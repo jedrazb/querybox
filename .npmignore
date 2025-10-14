@@ -1,0 +1,29 @@
+# Source files
+src/
+examples/
+*.ts
+!*.d.ts
+
+# Config files
+tsconfig.json
+vite.config.ts
+.gitignore
+
+# Development files
+node_modules/
+.vscode/
+.idea/
+*.log
+
+# Test files
+test/
+tests/
+__tests__/
+*.test.*
+*.spec.*
+
+# Documentation (keep README)
+docs/
+
+# Build artifacts (keep dist)
+*.tsbuildinfo
