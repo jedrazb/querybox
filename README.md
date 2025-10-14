@@ -1,13 +1,10 @@
-# QueryBox Monorepo
-
 <div align="center">
 
-**Embeddable search and chat widgets powered by Elasticsearch**
-
-[![npm version](https://img.shields.io/npm/v/@jedrazb/querybox.svg)](https://www.npmjs.com/package/@jedrazb/querybox)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[Querybox](./assets/querybox-logo.svg)
 
 </div>
+
+---
 
 ## 🎯 Overview
 
