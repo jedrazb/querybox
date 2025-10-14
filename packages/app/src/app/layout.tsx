@@ -4,10 +4,10 @@ import { QueryBoxProvider } from "@/components/QueryBoxProvider";
 import "../styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "QueryBox - Embeddable Search & AI Chat Widgets",
+  title: "QueryBox - Website Search & Chat Widget",
   description:
     "Add powerful search and AI-powered chat to any website. Powered by Elasticsearch.",
-  keywords: ["search", "chat", "widget", "elasticsearch", "ai", "embeddable"],
+  keywords: ["search", "chat", "widget", "elasticsearch", "ai"],
 };
 
 export default function RootLayout({
