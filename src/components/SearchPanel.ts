@@ -15,7 +15,8 @@ export class SearchPanel extends BasePanel {
     super(config, container);
     this.elasticsearchClient = new ElasticsearchClient(
       config.host,
-      config.apiKey
+      config.apiKey,
+      config.indexName
     );
   }
 

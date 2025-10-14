@@ -34,6 +34,7 @@ Edit `examples/index.html` and update the configuration:
 const querybox = new QueryBox({
   host: "YOUR_HOST_URL",
   apiKey: "YOUR_API_KEY",
+  indexName: "YOUR_INDEX_NAME", // Your Elasticsearch index with crawled content
   agentId: "YOUR_AGENT_ID",
   theme: "auto", // or 'light', 'dark'
 });
@@ -64,6 +65,7 @@ This creates:
   const qb = new QueryBox({
     host: "...",
     apiKey: "...",
+    indexName: "my-website-content",
   });
   qb.search(); // Open search
   qb.chat(); // Open chat
@@ -84,6 +86,7 @@ import "./dist/style.css";
 const qb = new QueryBox({
   host: "...",
   apiKey: "...",
+  indexName: "my-website-content",
 });
 qb.search();
 qb.chat();
@@ -105,6 +108,7 @@ export default function Page() {
         new QueryBox({
           host: "...",
           apiKey: "...",
+          indexName: "my-website-content",
         })
       );
     });
@@ -134,9 +138,10 @@ export default function Page() {
 
 1. **Connect to Your API**: Update the `host` in your config
 2. **Add API Key**: Set your `apiKey` for authentication
-3. **Configure Agent**: Set your `agentId` for chat functionality
-4. **Customize Styling**: Override CSS variables in your stylesheet
-5. **Add to Your Site**: Follow the integration guide in README.md
+3. **Set Index Name**: Set your `indexName` to your Elasticsearch index with crawled content
+4. **Configure Agent**: Set your `agentId` for chat functionality
+5. **Customize Styling**: Override CSS variables in your stylesheet
+6. **Add to Your Site**: Follow the integration guide in README.md
 
 ## Need Help?
 

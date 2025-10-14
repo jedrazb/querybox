@@ -613,3 +613,194 @@
     border-radius: 0;
   }
 }
+
+/* =========================================
+   Validation Panel Styles
+   ========================================= */
+.querybox-validation-panel {
+  max-width: 600px;
+}
+
+.querybox-validation__content {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+.querybox-validation__intro {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(255, 193, 7, 0.1);
+  border-left: 4px solid #ffc107;
+  border-radius: 8px;
+}
+
+.querybox-validation__intro p {
+  margin: 0;
+  color: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+[data-querybox-theme="dark"] .querybox-validation__intro {
+  background: rgba(255, 193, 7, 0.15);
+  border-left-color: #ffb300;
+}
+
+.querybox-validation__error-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px 0;
+}
+
+.querybox-validation__error-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: rgba(244, 67, 54, 0.08);
+  border: 1px solid rgba(244, 67, 54, 0.2);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.querybox-validation__error-item:hover {
+  background: rgba(244, 67, 54, 0.12);
+  border-color: rgba(244, 67, 54, 0.3);
+}
+
+[data-querybox-theme="dark"] .querybox-validation__error-item {
+  background: rgba(244, 67, 54, 0.12);
+  border-color: rgba(244, 67, 54, 0.25);
+}
+
+[data-querybox-theme="dark"] .querybox-validation__error-item:hover {
+  background: rgba(244, 67, 54, 0.18);
+  border-color: rgba(244, 67, 54, 0.35);
+}
+
+.querybox-validation__error-icon {
+  flex-shrink: 0;
+  color: #f44336;
+  margin-top: 2px;
+}
+
+.querybox-validation__error-item strong {
+  color: #f44336;
+  font-weight: 600;
+}
+
+[data-querybox-theme="dark"] .querybox-validation__error-item strong {
+  color: #ff5252;
+}
+
+.querybox-validation__help {
+  margin-bottom: 32px;
+  padding: 20px;
+  background: rgba(33, 150, 243, 0.08);
+  border-radius: 12px;
+}
+
+[data-querybox-theme="dark"] .querybox-validation__help {
+  background: rgba(33, 150, 243, 0.12);
+}
+
+.querybox-validation__help h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.querybox-validation__help p {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: inherit;
+  opacity: 0.9;
+}
+
+.querybox-validation__links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.querybox-validation__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.querybox-validation__link:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.2);
+  transform: translateX(4px);
+}
+
+[data-querybox-theme="dark"] .querybox-validation__link {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-querybox-theme="dark"] .querybox-validation__link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.querybox-validation__link svg {
+  flex-shrink: 0;
+  color: #2196f3;
+}
+
+[data-querybox-theme="dark"] .querybox-validation__link svg {
+  color: #64b5f6;
+}
+
+.querybox-validation__example {
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-querybox-theme="dark"] .querybox-validation__example {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.querybox-validation__example h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: inherit;
+}
+
+.querybox-validation__example pre {
+  margin: 0;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+[data-querybox-theme="dark"] .querybox-validation__example pre {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.querybox-validation__example code {
+  font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: inherit;
+}

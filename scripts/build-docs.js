@@ -133,12 +133,42 @@ function restoreCodeBlocks(html, codeBlocks, placeholder) {
 }
 
 /**
+ * Generate docs navigation menu
+ */
+function generateDocsNav(currentFilename) {
+  const docPages = [
+    { file: "README.html", title: "Overview" },
+    { file: "QUICKSTART.html", title: "Quick Start" },
+    { file: "CONFIG.html", title: "Configuration" },
+    { file: "STYLING.html", title: "Styling" },
+    { file: "CONTRIBUTING.html", title: "Contributing" },
+  ];
+
+  const navItems = docPages
+    .map((page) => {
+      const isActive = currentFilename === page.file.replace(".html", ".md");
+      const activeClass = isActive ? ' class="active"' : "";
+      return `<a href="${basePath}/docs/${page.file}"${activeClass}> ${page.title}</a>`;
+    })
+    .join("\n        ");
+
+  return `<nav class="docs-subnav">
+      <div class="docs-subnav-content">
+        ${navItems}
+      </div>
+    </nav>`;
+}
+
+/**
  * Simple markdown to HTML converter
  */
 function markdownToHtml(markdown, title, filename) {
   // Extract headings for TOC
   const headings = extractHeadings(markdown);
   const toc = generateTOC(headings);
+
+  // Generate docs navigation
+  const docsNav = generateDocsNav(filename);
 
   // Extract code blocks first to avoid them being processed by other rules
   const { processed, codeBlocks, placeholder } = extractCodeBlocks(markdown);
@@ -215,13 +245,12 @@ function markdownToHtml(markdown, title, filename) {
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
       z-index: 100;
-      padding: 16px 0;
     }
 
     .doc-header-content {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 16px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -252,6 +281,52 @@ function markdownToHtml(markdown, title, filename) {
 
     .doc-nav a:hover {
       color: var(--primary);
+    }
+
+    /* Docs Subnavigation */
+    .docs-subnav {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .docs-subnav-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      gap: 8px;
+      min-height: 48px;
+      align-items: center;
+    }
+
+    .docs-subnav a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .docs-subnav a:hover {
+      color: var(--text);
+    }
+
+    .docs-subnav a.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .doc-nav-icon {
+      font-size: 16px;
+      line-height: 1;
     }
 
     .demo-search-btn,
@@ -548,6 +623,20 @@ function markdownToHtml(markdown, title, filename) {
       .demo-chat-btn {
         display: none;
       }
+
+      .docs-subnav-content {
+        padding: 0 12px;
+        gap: 4px;
+      }
+
+      .docs-subnav a {
+        padding: 8px 12px;
+        font-size: 13px;
+      }
+
+      .doc-nav-icon {
+        font-size: 14px;
+      }
     }
 
     /* Keyboard shortcut hint */
@@ -615,6 +704,8 @@ function markdownToHtml(markdown, title, filename) {
       </nav>
     </div>
   </header>
+
+  ${docsNav}
 
   <div class="${contentClass}">
     ${headings.length > 0 ? toc : ""}

@@ -4,7 +4,7 @@ This guide explains how to configure the QueryBox widget for your application.
 
 ## Required Configuration
 
-The QueryBox widget requires two essential parameters:
+The QueryBox widget requires three essential parameters:
 
 ### 1. `host` (required)
 
@@ -36,14 +36,35 @@ Your API key for authentication. This key will be sent with all requests using t
 ```javascript
 const querybox = new QueryBox({
   host: "https://my-deployment.es.cloud.es.io",
-  apiKey: "your-base64-encoded-api-key",
+  apiKey: "your-api-key",
+  indexName: "my-website-content",
   // ...
 });
 ```
 
+### 3. `indexName` (required)
+
+The name of your Elasticsearch index containing your crawled website content. This index will be used for all search queries.
+
+**Examples:**
+
+```javascript
+const querybox = new QueryBox({
+  host: "https://my-deployment.es.cloud.es.io",
+  apiKey: "your-api-key",
+  indexName: "my-website-content", // Your index name
+});
+```
+
+**How to find your index name:**
+
+- In Kibana: Go to Management > Index Management to see your indices
+- Via API: `GET /_cat/indices` to list all indices
+- Common naming patterns: `website-content`, `docs`, `search-content-*`
+
 ## Optional Configuration
 
-### 3. `agentId` (optional)
+### 4. `agentId` (optional)
 
 The ID of your Elasticsearch agent for chat functionality. Only required if you want to use the chat feature.
 
@@ -51,11 +72,12 @@ The ID of your Elasticsearch agent for chat functionality. Only required if you 
 const querybox = new QueryBox({
   host: "https://my-deployment.es.cloud.es.io",
   apiKey: "your-api-key",
+  indexName: "my-website-content",
   agentId: "my-chat-agent-id", // Optional
 });
 ```
 
-### 4. `theme` (optional)
+### 5. `theme` (optional)
 
 Choose between `'light'`, `'dark'`, or `'auto'` themes. Defaults to `'auto'` (matches system preference).
 
@@ -63,11 +85,12 @@ Choose between `'light'`, `'dark'`, or `'auto'` themes. Defaults to `'auto'` (ma
 const querybox = new QueryBox({
   host: "...",
   apiKey: "...",
+  indexName: "my-website-content",
   theme: "dark", // 'light', 'dark', or 'auto'
 });
 ```
 
-### 5. `container` (optional)
+### 6. `container` (optional)
 
 Specify where to mount the widget. Can be an HTMLElement or a CSS selector string. Defaults to `document.body`.
 
@@ -75,11 +98,12 @@ Specify where to mount the widget. Can be an HTMLElement or a CSS selector strin
 const querybox = new QueryBox({
   host: "...",
   apiKey: "...",
+  indexName: "my-website-content",
   container: "#app", // or document.getElementById('app')
 });
 ```
 
-### 6. `classNames` (optional)
+### 7. `classNames` (optional)
 
 Add custom CSS classes to widget elements for styling.
 
@@ -87,6 +111,7 @@ Add custom CSS classes to widget elements for styling.
 const querybox = new QueryBox({
   host: "...",
   apiKey: "...",
+  indexName: "my-website-content",
   classNames: {
     panel: "my-custom-panel",
     searchPanel: "my-search-panel",
@@ -106,6 +131,7 @@ For Next.js or other frameworks using environment variables:
 # Required
 NEXT_PUBLIC_HOST=https://your-host.es.cloud.es.io
 NEXT_PUBLIC_API_KEY=your-api-key-here
+NEXT_PUBLIC_INDEX_NAME=my-website-content
 
 # Optional
 NEXT_PUBLIC_AGENT_ID=your-agent-id
@@ -117,6 +143,7 @@ NEXT_PUBLIC_AGENT_ID=your-agent-id
 const querybox = new QueryBox({
   host: process.env.NEXT_PUBLIC_HOST,
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  indexName: process.env.NEXT_PUBLIC_INDEX_NAME,
   agentId: process.env.NEXT_PUBLIC_AGENT_ID,
 });
 ```
@@ -196,6 +223,7 @@ Use the browser console to verify your configuration:
 const querybox = new QueryBox({
   host: "YOUR_HOST",
   apiKey: "YOUR_API_KEY",
+  indexName: "YOUR_INDEX_NAME",
   agentId: "YOUR_AGENT_ID",
 });
 
@@ -218,6 +246,10 @@ Make sure you're passing the `host` parameter to the constructor.
 ### Error: "QueryBox: apiKey is required"
 
 Make sure you're passing the `apiKey` parameter to the constructor.
+
+### Error: "QueryBox: indexName is required"
+
+Make sure you're passing the `indexName` parameter to the constructor with the name of your Elasticsearch index containing crawled content.
 
 ### 401 Unauthorized
 
@@ -253,6 +285,7 @@ const querybox = new QueryBox({
   // Required
   host: "https://my-deployment.es.cloud.es.io",
   apiKey: "VnVhQmZrTUJDZGJrU...", // Base64 encoded
+  indexName: "my-website-content",
 
   // Optional
   agentId: "my-agent-123",

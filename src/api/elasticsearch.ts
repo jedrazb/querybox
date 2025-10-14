@@ -6,10 +6,12 @@ import type { SearchResponse, SearchResult } from "../types";
 export class ElasticsearchClient {
   private host: string;
   private apiKey: string;
+  private indexName: string;
 
-  constructor(host: string, apiKey: string) {
+  constructor(host: string, apiKey: string, indexName: string) {
     this.host = host;
     this.apiKey = apiKey;
+    this.indexName = indexName;
   }
 
   /**
@@ -27,7 +29,7 @@ export class ElasticsearchClient {
   ): Promise<SearchResponse> {
     const size = options?.size || 10;
     const from = options?.from || 0;
-    const index = options?.index || "_all";
+    const index = options?.index || this.indexName;
 
     try {
       const response = await fetch(`${this.host}/${index}/_search`, {

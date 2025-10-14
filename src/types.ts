@@ -6,6 +6,8 @@ export interface QueryBoxConfig {
   host: string;
   /** API Key for authentication (required) */
   apiKey: string;
+  /** Elasticsearch index name with crawled website content (required) */
+  indexName: string;
   /** Optional agent ID for chat functionality */
   agentId?: string;
   /** Container element or selector */

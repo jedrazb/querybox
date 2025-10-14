@@ -33,7 +33,8 @@ export class UnifiedPanel extends BasePanel {
     this.currentMode = initialMode;
     this.elasticsearchClient = new ElasticsearchClient(
       config.host,
-      config.apiKey
+      config.apiKey,
+      config.indexName
     );
     this.chatClient = new ChatClient({
       host: config.host,

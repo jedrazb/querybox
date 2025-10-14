@@ -31,6 +31,7 @@ export function QueryBoxWidget() {
         const instance = new QueryBox({
           host: process.env.NEXT_PUBLIC_HOST || "http://localhost:9200",
           apiKey: process.env.NEXT_PUBLIC_API_KEY || "your-api-key",
+          indexName: process.env.NEXT_PUBLIC_INDEX_NAME || "my-website-content",
           agentId: process.env.NEXT_PUBLIC_AGENT_ID || "default-agent",
           theme: "auto",
         });

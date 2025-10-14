@@ -32,6 +32,7 @@ import "@jedrazb/querybox/dist/style.css";
 const querybox = new QueryBox({
   host: "http://localhost:9200",
   apiKey: "your-api-key",
+  indexName: "my-website-content",
   agentId: "my-agent-id",
 });
 
@@ -60,6 +61,7 @@ querybox.chat();
       const querybox = new QueryBox({
         host: "http://localhost:9200",
         apiKey: "your-api-key",
+        indexName: "my-website-content",
         agentId: "my-agent-id",
       });
     </script>
@@ -99,6 +101,7 @@ export function QueryBoxWidget() {
       const qb = new QueryBox({
         host: process.env.NEXT_PUBLIC_HOST,
         apiKey: process.env.NEXT_PUBLIC_API_KEY,
+        indexName: process.env.NEXT_PUBLIC_INDEX_NAME,
         agentId: process.env.NEXT_PUBLIC_AGENT_ID,
       });
 
@@ -138,6 +141,9 @@ interface QueryBoxConfig {
 
   /** API Key for authentication (required) */
   apiKey: string;
+
+  /** Elasticsearch index name with crawled website content (required) */
+  indexName: string;
 
   /** Agent ID for chat functionality (optional) */
   agentId?: string;
@@ -254,6 +260,7 @@ The widget uses API key authentication. Include your API key when initializing:
 const querybox = new QueryBox({
   host: "https://your-api-host.com",
   apiKey: "your-api-key",
+  indexName: "my-website-content",
   agentId: "optional-agent-id",
 });
 ```

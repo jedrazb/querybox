@@ -1,48 +1,90 @@
 import type { QueryBoxConfig } from "./types";
 import { UnifiedPanel } from "./components/UnifiedPanel";
+import {
+  ValidationPanel,
+  type ValidationError,
+} from "./components/ValidationPanel";
 
 /**
  * Main QueryBox widget class
  * Provides search() and chat() methods to open the panel in the appropriate mode
  */
 export class QueryBox {
-  private config: Required<QueryBoxConfig>;
-  private panel: UnifiedPanel | null = null;
+  private config: Partial<QueryBoxConfig>;
+  private validConfig: Required<QueryBoxConfig> | null = null;
+  private panel: UnifiedPanel | ValidationPanel | null = null;
   private container: HTMLElement;
+  private validationErrors: ValidationError[] = [];
+  private escapeHandler: ((e: KeyboardEvent) => void) | null = null;
 
   constructor(config: QueryBoxConfig) {
-    // Validate required config
-    if (!config.host) {
-      throw new Error("QueryBox: host is required");
-    }
-    if (!config.apiKey) {
-      throw new Error("QueryBox: apiKey is required");
-    }
+    this.config = config;
 
-    // Set defaults
-    this.config = {
-      host: config.host,
-      apiKey: config.apiKey,
-      agentId: config.agentId || "",
-      container: config.container || document.body,
-      theme: config.theme || "auto",
-      classNames: config.classNames || {},
-    };
+    // Validate configuration and collect errors
+    this.validationErrors = this.validateConfig(config);
+
+    // If no errors, create valid config
+    if (this.validationErrors.length === 0) {
+      this.validConfig = {
+        host: config.host,
+        apiKey: config.apiKey,
+        indexName: config.indexName,
+        agentId: config.agentId || "",
+        container: config.container || document.body,
+        theme: config.theme || "auto",
+        classNames: config.classNames || {},
+      };
+    }
 
     // Resolve container
-    if (typeof this.config.container === "string") {
-      const element = document.querySelector(this.config.container);
+    const containerValue = config.container || document.body;
+    if (typeof containerValue === "string") {
+      const element = document.querySelector(containerValue);
       if (!element) {
-        throw new Error(
-          `QueryBox: container "${this.config.container}" not found`
+        console.error(
+          `QueryBox: container "${containerValue}" not found, using document.body`
         );
+        this.container = document.body;
+      } else {
+        this.container = element as HTMLElement;
       }
-      this.container = element as HTMLElement;
     } else {
-      this.container = this.config.container as HTMLElement;
+      this.container = containerValue as HTMLElement;
     }
 
     this.init();
+  }
+
+  /**
+   * Validate configuration and return list of errors
+   */
+  private validateConfig(config: Partial<QueryBoxConfig>): ValidationError[] {
+    const errors: ValidationError[] = [];
+
+    if (!config.host) {
+      errors.push({
+        field: "host",
+        message:
+          "Host URL is required (e.g., https://your-host.es.cloud.es.io)",
+      });
+    }
+
+    if (!config.apiKey) {
+      errors.push({
+        field: "apiKey",
+        message: "API Key is required for authentication",
+      });
+    }
+
+    if (!config.indexName) {
+      errors.push({
+        field: "indexName",
+        message:
+          "Index name is required - specify your Elasticsearch index with crawled website content",
+      });
+    }
+
+    return errors;
   }
 
   /**
@@ -60,7 +102,7 @@ export class QueryBox {
    * Apply theme to the document
    */
   private applyTheme(): void {
-    const theme = this.config.theme;
+    const theme = this.config.theme || "auto";
     if (theme === "auto") {
       // Auto-detect based on system preference
       const prefersDark = window.matchMedia(
@@ -87,36 +129,109 @@ export class QueryBox {
    * Open the panel in search mode
    */
   public search(): void {
-    if (!this.panel) {
-      this.panel = new UnifiedPanel(this.config, this.container, "search");
+    // If there are validation errors, show validation panel
+    if (this.validationErrors.length > 0) {
+      this.showValidationPanel();
+      return;
     }
 
-    if (this.panel.getCurrentMode() !== "search") {
+    if (!this.panel) {
+      this.panel = new UnifiedPanel(
+        this.validConfig!,
+        this.container,
+        "search"
+      );
+    }
+
+    if (
+      this.panel instanceof UnifiedPanel &&
+      this.panel.getCurrentMode() !== "search"
+    ) {
       this.panel.switchToMode("search");
     }
 
     this.panel.open();
+    this.setupEscapeHandler();
   }
 
   /**
    * Open the panel in chat mode
    */
   public chat(): void {
-    if (!this.panel) {
-      this.panel = new UnifiedPanel(this.config, this.container, "chat");
+    // If there are validation errors, show validation panel
+    if (this.validationErrors.length > 0) {
+      this.showValidationPanel();
+      return;
     }
 
-    if (this.panel.getCurrentMode() !== "chat") {
+    if (!this.panel) {
+      this.panel = new UnifiedPanel(this.validConfig!, this.container, "chat");
+    }
+
+    if (
+      this.panel instanceof UnifiedPanel &&
+      this.panel.getCurrentMode() !== "chat"
+    ) {
       this.panel.switchToMode("chat");
     }
 
     this.panel.open();
+    this.setupEscapeHandler();
+  }
+
+  /**
+   * Show validation panel with configuration errors
+   */
+  private showValidationPanel(): void {
+    if (!this.panel || !(this.panel instanceof ValidationPanel)) {
+      // Destroy existing panel if it's not a validation panel
+      if (this.panel) {
+        this.panel.destroy();
+      }
+      this.panel = new ValidationPanel(
+        this.config,
+        this.container,
+        this.validationErrors
+      );
+    }
+    this.panel.open();
+    this.setupEscapeHandler();
+  }
+
+  /**
+   * Set up escape key handler to close the panel
+   */
+  private setupEscapeHandler(): void {
+    // Remove existing handler if any
+    this.removeEscapeHandler();
+
+    // Create new handler
+    this.escapeHandler = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && this.panel) {
+        this.panel.close();
+        this.removeEscapeHandler();
+      }
+    };
+
+    // Add listener
+    document.addEventListener("keydown", this.escapeHandler);
+  }
+
+  /**
+   * Remove escape key handler
+   */
+  private removeEscapeHandler(): void {
+    if (this.escapeHandler) {
+      document.removeEventListener("keydown", this.escapeHandler);
+      this.escapeHandler = null;
+    }
   }
 
   /**
    * Destroy the widget and clean up
    */
   public destroy(): void {
+    this.removeEscapeHandler();
     if (this.panel) {
       this.panel.destroy();
       this.panel = null;
@@ -126,7 +241,21 @@ export class QueryBox {
   /**
    * Get current configuration
    */
-  public getConfig(): Readonly<Required<QueryBoxConfig>> {
+  public getConfig(): Readonly<Partial<QueryBoxConfig>> {
     return { ...this.config };
+  }
+
+  /**
+   * Check if configuration is valid
+   */
+  public isValid(): boolean {
+    return this.validationErrors.length === 0;
+  }
+
+  /**
+   * Get validation errors
+   */
+  public getValidationErrors(): ReadonlyArray<ValidationError> {
+    return [...this.validationErrors];
   }
 }
