@@ -23,7 +23,9 @@ export default function RootLayout({
       <body>
         <QueryBoxProvider>
           <Header />
-          <div style={{ paddingTop: "70px" }}>{children}</div>
+          <div style={{ paddingTop: "70px", minHeight: "100vh" }}>
+            {children}
+          </div>
         </QueryBoxProvider>
       </body>
     </html>

@@ -21,10 +21,6 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: white;
   text-decoration: none;
   transition: opacity 0.2s;
 }
@@ -33,15 +29,11 @@
   opacity: 0.8;
 }
 
-.icon {
-  font-size: 1.5rem;
-}
-
-.name {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.logoImage {
+  height: auto;
+  width: auto;
+  width: 240px;
+  max-height: 30px;
 }
 
 .nav {

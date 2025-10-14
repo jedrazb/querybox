@@ -22,6 +22,12 @@ export default function Docs() {
     <div className={styles.docsLayout}>
       {/* Sidebar with TOC */}
       <aside className={styles.sidebar}>
+        <button className={styles.searchButton} onClick={search}>
+          <span className={styles.searchIcon}>🔍</span>
+          <span className={styles.searchText}>Search docs</span>
+          <kbd className={styles.kbd}>⌘ + K</kbd>
+        </button>
+
         <nav className={styles.toc}>
           <h3 className={styles.tocTitle}>Contents</h3>
           <ul className={styles.tocList}>
@@ -40,18 +46,6 @@ export default function Docs() {
             ))}
           </ul>
         </nav>
-
-        <div className={styles.keyboardShortcut}>
-          <div className={styles.shortcutBox}>
-            <span className={styles.shortcutIcon}>⌨️</span>
-            <div>
-              <div className={styles.shortcutTitle}>Quick Search</div>
-              <div className={styles.shortcutHint}>
-                Press <kbd className={styles.kbd}>⌘K</kbd> to search or ask AI
-              </div>
-            </div>
-          </div>
-        </div>
       </aside>
 
       {/* Main Content */}

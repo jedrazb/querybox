@@ -43,7 +43,12 @@ export class UnifiedPanel extends BasePanel {
 
     panel.innerHTML = `
       <div class="querybox-panel__header">
-        <h2 class="querybox-panel__title">${this.getModeTitle()}</h2>
+        <div class="querybox-panel__title-section">
+          <h2 class="querybox-panel__title">${this.getModeTitle()}</h2>
+          <a href="https://querybox.io" target="_blank" rel="noopener noreferrer" class="querybox-powered-by">
+            Powered by QueryBox
+          </a>
+        </div>
         <div class="querybox-mode-switcher">
           <button class="querybox-mode-btn ${
             this.currentMode === "search" ? "active" : ""

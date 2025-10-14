@@ -44,7 +44,7 @@ export default function Home() {
           </div>
           <div className={styles.keyboardHint}>
             <span>
-              💡 Tip: Press <kbd>⌘K</kbd> anywhere to search
+              💡 Tip: Press <kbd>⌘ + K</kbd> anywhere to search
             </span>
           </div>
         </div>
@@ -67,7 +67,7 @@ export default function Home() {
       {/* Quick Example */}
       <section className={styles.example} id="demo">
         <div className={styles.container}>
-          <h2 className={styles.sectionTitle}>Add to Your Website</h2>
+          <h2 className={styles.sectionTitle}>Install and use</h2>
 
           {/* Tabs */}
           <div className={styles.tabs}>
@@ -189,16 +189,23 @@ export default function Page() {
 
       {/* Footer */}
       <footer className={styles.footer}>
-        <p>
-          Built with ❤️ by{" "}
-          <a
-            href="https://github.com/jedrazb"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            jedrazb
-          </a>
-        </p>
+        <div className={styles.footerContent}>
+          <img
+            src="/querybox.svg"
+            alt="QueryBox"
+            className={styles.footerLogo}
+          />
+          <p>
+            Built with ❤️ by{" "}
+            <a
+              href="https://github.com/jedrazb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              jedrazb
+            </a>
+          </p>
+        </div>
         <div className={styles.footerLinks}>
           <a
             href="https://github.com/jedrazb/querybox"
