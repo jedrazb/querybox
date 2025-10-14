@@ -1,0 +1,75 @@
+/**
+ * Domain status API endpoint - App Router
+ * GET /api/querybox/{domain}/v1/status
+ */
+
+import { NextRequest, NextResponse } from "next/server";
+import type { DomainStatus } from "@jedrazb/querybox-shared";
+import { getElasticsearchClient } from "@/lib/elasticsearch";
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { domain: string } }
+) {
+  try {
+    const { domain } = params;
+
+    if (!domain) {
+      return NextResponse.json(
+        { error: "Invalid domain parameter" },
+        { status: 400 }
+      );
+    }
+
+    const esClient = getElasticsearchClient();
+
+    // Get domain configuration
+    const domainConfig = await esClient.getDomainConfig(domain);
+
+    if (!domainConfig) {
+      return NextResponse.json({
+        domain,
+        configured: false,
+      });
+    }
+
+    // Get document count
+    const documentCount = await esClient.getDocumentCount(
+      domainConfig.indexName
+    );
+
+    const status: DomainStatus = {
+      domain,
+      configured: true,
+      indexName: domainConfig.indexName,
+      agentId: domainConfig.agentId,
+      status: domainConfig.status,
+      documentCount,
+    };
+
+    return NextResponse.json(status, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  } catch (error: any) {
+    console.error("Status error:", error);
+    return NextResponse.json(
+      { error: error.message || "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+}

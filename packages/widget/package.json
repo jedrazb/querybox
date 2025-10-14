@@ -1,0 +1,60 @@
+{
+  "name": "@jedrazb/querybox",
+  "version": "0.1.0",
+  "description": "Lightweight embeddable search and chat widget powered by Elasticsearch",
+  "type": "module",
+  "main": "./dist/querybox.umd.js",
+  "module": "./dist/querybox.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/querybox.es.js",
+      "require": "./dist/querybox.umd.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build:docs": "node scripts/build-docs.js",
+    "build:all": "pnpm build && pnpm build:docs",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "search",
+    "chat",
+    "widget",
+    "elasticsearch",
+    "embeddable",
+    "querybox",
+    "glassmorphism",
+    "agent",
+    "ai",
+    "conversational-ai"
+  ],
+  "author": "jedrazb",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jedrazb/querybox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jedrazb/querybox/issues"
+  },
+  "homepage": "https://github.com/jedrazb/querybox#readme",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.8",
+    "vite-plugin-dts": "^3.7.0"
+  },
+  "dependencies": {
+    "@jedrazb/querybox-shared": "workspace:*"
+  }
+}

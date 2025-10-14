@@ -1,0 +1,291 @@
+.docsLayout {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Sidebar */
+.sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 70px;
+  align-self: flex-start;
+  width: 280px;
+  height: calc(100vh - 70px);
+  padding: 2rem 1.5rem;
+  border-right: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.5);
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.toc {
+  margin-bottom: 2rem;
+}
+
+.tocTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.tocList {
+  list-style: none;
+}
+
+.tocList li {
+  margin-bottom: 0.5rem;
+}
+
+.tocList a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+}
+
+.tocList a:hover {
+  color: var(--text);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.tocActive {
+  color: var(--primary) !important;
+  background: rgba(99, 102, 241, 0.15) !important;
+  font-weight: 600;
+}
+
+.keyboardShortcut {
+  padding-top: 1.5rem;
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+}
+
+.shortcutBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 8px;
+}
+
+.shortcutIcon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.shortcutTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.shortcutHint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.kbd {
+  display: inline-block;
+  padding: 0.2rem 0.4rem;
+  margin: 0 0.2rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  font-family: "SF Mono", "Monaco", "Courier New", monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Main Content */
+.content {
+  flex: 1;
+  padding: 3rem;
+  max-width: 900px;
+  min-width: 0;
+}
+
+.section {
+  margin-bottom: 4rem;
+}
+
+.section h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+  color: var(--text);
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+  color: var(--text);
+}
+
+.section h4 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.section p {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.lead {
+  font-size: 1.25rem !important;
+  color: var(--text) !important;
+  margin-bottom: 2rem !important;
+}
+
+/* Code Blocks */
+.code {
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.code code {
+  font-family: "Fira Code", "Monaco", "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+}
+
+/* Table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table thead {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  padding: 1rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.table code {
+  background: rgba(99, 102, 241, 0.15);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: "Fira Code", monospace;
+  font-size: 0.875rem;
+  color: #a5b4fc;
+}
+
+/* API Methods */
+.apiMethod {
+  padding: 1.5rem;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.apiMethod h4 {
+  margin-bottom: 0.75rem;
+  color: var(--primary);
+}
+
+.apiMethod code {
+  background: rgba(99, 102, 241, 0.15);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: "Fira Code", monospace;
+}
+
+/* Footer */
+.docFooter {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.docFooter a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.docFooter a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .docsLayout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: relative;
+    top: 0;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .content {
+    padding: 2rem 1.5rem;
+  }
+}

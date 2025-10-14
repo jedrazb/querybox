@@ -1,59 +1,23 @@
 {
-  "name": "@jedrazb/querybox",
+  "name": "querybox-monorepo",
   "version": "0.1.0",
-  "description": "Lightweight embeddable search and chat widget powered by Elasticsearch",
-  "type": "module",
-  "main": "./dist/querybox.umd.js",
-  "module": "./dist/querybox.es.js",
-  "types": "./dist/index.d.ts",
+  "private": true,
+  "description": "Monorepo for QueryBox widget and API backend",
   "packageManager": "pnpm@8.15.0",
-  "exports": {
-    ".": {
-      "import": "./dist/querybox.es.js",
-      "require": "./dist/querybox.umd.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./dist/style.css": "./dist/style.css"
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "build:docs": "node scripts/build-docs.js",
-    "build:all": "pnpm build && pnpm build:docs",
-    "preview": "vite preview",
-    "type-check": "tsc --noEmit"
+    "dev": "pnpm --parallel dev",
+    "dev:widget": "pnpm --filter @jedrazb/querybox dev",
+    "dev:app": "pnpm --filter @jedrazb/querybox-app dev",
+    "build": "pnpm --filter @jedrazb/querybox-shared build && pnpm --filter @jedrazb/querybox build && cp packages/widget/dist/style.css packages/app/public/querybox.css && pnpm --filter @jedrazb/querybox-app build",
+    "build:widget": "pnpm --filter @jedrazb/querybox build && cp packages/widget/dist/style.css packages/app/public/querybox.css",
+    "build:app": "pnpm --filter @jedrazb/querybox-app build",
+    "type-check": "pnpm -r type-check",
+    "clean": "pnpm -r clean"
   },
-  "keywords": [
-    "search",
-    "chat",
-    "widget",
-    "elasticsearch",
-    "embeddable",
-    "querybox",
-    "glassmorphism",
-    "agent",
-    "ai",
-    "conversational-ai"
-  ],
   "author": "jedrazb",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/jedrazb/querybox.git"
-  },
-  "bugs": {
-    "url": "https://github.com/jedrazb/querybox/issues"
-  },
-  "homepage": "https://github.com/jedrazb/querybox#readme",
-  "devDependencies": {
-    "@types/node": "^20.10.0",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.8",
-    "vite-plugin-dts": "^3.7.0"
-  },
-  "peerDependencies": {},
-  "dependencies": {}
+  }
 }

@@ -1,161 +1,201 @@
-# 🔍 QueryBox Widget
+# QueryBox Monorepo
 
-A lightweight, embeddable JavaScript widget for search and AI chat powered by Elasticsearch.
+<div align="center">
 
-> **📖 [View Documentation Website](https://jedrazb.github.io/querybox)** (or your deployed URL)
+**Embeddable search and chat widgets powered by Elasticsearch**
 
-## ✨ Features
+[![npm version](https://img.shields.io/npm/v/@jedrazb/querybox.svg)](https://www.npmjs.com/package/@jedrazb/querybox)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-- **🔍 Search Panel** - Powerful search powered by Elasticsearch `_search` API
-- **💬 Chat Assistant** - AI chat with streaming responses and tool usage visualization
-- **📦 Multiple Integration Methods** - Works as npm package, UMD script, or ES module
-- **✨ Apple Glassmorphism** - Beautiful frosted glass UI with backdrop blur effects
-- **🎨 Light & Dark Mode** - Automatic theme switching based on system preferences
-- **⚡ Built with Vite** - Fast development and optimized production builds
-- **📱 Mobile Friendly** - Responsive design that works on all devices
-- **🔧 Highly Configurable** - Easy to customize and extend
+</div>
+
+## 🎯 Overview
+
+QueryBox is a complete solution for adding powerful search and AI-powered chat to any website. It consists of:
+
+1. **Widget** (`packages/widget`) - Lightweight embeddable component
+2. **API Backend** (`packages/api`) - Multi-tenant backend service
+3. **Shared Types** (`packages/shared`) - Common TypeScript definitions
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────┐
+│  Your Website                       │
+│  <QueryBox apiEndpoint="..." />     │
+└─────────────────────────────────────┘
+            ↓
+┌─────────────────────────────────────┐
+│  QueryBox API (Next.js)             │
+│  - Multi-tenant                     │
+│  - Handles all ES operations        │
+│  - Built-in crawler                 │
+└─────────────────────────────────────┘
+            ↓
+┌─────────────────────────────────────┐
+│  Elasticsearch Cloud                │
+│  - Indices per domain               │
+│  - Search & Agent capabilities      │
+└─────────────────────────────────────┘
+```
 
 ## 🚀 Quick Start
 
-### Installation
+### For Website Owners (Using the Widget)
 
-#### Option 1: NPM Package
+1. **Install the widget:**
 
 ```bash
 npm install @jedrazb/querybox
 ```
 
-```javascript
+2. **Add to your site:**
+
+```typescript
 import QueryBox from "@jedrazb/querybox";
 import "@jedrazb/querybox/dist/style.css";
 
 const querybox = new QueryBox({
-  host: "http://localhost:9200",
-  apiKey: "your-api-key",
-  indexName: "my-website-content",
-  agentId: "my-agent-id",
+  apiEndpoint: "https://api.querybox.io/api/querybox/yoursite.com/v1",
 });
 
-// Open search or chat
-querybox.search();
-querybox.chat();
+// Add search button
+document.getElementById("search-btn").onclick = () => querybox.search();
+
+// Add chat button
+document.getElementById("chat-btn").onclick = () => querybox.chat();
 ```
 
-#### Option 2: Script Tag (UMD / CDN)
+3. **Request your domain to be crawled:**
 
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@jedrazb/querybox/dist/style.css"
-    />
-  </head>
-  <body>
-    <button onclick="querybox.search()">Search</button>
-    <button onclick="querybox.chat()">Chat</button>
-
-    <script src="https://unpkg.com/@jedrazb/querybox/dist/querybox.umd.js"></script>
-    <script>
-      const querybox = new QueryBox({
-        host: "http://localhost:9200",
-        apiKey: "your-api-key",
-        indexName: "my-website-content",
-        agentId: "my-agent-id",
-      });
-    </script>
-  </body>
-</html>
+```bash
+curl -X POST https://api.querybox.io/api/querybox/yoursite.com/v1/crawl \
+  -H "Content-Type: application/json" \
+  -d '{
+    "domain": "yoursite.com",
+    "config": {
+      "startUrl": "https://yoursite.com",
+      "maxPages": 100
+    }
+  }'
 ```
 
-## 📖 Documentation
+### For API Operators (Self-hosting)
 
-Visit the **[Documentation Website](https://jedrazb.github.io/querybox)** for comprehensive guides.
+1. **Clone and install:**
 
-Essential docs:
-
-- **[Quick Start](docs/QUICKSTART.md)** - Get running in 5 minutes
-- **[Configuration](docs/CONFIG.md)** - Complete configuration reference
-- **[Styling & Design](docs/STYLING.md)** - Customization and glassmorphism guide
-- **[Contributing](docs/CONTRIBUTING.md)** - How to contribute
-
-## 📖 Usage Examples
-
-### Next.js
-
-See [`examples/nextjs-example.tsx`](examples/nextjs-example.tsx) for a complete Next.js component example.
-
-```tsx
-"use client";
-
-import { useEffect, useState } from "react";
-
-export function QueryBoxWidget() {
-  const [querybox, setQuerybox] = useState(null);
-
-  useEffect(() => {
-    import("@jedrazb/querybox").then(({ default: QueryBox }) => {
-      import("@jedrazb/querybox/dist/style.css");
-
-      const qb = new QueryBox({
-        host: process.env.NEXT_PUBLIC_HOST,
-        apiKey: process.env.NEXT_PUBLIC_API_KEY,
-        indexName: process.env.NEXT_PUBLIC_INDEX_NAME,
-        agentId: process.env.NEXT_PUBLIC_AGENT_ID,
-      });
-
-      setQuerybox(qb);
-    });
-  }, []);
-
-  return (
-    <div>
-      <button onClick={() => querybox?.search()}>Search</button>
-      <button onClick={() => querybox?.chat()}>Chat</button>
-    </div>
-  );
-}
+```bash
+git clone https://github.com/jedrazb/querybox.git
+cd querybox
+pnpm install
 ```
 
-### WordPress
+2. **Configure API:**
 
-See [`examples/wordpress-example.html`](examples/wordpress-example.html) for WordPress integration.
+```bash
+cd packages/api
+cp env.example .env.local
+# Edit .env.local with your Elasticsearch credentials
+```
 
-### Plain HTML
+3. **Deploy to Vercel:**
 
-See [`examples/standalone.html`](examples/standalone.html) for a standalone HTML example.
+```bash
+cd packages/api
+vercel
+```
 
-## ⚙️ Configuration
+4. **Set environment variables in Vercel dashboard:**
 
-See **[Configuration Guide](docs/CONFIG.md)** for comprehensive configuration including security best practices, CORS setup, and troubleshooting.
+- `ELASTICSEARCH_HOST`
+- `ELASTICSEARCH_API_KEY`
 
-See **[Styling & Design Guide](docs/STYLING.md)** for complete styling documentation including customization, themes, and glassmorphism effects.
+## 📦 Packages
 
-### Quick Reference
+### Widget (`@jedrazb/querybox`)
+
+Embeddable search and chat component with beautiful glassmorphic UI.
+
+- 🎨 Beautiful, customizable UI
+- 🔍 Instant search with highlighting
+- 💬 AI-powered conversational chat
+- 🌙 Dark/light theme support
+- 📱 Fully responsive
+- ⚡ Lightweight (~50KB gzipped)
+
+[View Widget README](./packages/widget/README.md)
+
+### API Backend
+
+Full Next.js application with:
+
+- **Landing page** - Beautiful, animated hero with setup flow
+- **Interactive setup** - Real-time crawl progress tracking
+- **API routes** - Multi-tenant backend (App Router)
+- **Domain management** - Automatic indexing and configuration
+- **Web crawler** - Built-in website crawling
+
+[View App README](./packages/app/README.md)
+
+### Shared Types
+
+Common TypeScript definitions used by both widget and API.
+
+## 🛠️ Development
+
+### Quick Start
+
+```bash
+git clone https://github.com/jedrazb/querybox.git
+cd querybox
+pnpm install
+
+# Configure Elasticsearch
+cd packages/app
+cp env.example .env.local
+# Edit .env.local with your ES credentials
+
+# Start development
+cd ../..
+pnpm dev:app
+# Open http://localhost:3000
+```
+
+See [QUICK_START.md](./QUICK_START.md) for 3-minute setup guide or [LOCAL_DEVELOPMENT.md](./LOCAL_DEVELOPMENT.md) for detailed instructions.
+
+### Project Structure
+
+```
+querybox/
+├── packages/
+│   ├── widget/              # Embeddable widget (npm package)
+│   │   ├── src/             # Widget source only
+│   │   └── package.json
+│   ├── app/                 # Next.js application
+│   │   ├── src/
+│   │   │   ├── app/         # App Router (pages + API routes)
+│   │   │   ├── components/  # React components
+│   │   │   ├── lib/         # ES client
+│   │   │   └── services/    # Crawler
+│   │   ├── docs/            # Documentation
+│   │   └── examples/        # Integration examples
+│   └── shared/              # Shared types
+│       └── src/
+├── pnpm-workspace.yaml
+└── package.json
+```
+
+## 🔧 Configuration
+
+### Widget Configuration
 
 ```typescript
 interface QueryBoxConfig {
-  /** Host URL for the API (required) */
-  host: string;
-
-  /** API Key for authentication (required) */
-  apiKey: string;
-
-  /** Elasticsearch index name with crawled website content (required) */
-  indexName: string;
-
-  /** Agent ID for chat functionality (optional) */
-  agentId?: string;
-
-  /** Container element or selector (optional, defaults to document.body) */
-  container?: HTMLElement | string;
-
-  /** Theme: 'light', 'dark', or 'auto' (optional, defaults to 'auto') */
-  theme?: "light" | "dark" | "auto";
-
-  /** Custom CSS class names (optional) */
+  apiEndpoint: string; // Required: API endpoint URL
+  container?: HTMLElement | string; // Optional: Container element
+  theme?: "light" | "dark" | "auto"; // Optional: Theme
   classNames?: {
+    // Optional: Custom CSS classes
     panel?: string;
     searchPanel?: string;
     chatPanel?: string;
@@ -164,205 +204,95 @@ interface QueryBoxConfig {
 }
 ```
 
-## 🎨 API Reference
+### API Configuration (Environment Variables)
 
-### `QueryBox`
+| Variable                | Required | Description                 |
+| ----------------------- | -------- | --------------------------- |
+| `ELASTICSEARCH_HOST`    | Yes      | Elasticsearch instance URL  |
+| `ELASTICSEARCH_API_KEY` | Yes      | ES API key with permissions |
 
-Main class for the widget.
+## 📝 API Endpoints
 
-#### Constructor
+All endpoints follow: `/api/querybox/{domain}/v1/{endpoint}`
+
+- `POST /search` - Search documents
+- `POST /chat` - Chat with AI agent
+- `GET /status` - Domain status & config
+- `POST /crawl` - Initiate website crawl
+
+[View full API documentation](./packages/api/README.md)
+
+## 🎨 Customization
+
+### Custom Styles
+
+```css
+/* Override CSS variables */
+:root {
+  --querybox-primary: #your-color;
+  --querybox-background: rgba(255, 255, 255, 0.9);
+}
+```
+
+### Custom Classes
 
 ```typescript
-new QueryBox(config: QueryBoxConfig)
-```
-
-#### Methods
-
-- **`search(): void`** - Opens the search panel
-- **`chat(): void`** - Opens the chat panel
-- **`destroy(): void`** - Destroys the widget and cleans up
-- **`getConfig(): QueryBoxConfig`** - Returns the current configuration
-
-## 🛠️ Development
-
-### Prerequisites
-
-- Node.js 18+
-- pnpm (recommended), npm, or yarn
-
-### Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/jedrazb/querybox.git
-cd querybox
-
-# Install pnpm (if not already installed)
-npm install -g pnpm
-
-# Install dependencies
-pnpm install
-
-# Start development server (opens documentation website)
-pnpm dev
-```
-
-The dev server will open at `http://localhost:5173` with the documentation website.
-
-### Build
-
-```bash
-# Build for production
-pnpm build
-
-# Type check
-pnpm type-check
-
-# Preview production build
-pnpm preview
-```
-
-### Project Structure
-
-```
-querybox/
-├── src/
-│   ├── index.ts              # Main entry point
-│   ├── QueryBox.ts           # Main widget class
-│   ├── types.ts              # TypeScript types
-│   ├── components/           # UI components
-│   │   ├── BasePanel.ts      # Base panel class
-│   │   ├── SearchPanel.ts    # Search panel component
-│   │   └── ChatPanel.ts      # Chat panel component
-│   ├── api/                  # API clients
-│   │   ├── elasticsearch.ts  # Elasticsearch client
-│   │   └── chat-client.ts    # Chat/agent client
-│   └── styles/               # CSS styles
-│       └── main.css          # Main stylesheet
-├── examples/                 # Usage examples
-│   ├── index.html           # Interactive examples
-│   ├── standalone.html      # UMD example
-│   ├── nextjs-example.tsx   # Next.js example
-│   └── wordpress-example.html # WordPress example
-├── dist/                     # Build output
-├── vite.config.ts           # Vite configuration
-├── tsconfig.json            # TypeScript configuration
-└── package.json             # Package manifest
-```
-
-## 🔌 API Integration
-
-### Authentication
-
-The widget uses API key authentication. Include your API key when initializing:
-
-```javascript
-const querybox = new QueryBox({
-  host: "https://your-api-host.com",
-  apiKey: "your-api-key",
-  indexName: "my-website-content",
-  agentId: "optional-agent-id",
+new QueryBox({
+  apiEndpoint: "...",
+  classNames: {
+    panel: "my-custom-panel",
+    overlay: "my-custom-overlay",
+  },
 });
 ```
 
-All API requests include the `Authorization: ApiKey <your-api-key>` header.
+## 🚢 Deployment
 
-### Elasticsearch Search
-
-The widget uses Elasticsearch's `_search` API with:
-
-- Multi-match queries across title, content, and description fields
-- Fuzzy matching for typo tolerance
-- Field boosting (title^2)
-- Highlighting support
-
-### Chat/Agent API
-
-The widget expects a streaming chat API endpoint with:
-
-- POST `/api/agents/{agentId}/converse`
-- Streaming responses (SSE or NDJSON)
-- Tool call and tool result support
-
-## 🎯 Roadmap
-
-Current scaffolding provides:
-
-- ✅ Widget architecture and component structure
-- ✅ Search and chat UI panels
-- ✅ API client stubs for Elasticsearch and chat
-- ✅ Multiple embedding methods (npm, UMD, ESM)
-- ✅ **Apple glassmorphism design** with frosted glass effects
-- ✅ Light/dark mode with automatic theme switching
-- ✅ Smooth animations and micro-interactions
-- ✅ Example implementations
-
-Next steps:
-
-- 🔄 Connect to real Elasticsearch endpoint
-- 🔄 Integrate with agent builder converse API
-- 🔄 Add comprehensive error handling
-- 🔄 Add unit tests
-- 🔄 Add keyboard navigation
-- 🔄 Add accessibility improvements (ARIA labels, focus management)
-- 🔄 Add result highlighting and snippets
-- 🔄 Add chat history persistence
-- 🔄 Add file upload support for chat
-- 🔄 Add markdown rendering for chat responses
-
-## 📦 NPM Package
-
-The package is published as [`@jedrazb/querybox`](https://www.npmjs.com/package/@jedrazb/querybox) on npm.
-
-### Installation
+### Widget (NPM)
 
 ```bash
-npm install @jedrazb/querybox
-# or
-pnpm add @jedrazb/querybox
-# or
-yarn add @jedrazb/querybox
+cd packages/widget
+pnpm build
+npm publish
 ```
 
-### CDN Links
+### App (Vercel)
 
-You can also use it directly from a CDN:
-
-**unpkg:**
-
-```html
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/@jedrazb/querybox/dist/style.css"
-/>
-<script src="https://unpkg.com/@jedrazb/querybox/dist/querybox.umd.js"></script>
+```bash
+cd packages/app
+vercel --prod
 ```
 
-**jsDelivr:**
-
-```html
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@jedrazb/querybox/dist/style.css"
-/>
-<script src="https://cdn.jsdelivr.net/npm/@jedrazb/querybox/dist/querybox.umd.js"></script>
-```
-
-## 📄 License
-
-MIT
-
-## 🌐 Documentation Website
-
-The documentation is available as a beautiful website with glassmorphism design:
-
-- **Local**: `pnpm dev` → `http://localhost:5173`
-- **Production**: https://jedrazb.github.io/querybox (or your deployed URL)
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for deployment instructions.
+Alternative platforms: Railway, Render, Netlify, AWS, Google Cloud
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
-See **[Contributing Guide](docs/CONTRIBUTING.md)** for guidelines.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+MIT © [jedrazb](https://github.com/jedrazb)
+
+## 🙏 Acknowledgments
+
+- Built with [Elasticsearch](https://www.elastic.co/)
+- UI inspired by glassmorphism design trends
+- Powered by [Next.js](https://nextjs.org/) and [Vite](https://vitejs.dev/)
+
+## 📧 Support
+
+- 📫 Issues: [GitHub Issues](https://github.com/jedrazb/querybox/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/jedrazb/querybox/discussions)
+- 📖 Docs: [Documentation](./docs)
+
+---
+
+<div align="center">
+Made with ❤️ by <a href="https://github.com/jedrazb">jedrazb</a>
+</div>
