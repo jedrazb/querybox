@@ -1,15 +1,13 @@
 import type { QueryBoxConfig } from "./types";
-import { SearchPanel } from "./components/SearchPanel";
-import { ChatPanel } from "./components/ChatPanel";
+import { UnifiedPanel } from "./components/UnifiedPanel";
 
 /**
  * Main QueryBox widget class
- * Provides search() and chat() methods to open respective panels
+ * Provides search() and chat() methods to open the panel in the appropriate mode
  */
 export class QueryBox {
   private config: Required<QueryBoxConfig>;
-  private searchPanel: SearchPanel | null = null;
-  private chatPanel: ChatPanel | null = null;
+  private panel: UnifiedPanel | null = null;
   private container: HTMLElement;
 
   constructor(config: QueryBoxConfig) {
@@ -86,51 +84,42 @@ export class QueryBox {
   }
 
   /**
-   * Open the search panel
+   * Open the panel in search mode
    */
   public search(): void {
-    // Close chat panel if open
-    if (this.chatPanel) {
-      this.chatPanel.close();
+    if (!this.panel) {
+      this.panel = new UnifiedPanel(this.config, this.container, "search");
     }
 
-    // Create or reopen search panel
-    if (!this.searchPanel) {
-      this.searchPanel = new SearchPanel(this.config, this.container);
+    if (this.panel.getCurrentMode() !== "search") {
+      this.panel.switchToMode("search");
     }
 
-    this.searchPanel.open();
+    this.panel.open();
   }
 
   /**
-   * Open the chat panel
+   * Open the panel in chat mode
    */
   public chat(): void {
-    // Close search panel if open
-    if (this.searchPanel) {
-      this.searchPanel.close();
+    if (!this.panel) {
+      this.panel = new UnifiedPanel(this.config, this.container, "chat");
     }
 
-    // Create or reopen chat panel
-    if (!this.chatPanel) {
-      this.chatPanel = new ChatPanel(this.config, this.container);
+    if (this.panel.getCurrentMode() !== "chat") {
+      this.panel.switchToMode("chat");
     }
 
-    this.chatPanel.open();
+    this.panel.open();
   }
 
   /**
    * Destroy the widget and clean up
    */
   public destroy(): void {
-    if (this.searchPanel) {
-      this.searchPanel.destroy();
-      this.searchPanel = null;
-    }
-
-    if (this.chatPanel) {
-      this.chatPanel.destroy();
-      this.chatPanel = null;
+    if (this.panel) {
+      this.panel.destroy();
+      this.panel = null;
     }
   }
 

@@ -77,6 +77,50 @@ export abstract class BasePanel {
   }
 
   /**
+   * Hide the panel without closing (for mode switching)
+   */
+  public hide(): void {
+    if (this.panel) {
+      this.panel.style.display = "none";
+    }
+  }
+
+  /**
+   * Show the panel (for mode switching)
+   */
+  public show(): void {
+    if (!this.overlay) {
+      this.overlay = this.createOverlay();
+      this.container.appendChild(this.overlay);
+    }
+
+    if (!this.panel) {
+      this.panel = this.createPanel();
+      this.container.appendChild(this.panel);
+    }
+
+    this.panel.style.display = "";
+
+    // Ensure visibility
+    if (!this.isOpen) {
+      requestAnimationFrame(() => {
+        if (this.overlay)
+          this.overlay.classList.add("querybox-overlay--visible");
+        if (this.panel) this.panel.classList.add("querybox-panel--visible");
+      });
+      this.isOpen = true;
+      this.onOpen();
+    }
+  }
+
+  /**
+   * Get the panel element
+   */
+  public getElement(): HTMLElement | null {
+    return this.panel;
+  }
+
+  /**
    * Destroy the panel and clean up
    */
   public destroy(): void {

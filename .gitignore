@@ -17,6 +17,9 @@ dist-ssr
 
 # Generated docs
 public/docs/*.html
+public/dist/*.js
+public/dist/*.css
+!public/dist/README.md
 
 # Lock files (keep only pnpm-lock.yaml)
 package-lock.json

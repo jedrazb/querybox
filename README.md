@@ -1,6 +1,6 @@
 # 🔍 QueryBox Widget
 
-A lightweight, embeddable JavaScript widget that provides search and chat functionality powered by Elasticsearch and agent builder APIs.
+A lightweight, embeddable JavaScript widget for search and AI chat powered by Elasticsearch.
 
 > **📖 [View Documentation Website](https://jedrazb.github.io/querybox)** (or your deployed URL)
 
