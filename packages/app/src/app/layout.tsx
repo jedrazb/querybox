@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   description:
     "Add powerful search and AI-powered chat to any website. Powered by Elasticsearch.",
   keywords: ["search", "chat", "widget", "elasticsearch", "ai"],
+  openGraph: {
+    title: "QueryBox - Website Search & Chat Widget",
+    description:
+      "Add powerful search and AI-powered chat to any website. Powered by Elasticsearch.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
