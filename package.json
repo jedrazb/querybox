@@ -8,7 +8,7 @@
     "dev": "pnpm --parallel dev",
     "dev:widget": "pnpm --filter @jedrazb/querybox dev",
     "dev:app": "pnpm --filter @jedrazb/querybox-app dev",
-    "build": "pnpm --filter @jedrazb/querybox-shared build && pnpm --filter @jedrazb/querybox build && cp packages/widget/dist/style.css packages/app/public/querybox.css && pnpm --filter @jedrazb/querybox-app build",
+    "build": "pnpm install && pnpm --filter @jedrazb/querybox-shared build && pnpm --filter @jedrazb/querybox build && cp packages/widget/dist/style.css packages/app/public/querybox.css && pnpm --filter @jedrazb/querybox-app build",
     "build:widget": "pnpm --filter @jedrazb/querybox build && cp packages/widget/dist/style.css packages/app/public/querybox.css",
     "build:app": "pnpm --filter @jedrazb/querybox-app build",
     "type-check": "pnpm -r type-check",
