@@ -16,6 +16,10 @@ const outputDir = path.join(rootDir, "public", "docs");
 const distDir = path.join(rootDir, "dist");
 const publicDistDir = path.join(rootDir, "public", "dist");
 
+// Determine base path based on NODE_ENV
+const isProduction = process.env.NODE_ENV === "production";
+const basePath = isProduction ? "/querybox" : "";
+
 // Create output directory
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
@@ -199,8 +203,8 @@ function markdownToHtml(markdown, title, filename) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title} - QueryBox Documentation</title>
-  <link rel="stylesheet" href="/querybox/styles.css">
-  <link rel="stylesheet" href="/querybox/dist/style.css">
+  <link rel="stylesheet" href="${basePath}/styles.css">
+  <link rel="stylesheet" href="${basePath}/dist/style.css">
   <style>
     /* Documentation layout */
     .doc-header {
@@ -589,13 +593,13 @@ function markdownToHtml(markdown, title, filename) {
 <body>
   <header class="doc-header">
     <div class="doc-header-content">
-      <a href="/querybox/" class="doc-logo">
+      <a href="${basePath}/" class="doc-logo">
         <span>🔍</span>
         <span>QueryBox</span>
       </a>
       <nav class="doc-nav">
-        <a href="/querybox/">Home</a>
-        <a href="/querybox/docs/README.html">Docs</a>
+        <a href="${basePath}/">Home</a>
+        <a href="${basePath}/docs/README.html">Docs</a>
         <a href="https://github.com/jedrazb/querybox" target="_blank">GitHub</a>
         <button class="demo-search-btn" onclick="queryboxDemo?.search()" title="Try Search">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -625,10 +629,10 @@ function markdownToHtml(markdown, title, filename) {
         © ${new Date().getFullYear()} QueryBox. MIT License.
       </div>
       <div class="doc-footer-links">
-        <a href="/querybox/docs/QUICKSTART.html">Quick Start</a>
-        <a href="/querybox/docs/CONFIG.html">Configuration</a>
-        <a href="/querybox/docs/STYLING.html">Styling</a>
-        <a href="/querybox/docs/CONTRIBUTING.html">Contributing</a>
+        <a href="${basePath}/docs/QUICKSTART.html">Quick Start</a>
+        <a href="${basePath}/docs/CONFIG.html">Configuration</a>
+        <a href="${basePath}/docs/STYLING.html">Styling</a>
+        <a href="${basePath}/docs/CONTRIBUTING.html">Contributing</a>
       </div>
     </div>
   </footer>
@@ -706,7 +710,7 @@ function markdownToHtml(markdown, title, filename) {
   }
 
   <!-- QueryBox Widget Demo -->
-  <script src="/querybox/dist/querybox.umd.js"></script>
+  <script src="${basePath}/dist/querybox.umd.js"></script>
   <script>
     // Initialize QueryBox widget for demo
     // Note: Replace with your actual configuration
