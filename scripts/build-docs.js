@@ -840,6 +840,54 @@ function markdownToHtml(markdown, title, filename) {
 </html>`;
 }
 
+/**
+ * Generate sitemap.xml dynamically
+ */
+function generateSitemap(docFiles) {
+  const baseUrl = "https://jedrazb.github.io/querybox";
+
+  // Define page priorities and change frequencies
+  const pagePriorities = {
+    index: { priority: "1.0", changefreq: "weekly" },
+    README: { priority: "0.9", changefreq: "weekly" },
+    QUICKSTART: { priority: "0.9", changefreq: "weekly" },
+    CONFIG: { priority: "0.8", changefreq: "monthly" },
+    STYLING: { priority: "0.8", changefreq: "monthly" },
+    CONTRIBUTING: { priority: "0.6", changefreq: "monthly" },
+  };
+
+  let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${baseUrl}/</loc>
+    <priority>${pagePriorities.index.priority}</priority>
+    <changefreq>${pagePriorities.index.changefreq}</changefreq>
+  </url>
+`;
+
+  // Add documentation pages
+  docFiles.forEach((file) => {
+    const htmlFile = file.replace(".md", ".html");
+    const pageName = file.replace(".md", "");
+    const pageInfo = pagePriorities[pageName] || {
+      priority: "0.7",
+      changefreq: "monthly",
+    };
+
+    sitemap += `  <url>
+    <loc>${baseUrl}/docs/${htmlFile}</loc>
+    <priority>${pageInfo.priority}</priority>
+    <changefreq>${pageInfo.changefreq}</changefreq>
+  </url>
+`;
+  });
+
+  sitemap += `</urlset>
+`;
+
+  return sitemap;
+}
+
 // Convert all markdown files
 const files = fs.readdirSync(docsDir).filter((f) => f.endsWith(".md"));
 
@@ -854,5 +902,20 @@ files.forEach((file) => {
   fs.writeFileSync(path.join(outputDir, outputFile), html);
   console.log(`✅ ${file} → docs/${outputFile}`);
 });
+
+// Generate sitemap
+console.log("\n🗺️  Generating sitemap...\n");
+const sitemap = generateSitemap(files);
+const publicDir = path.join(rootDir, "public");
+const sitemapPath = path.join(publicDir, "sitemap.xml");
+fs.writeFileSync(sitemapPath, sitemap);
+console.log(`✅ sitemap.xml generated`);
+
+// Also copy to dist if it exists
+const distSitemapPath = path.join(distDir, "sitemap.xml");
+if (fs.existsSync(distDir)) {
+  fs.writeFileSync(distSitemapPath, sitemap);
+  console.log(`✅ sitemap.xml copied to dist/`);
+}
 
 console.log("\n✨ Documentation built successfully!");
