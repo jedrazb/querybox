@@ -1,8 +1,12 @@
 <div align="center">
 
-[Querybox](./assets/querybox-logo.svg)
+<img src="./assets/querybox-logo.svg" alt="Querybox logo" width="400">
+
+Lighweight, embeddable website search and chat widget
 
 </div>
+
+
 
 ---
 
