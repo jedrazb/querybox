@@ -3,6 +3,7 @@ import { resolve } from "path";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
+  base: "/querybox/",
   plugins: [
     dts({
       insertTypesEntry: true,
