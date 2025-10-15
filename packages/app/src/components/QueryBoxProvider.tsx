@@ -1,5 +1,6 @@
 "use client";
 
+import { extractBaseDomain } from "@/lib/utils";
 import { createContext, useContext, useEffect, useRef, ReactNode } from "react";
 
 // We'll dynamically import QueryBox to avoid SSR issues
@@ -26,19 +27,14 @@ export function QueryBoxProvider({ children }: { children: ReactNode }) {
           QueryBox = module.default;
 
           // Use environment variable for API URL, fallback to production
-          const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-          const domain = "demo.querybox.io"; // Demo domain
+          const publicUrl = process.env.NEXT_PUBLIC_API_URL || "";
+          const processedDomain = extractBaseDomain(publicUrl);
 
           // Initialize with demo endpoint
           queryboxRef.current = new QueryBox({
-            apiEndpoint: `${apiUrl}/api/querybox/${domain}/v1`,
+            apiEndpoint: `/api/querybox/${processedDomain}/v1`,
             primaryColor: "#FF10D3",
           });
-
-          console.log(
-            "✅ QueryBox initialized with endpoint:",
-            `${apiUrl}/api/querybox/${domain}/v1`
-          );
         } catch (error) {
           console.error("❌ Failed to load QueryBox:", error);
         }

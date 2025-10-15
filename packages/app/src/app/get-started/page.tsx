@@ -269,6 +269,73 @@ function GetStartedContent() {
 
   return (
     <main className={styles.container}>
+      {/* SEO-friendly content for crawlers */}
+      <div className="sr-only">
+        <h1>Get Started with QueryBox - Setup Guide</h1>
+        <p>
+          QueryBox is an embeddable JavaScript widget that adds powerful search
+          and AI-powered chat to any website. Follow these three simple steps to
+          get started:
+        </p>
+        <section>
+          <h2>Step 1: Add Your Website</h2>
+          <p>
+            Enter your website domain (e.g., example.com) to create an AI agent
+            powered by Elasticsearch. QueryBox will validate your domain and set
+            up the necessary infrastructure including an Elasticsearch index and
+            AI agent configuration. This step establishes the foundation for
+            your search and chat functionality.
+          </p>
+        </section>
+        <section>
+          <h2>Step 2: Crawl Your Website</h2>
+          <p>
+            Start the web crawler to index your website content. The crawler
+            will automatically discover and index all accessible pages from your
+            domain. Once crawling is complete, your content will be searchable
+            and available for AI-powered chat responses. You can re-crawl
+            anytime to update the index with new content.
+          </p>
+        </section>
+        <section>
+          <h2>Step 3: Test and Install</h2>
+          <p>
+            Test QueryBox with your indexed content using our live preview. You
+            can customize the appearance by choosing a theme (light, dark, or
+            auto), setting a primary color, and adding a custom title. Once
+            satisfied, copy the installation code snippet and add it to your
+            website. Installation methods include NPM package, CDN script tag,
+            or React component. The widget provides both search and AI chat
+            functionality powered by your website content.
+          </p>
+        </section>
+        <section>
+          <h3>Key Features</h3>
+          <ul>
+            <li>
+              Elasticsearch-powered search: Fast, relevant search results from
+              your website content
+            </li>
+            <li>
+              AI chat assistant: Intelligent responses based on your website
+              content using Elastic Agent Builder
+            </li>
+            <li>
+              Easy installation: Multiple installation methods including NPM,
+              CDN, and React
+            </li>
+            <li>
+              Customizable appearance: Match your brand with custom themes and
+              colors
+            </li>
+            <li>
+              Automatic crawling: Keep your search index up-to-date with
+              periodic re-crawling
+            </li>
+          </ul>
+        </section>
+      </div>
+
       <div className={styles.header}>
         <h1 className={styles.title}>Get Started with QueryBox</h1>
         <p className={styles.subtitle}>

@@ -19,6 +19,41 @@ export default function Docs() {
 
   return (
     <div className={styles.docsLayout}>
+      {/* SEO-friendly content for crawlers */}
+      <div className="sr-only">
+        <h1>QueryBox Documentation - Complete Guide</h1>
+        <p>
+          QueryBox is a lightweight, embeddable JavaScript widget that adds
+          powerful search and AI-powered chat capabilities to any website. This
+          documentation covers installation, configuration, and API reference.
+        </p>
+        <nav aria-label="Documentation sections">
+          <h2>Documentation Contents</h2>
+          <ul>
+            <li>
+              <a href="#overview">Overview</a> - Introduction to QueryBox and
+              its features
+            </li>
+            <li>
+              <a href="#installation">Installation</a> - How to install QueryBox
+              using NPM, CDN, or React
+            </li>
+            <li>
+              <a href="#quick-start">Quick Start</a> - Get started quickly with
+              basic usage examples
+            </li>
+            <li>
+              <a href="#configuration">Configuration</a> - Customize QueryBox
+              with themes, colors, and options
+            </li>
+            <li>
+              <a href="#api">API Reference</a> - Complete API documentation for
+              QueryBox methods
+            </li>
+          </ul>
+        </nav>
+      </div>
+
       {/* Sidebar with TOC */}
       <aside className={styles.sidebar}>
         <button className={styles.searchButton} onClick={search}>

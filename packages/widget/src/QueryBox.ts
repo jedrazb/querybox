@@ -68,17 +68,21 @@ export class QueryBox {
       errors.push({
         field: "apiEndpoint",
         message:
-          "API endpoint is required (e.g., https://api.querybox.io/api/querybox/yourdomain.com/v1)",
+          "API endpoint is required (e.g., https://api.querybox.io/api/querybox/yourdomain.com/v1 or /api/querybox/yourdomain.com/v1)",
       });
     } else {
-      // Validate URL format
-      try {
-        new URL(config.apiEndpoint);
-      } catch {
-        errors.push({
-          field: "apiEndpoint",
-          message: "API endpoint must be a valid URL",
-        });
+      // Validate URL format - allow absolute URLs or relative paths
+      const isRelativePath = config.apiEndpoint.startsWith("/");
+      if (!isRelativePath) {
+        try {
+          new URL(config.apiEndpoint);
+        } catch {
+          errors.push({
+            field: "apiEndpoint",
+            message:
+              "API endpoint must be a valid URL or a relative path starting with /",
+          });
+        }
       }
     }
 
