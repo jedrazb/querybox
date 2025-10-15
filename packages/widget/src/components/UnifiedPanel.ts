@@ -335,21 +335,28 @@ export class UnifiedPanel extends BasePanel {
     const resultsHtml = results
       .map(
         (result) => `
-      <div class="querybox-search__result">
-        <h3 class="querybox-search__result-title">${this.escapeHtml(
-          result.title
-        )}</h3>
-        <p class="querybox-search__result-content">${this.escapeHtml(
-          result.content
-        )}</p>
-        ${
-          result.url
-            ? `<a href="${result.url}" class="querybox-search__result-link" target="_blank">
-            View →
-          </a>`
-            : ""
-        }
-      </div>
+      ${
+        result.url
+          ? `<a href="${this.escapeHtml(
+              result.url
+            )}" class="querybox-search__result" target="_blank" rel="noopener noreferrer">
+          <h3 class="querybox-search__result-title">${this.sanitizeWithHighlights(
+            result.title
+          )}</h3>
+          <p class="querybox-search__result-content">${this.sanitizeWithHighlights(
+            result.content
+          )}</p>
+          <span class="querybox-search__result-link">View →</span>
+        </a>`
+          : `<div class="querybox-search__result">
+          <h3 class="querybox-search__result-title">${this.sanitizeWithHighlights(
+            result.title
+          )}</h3>
+          <p class="querybox-search__result-content">${this.sanitizeWithHighlights(
+            result.content
+          )}</p>
+        </div>`
+      }
     `
       )
       .join("");
@@ -514,6 +521,19 @@ export class UnifiedPanel extends BasePanel {
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  /**
+   * Sanitize HTML but allow <em> tags for highlighting
+   * Escapes all HTML first, then restores only <em> and </em> tags
+   */
+  private sanitizeWithHighlights(text: string): string {
+    // First escape all HTML to prevent XSS
+    const escaped = this.escapeHtml(text);
+    // Then restore only <em> and </em> tags for highlighting
+    return escaped
+      .replace(/&lt;em&gt;/g, "<em>")
+      .replace(/&lt;\/em&gt;/g, "</em>");
   }
 
   protected onOpen(): void {

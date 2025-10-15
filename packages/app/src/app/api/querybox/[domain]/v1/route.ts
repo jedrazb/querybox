@@ -44,6 +44,42 @@ export async function GET(
       );
     }
 
+    // Verify that the resources in the config actually exist
+    const kibanaClient = getKibanaClient();
+
+    // Check if index exists
+    const indexExists = await esClient.indexExists(config.indexName);
+
+    // Check if agent exists
+    let agentExists = false;
+    if (config.agentId) {
+      try {
+        await kibanaClient.getAgent(config.agentId);
+        agentExists = true;
+      } catch (error) {
+        console.error("Agent not found:", config.agentId);
+      }
+    }
+
+    // If either resource doesn't exist, return exists: false
+    if (!indexExists || !agentExists) {
+      return NextResponse.json(
+        {
+          exists: false,
+          domain: baseDomain,
+          reason: !indexExists ? "Index not found" : "Agent not found",
+        },
+        {
+          status: 200,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+          },
+        }
+      );
+    }
+
     // Get document count
     const docCount = await esClient.getDocumentCount(config.indexName);
 

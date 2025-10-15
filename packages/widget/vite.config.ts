@@ -3,7 +3,6 @@ import { resolve } from "path";
 import dts from "vite-plugin-dts";
 
 export default defineConfig(({ command }) => ({
-  base: command === "build" ? "/querybox/" : "/",
   plugins: [
     dts({
       insertTypesEntry: true,
@@ -34,7 +33,7 @@ export default defineConfig(({ command }) => ({
     minify: "esbuild",
   },
   server: {
-    open: "/",
+    open: "http://localhost:3000",
   },
   publicDir: "public",
   root: ".",
