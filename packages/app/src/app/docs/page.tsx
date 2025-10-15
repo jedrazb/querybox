@@ -190,6 +190,17 @@ querybox.chat();`}</code>
               </tr>
               <tr>
                 <td>
+                  <code>initialQuestions</code>
+                </td>
+                <td>string[]</td>
+                <td>undefined</td>
+                <td>
+                  Array of suggested questions to display in empty chat state
+                  (max 3). Users can click these to start a conversation.
+                </td>
+              </tr>
+              <tr>
+                <td>
                   <code>container</code>
                 </td>
                 <td>HTMLElement | string</td>
@@ -220,6 +231,11 @@ querybox.chat();`}</code>
   theme: 'dark',
   primaryColor: '#10b981',
   title: 'Documentation',
+  initialQuestions: [
+    'How do I get started?',
+    'What are the pricing options?',
+    'How do I integrate with React?'
+  ],
   container: '#querybox-container',
   classNames: {
     panel: 'custom-panel',

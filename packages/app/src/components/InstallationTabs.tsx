@@ -11,6 +11,7 @@ interface InstallationTabsProps {
   theme?: string;
   primaryColor?: string;
   title?: string;
+  initialQuestions?: string[];
 }
 
 export default function InstallationTabs({
@@ -19,15 +20,25 @@ export default function InstallationTabs({
   theme = "auto",
   primaryColor = "#ec4899",
   title = "",
+  initialQuestions = [],
 }: InstallationTabsProps) {
   const [activeTab, setActiveTab] = useState<InstallationType>("cdn");
 
   const apiEndpoint = `${apiUrl}/api/querybox/${domain}/v1`;
 
   // Helper to generate config string
+  const initialQuestionsStr =
+    initialQuestions && initialQuestions.length > 0
+      ? `,\n    initialQuestions: [\n      ${initialQuestions
+          .map((q) => `'${q}'`)
+          .join(",\n      ")}\n    ]`
+      : "";
+
   const configString = `apiEndpoint: '${apiEndpoint}',
     theme: '${theme}',
-    primaryColor: '${primaryColor}'${title ? `,\n    title: '${title}'` : ""}`;
+    primaryColor: '${primaryColor}'${
+    title ? `,\n    title: '${title}'` : ""
+  }${initialQuestionsStr}`;
 
   const cdnCode = `<!-- Add to your HTML <head> -->
 <link rel="stylesheet" href="https://unpkg.com/@jedrazb/querybox/dist/style.css">

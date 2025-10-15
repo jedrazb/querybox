@@ -46,6 +46,11 @@ const querybox = new QueryBox({
   apiEndpoint: "https://api.querybox.io/api/querybox/yoursite.com/v1",
   theme: "auto",
   primaryColor: "#6366f1",
+  initialQuestions: [
+    "How do I get started?",
+    "What are the pricing options?",
+    "How do I integrate with React?",
+  ],
 });
 
 // Open search or chat
@@ -91,6 +96,7 @@ QueryBox is a monorepo with three packages:
   theme?: 'light'|'dark'|'auto';  // Default: 'auto'
   primaryColor?: string;      // Default: '#007aff'
   title?: string;             // Optional header title
+  initialQuestions?: string[];  // Optional suggested questions (max 3)
   container?: HTMLElement|string;
   classNames?: { panel, overlay, ... }
 }

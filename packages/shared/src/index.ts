@@ -30,6 +30,8 @@ export interface QueryBoxConfig {
   primaryColor?: string;
   /** Optional title to display at the top of the QueryBox panel */
   title?: string;
+  /** Suggested questions to display in empty chat state (max 3) */
+  initialQuestions?: string[];
   /** Custom CSS class names */
   classNames?: Partial<{
     panel: string;

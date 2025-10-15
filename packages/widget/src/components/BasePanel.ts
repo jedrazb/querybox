@@ -1,8 +1,10 @@
 import type { QueryBoxConfig } from "@jedrazb/querybox-shared";
 
-// Type for validated config with all required fields and optional title
-type ValidatedConfig = Required<Omit<QueryBoxConfig, "title">> &
-  Pick<QueryBoxConfig, "title">;
+// Type for validated config with all required fields and optional title/initialQuestions
+type ValidatedConfig = Required<
+  Omit<QueryBoxConfig, "title" | "initialQuestions">
+> &
+  Pick<QueryBoxConfig, "title" | "initialQuestions">;
 
 /**
  * Base panel class with common functionality

@@ -5,9 +5,11 @@ import {
   type ValidationError,
 } from "./components/ValidationPanel";
 
-// Type for validated config with all required fields and optional title
-type ValidatedConfig = Required<Omit<QueryBoxConfig, "title">> &
-  Pick<QueryBoxConfig, "title">;
+// Type for validated config with all required fields and optional title/initialQuestions
+type ValidatedConfig = Required<
+  Omit<QueryBoxConfig, "title" | "initialQuestions">
+> &
+  Pick<QueryBoxConfig, "title" | "initialQuestions">;
 
 /**
  * Main QueryBox widget class
@@ -29,12 +31,16 @@ export class QueryBox {
 
     // If no errors, create valid config
     if (this.validationErrors.length === 0) {
+      // Limit suggested questions to max 3
+      const initialQuestions = config.initialQuestions?.slice(0, 3);
+
       this.validConfig = {
         apiEndpoint: config.apiEndpoint,
         container: config.container || document.body,
         theme: config.theme || "auto",
         primaryColor: config.primaryColor || "#007aff",
         title: config.title || undefined,
+        initialQuestions: initialQuestions || undefined,
         classNames: config.classNames || {},
       };
     }

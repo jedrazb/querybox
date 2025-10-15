@@ -10,9 +10,11 @@ import type {
 import { QUERYBOX_WEBSITE_URL } from "@jedrazb/querybox-shared";
 import { marked } from "marked";
 
-// Type for validated config with all required fields and optional title
-type ValidatedConfig = Required<Omit<QueryBoxConfig, "title">> &
-  Pick<QueryBoxConfig, "title">;
+// Type for validated config with all required fields and optional title/initialQuestions
+type ValidatedConfig = Required<
+  Omit<QueryBoxConfig, "title" | "initialQuestions">
+> &
+  Pick<QueryBoxConfig, "title" | "initialQuestions">;
 
 export type PanelMode = "search" | "chat";
 
@@ -126,6 +128,21 @@ export class UnifiedPanel extends BasePanel {
   }
 
   private createChatContent(): string {
+    const initialQuestionsHtml =
+      this.config.initialQuestions && this.config.initialQuestions.length > 0
+        ? `<div class="querybox-chat__suggested-questions">
+          ${this.config.initialQuestions
+            .map(
+              (question, index) => `
+            <button class="querybox-chat__suggested-question" data-question-index="${index}">
+              ${this.escapeHtml(question)}
+            </button>
+          `
+            )
+            .join("")}
+        </div>`
+        : "";
+
     return `
       <div class="querybox-chat-container" style="display: none;">
         <div class="querybox-chat__messages">
@@ -137,18 +154,21 @@ export class UnifiedPanel extends BasePanel {
             <p>Hello! How can I help you today?</p>
           </div>
         </div>
-        <div class="querybox-chat__input-wrapper">
-          <input
-            type="text"
-            class="querybox-chat__input"
-            placeholder="Type your message..."
-            autocomplete="off"
-          />
-          <button class="querybox-chat__send" aria-label="Send message">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M2 10l16-8-8 16-2-8-6-0z" fill="currentColor"/>
-            </svg>
-          </button>
+        <div class="querybox-chat__input-container">
+          ${initialQuestionsHtml}
+          <div class="querybox-chat__input-wrapper">
+            <input
+              type="text"
+              class="querybox-chat__input"
+              placeholder="Type your message..."
+              autocomplete="off"
+            />
+            <button class="querybox-chat__send" aria-label="Send message">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M2 10l16-8-8 16-2-8-6-0z" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     `;
@@ -199,6 +219,23 @@ export class UnifiedPanel extends BasePanel {
         }
       });
     }
+
+    // Suggested question buttons
+    const initialQuestions = panel.querySelectorAll(
+      ".querybox-chat__suggested-question"
+    );
+    initialQuestions.forEach((button) => {
+      button.addEventListener("click", () => {
+        const index = parseInt(
+          button.getAttribute("data-question-index") || "0"
+        );
+        const question = this.config.initialQuestions?.[index];
+        if (question && this.chatInput) {
+          this.chatInput.value = question;
+          this.handleSend();
+        }
+      });
+    });
   }
 
   /**
@@ -564,8 +601,14 @@ export class UnifiedPanel extends BasePanel {
         </div>
       `;
       this.messageElements.clear();
+
+      // Show initial questions when no messages
+      this.showInitialQuestions();
       return;
     }
+
+    // Hide initial questions when there are messages
+    this.hideInitialQuestions();
 
     // Only render new messages, keep existing ones
     this.messages.forEach((message) => {
@@ -591,6 +634,30 @@ export class UnifiedPanel extends BasePanel {
     });
 
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  /**
+   * Show initial questions
+   */
+  private showInitialQuestions(): void {
+    const questionsContainer = this.panel?.querySelector(
+      ".querybox-chat__suggested-questions"
+    );
+    if (questionsContainer) {
+      (questionsContainer as HTMLElement).style.display = "flex";
+    }
+  }
+
+  /**
+   * Hide initial questions
+   */
+  private hideInitialQuestions(): void {
+    const questionsContainer = this.panel?.querySelector(
+      ".querybox-chat__suggested-questions"
+    );
+    if (questionsContainer) {
+      (questionsContainer as HTMLElement).style.display = "none";
+    }
   }
 
   private escapeHtml(text: string): string {

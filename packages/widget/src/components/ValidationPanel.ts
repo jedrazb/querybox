@@ -1,9 +1,11 @@
 import { BasePanel } from "./BasePanel";
 import type { QueryBoxConfig } from "@jedrazb/querybox-shared";
 
-// Type for validated config with all required fields and optional title
-type ValidatedConfig = Required<Omit<QueryBoxConfig, "title">> &
-  Pick<QueryBoxConfig, "title">;
+// Type for validated config with all required fields and optional title/initialQuestions
+type ValidatedConfig = Required<
+  Omit<QueryBoxConfig, "title" | "initialQuestions">
+> &
+  Pick<QueryBoxConfig, "title" | "initialQuestions">;
 
 export interface ValidationError {
   field: string;
@@ -28,6 +30,7 @@ export class ValidationPanel extends BasePanel {
       theme: config.theme || "auto",
       primaryColor: config.primaryColor || "#007aff",
       title: config.title,
+      initialQuestions: config.initialQuestions,
       classNames: config.classNames || {},
     };
     super(minimalConfig, container);

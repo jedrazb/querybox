@@ -21,6 +21,7 @@ interface TestDemoContextType {
       theme?: "light" | "dark" | "auto";
       primaryColor?: string;
       title?: string;
+      initialQuestions?: string[];
     }
   ) => Promise<void>;
   isReady: boolean;
@@ -62,6 +63,7 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
       theme?: "light" | "dark" | "auto";
       primaryColor?: string;
       title?: string;
+      initialQuestions?: string[];
     }
   ) => {
     if (!QueryBox) {
@@ -85,6 +87,7 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
         theme: config?.theme || "auto",
         primaryColor: config?.primaryColor || "#ec4899",
         title: config?.title,
+        initialQuestions: config?.initialQuestions,
       });
 
       setIsReady(true);

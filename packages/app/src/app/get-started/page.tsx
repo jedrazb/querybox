@@ -21,7 +21,7 @@ type DomainStatus = {
 function GetStartedContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { search, initializeForDomain, isReady } = useTestDemo();
+  const { chat, initializeForDomain, isReady } = useTestDemo();
 
   const [domain, setDomain] = useState("");
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set([0]));
@@ -32,6 +32,7 @@ function GetStartedContent() {
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
   const [primaryColor, setPrimaryColor] = useState("#ec4899");
   const [title, setTitle] = useState("");
+  const [initialQuestions, setinitialQuestions] = useState<string[]>([]);
 
   const cleanDomain = (input: string): string => {
     let cleaned = input.replace(/^https?:\/\//, "");
@@ -58,13 +59,18 @@ function GetStartedContent() {
   // Initialize QueryBox when domain is ready and has docs, or when config changes
   useEffect(() => {
     if (domain && status?.docCount && status.docCount > 0) {
-      initializeForDomain(domain, { theme, primaryColor, title });
+      initializeForDomain(domain, {
+        theme,
+        primaryColor,
+        title,
+        initialQuestions,
+      });
     }
-  }, [domain, status?.docCount, theme, primaryColor, title]);
+  }, [domain, status?.docCount, theme, primaryColor, title, initialQuestions]);
 
   const testQueryBox = () => {
     if (isReady) {
-      search();
+      chat();
     } else {
       console.warn("QueryBox not ready yet");
     }
@@ -582,8 +588,75 @@ function GetStartedContent() {
                           value={title}
                           onChange={(e) => setTitle(e.target.value)}
                           className={styles.input}
-                          placeholder="e.g., Help Center, Support"
+                          placeholder="(optional) e.g., Help Center, Support"
                         />
+                      </div>
+                      <div className={styles.configItem}>
+                        <label htmlFor="suggested-question-0">
+                          Initial questions
+                        </label>
+                        <div className={styles.questionsContainer}>
+                          {[0, 1, 2].map((index) => {
+                            const shouldShow =
+                              index === 0 ||
+                              (initialQuestions[index - 1] &&
+                                initialQuestions[index - 1].trim() !== "");
+
+                            if (!shouldShow) return null;
+
+                            return (
+                              <div
+                                key={index}
+                                className={styles.questionInputWrapper}
+                                style={{
+                                  animation:
+                                    index > 0
+                                      ? "slideIn 0.3s ease-out"
+                                      : "none",
+                                }}
+                              >
+                                <input
+                                  id={`suggested-question-${index}`}
+                                  type="text"
+                                  value={initialQuestions[index] || ""}
+                                  onChange={(e) => {
+                                    const newQuestions = [...initialQuestions];
+                                    newQuestions[index] = e.target.value;
+                                    setinitialQuestions(newQuestions);
+                                  }}
+                                  className={`${styles.input} ${
+                                    initialQuestions[index]
+                                      ? styles.inputWithRemove
+                                      : ""
+                                  }`}
+                                  placeholder={
+                                    index === 0
+                                      ? "(optional) e.g., How do I get started?"
+                                      : index === 1
+                                      ? "(optional) e.g., What are the pricing options?"
+                                      : "(optional) e.g., How do I integrate?"
+                                  }
+                                />
+                                {initialQuestions[index] && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const newQuestions =
+                                        initialQuestions.filter(
+                                          (_, i) => i !== index
+                                        );
+                                      setinitialQuestions(newQuestions);
+                                    }}
+                                    className={styles.removeQuestionBtn}
+                                    aria-label="Remove question"
+                                  >
+                                    ✕
+                                  </button>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
 
@@ -593,6 +666,7 @@ function GetStartedContent() {
                       theme={theme}
                       primaryColor={primaryColor}
                       title={title}
+                      initialQuestions={initialQuestions}
                     />
 
                     <div className={styles.ctaButtons}>

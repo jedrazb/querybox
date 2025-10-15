@@ -41,6 +41,10 @@ export function QueryBoxProvider({ children }: { children: ReactNode }) {
           queryboxRef.current = new QueryBox({
             apiEndpoint: `/api/querybox/${processedDomain}/v1`,
             primaryColor: "#FF10D3",
+            initialQuestions: [
+              "What is QueryBox?",
+              "How can I add QueryBox to my site?",
+            ],
           });
         } catch (error) {
           console.error("❌ Failed to load QueryBox:", error);
