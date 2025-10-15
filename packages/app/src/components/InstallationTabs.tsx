@@ -10,6 +10,7 @@ interface InstallationTabsProps {
   domain?: string;
   theme?: string;
   primaryColor?: string;
+  title?: string;
 }
 
 export default function InstallationTabs({
@@ -17,10 +18,16 @@ export default function InstallationTabs({
   domain = "{your-domain}",
   theme = "auto",
   primaryColor = "#ec4899",
+  title = "",
 }: InstallationTabsProps) {
   const [activeTab, setActiveTab] = useState<InstallationType>("cdn");
 
   const apiEndpoint = `${apiUrl}/api/querybox/${domain}/v1`;
+
+  // Helper to generate config string
+  const configString = `apiEndpoint: '${apiEndpoint}',
+    theme: '${theme}',
+    primaryColor: '${primaryColor}'${title ? `,\n    title: '${title}'` : ""}`;
 
   const cdnCode = `<!-- Add to your HTML <head> -->
 <link rel="stylesheet" href="https://unpkg.com/@jedrazb/querybox/dist/style.css">
@@ -29,9 +36,7 @@ export default function InstallationTabs({
 <!-- Add before closing </body> tag -->
 <script>
   const querybox = new QueryBox({
-    apiEndpoint: '${apiEndpoint}',
-    theme: '${theme}',
-    primaryColor: '${primaryColor}'
+    ${configString}
   });
 
   // Add keyboard shortcut (Cmd+K / Ctrl+K)
@@ -56,9 +61,7 @@ yarn add @jedrazb/querybox`;
 import '@jedrazb/querybox/dist/style.css';
 
 const querybox = new QueryBox({
-  apiEndpoint: '${apiEndpoint}',
-  theme: '${theme}',
-  primaryColor: '${primaryColor}'
+  ${configString}
 });
 
 // Open search
@@ -81,9 +84,7 @@ export function QueryBoxProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     queryboxRef.current = new QueryBox({
-      apiEndpoint: '${apiEndpoint}',
-      theme: '${theme}',
-      primaryColor: '${primaryColor}'
+      ${configString}
     });
 
     // Add keyboard shortcut
@@ -114,9 +115,7 @@ function App() {
   useEffect(() => {
     // Initialize QueryBox
     queryboxRef.current = new QueryBox({
-      apiEndpoint: '${apiEndpoint}',
-      theme: '${theme}',
-      primaryColor: '${primaryColor}'
+      ${configString}
     });
 
     // Add keyboard shortcut (Cmd+K / Ctrl+K)
@@ -158,9 +157,7 @@ export default App;`;
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const querybox = new QueryBox({
-      apiEndpoint: '${apiEndpoint}',
-      theme: '${theme}',
-      primaryColor: '${primaryColor}'
+      ${configString}
     });
 
     // Add keyboard shortcut (Cmd+K / Ctrl+K)

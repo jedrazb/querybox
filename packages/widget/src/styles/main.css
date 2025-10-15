@@ -150,19 +150,21 @@
 .querybox-header__left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   flex-shrink: 1;
   min-width: 0;
 }
 
 .querybox-header__title {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--querybox-text);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--querybox-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px;
+  max-width: 250px;
+  padding-right: 16px;
+  border-right: 2px solid var(--querybox-border);
 }
 
 .querybox-panel__close {

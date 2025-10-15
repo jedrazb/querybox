@@ -31,6 +31,7 @@ function GetStartedContent() {
   const [isCrawling, setIsCrawling] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
   const [primaryColor, setPrimaryColor] = useState("#ec4899");
+  const [title, setTitle] = useState("");
 
   const cleanDomain = (input: string): string => {
     let cleaned = input.replace(/^https?:\/\//, "");
@@ -57,9 +58,9 @@ function GetStartedContent() {
   // Initialize QueryBox when domain is ready and has docs, or when config changes
   useEffect(() => {
     if (domain && status?.docCount && status.docCount > 0) {
-      initializeForDomain(domain, { theme, primaryColor });
+      initializeForDomain(domain, { theme, primaryColor, title });
     }
-  }, [domain, status?.docCount, theme, primaryColor]);
+  }, [domain, status?.docCount, theme, primaryColor, title]);
 
   const testQueryBox = () => {
     if (isReady) {
@@ -88,6 +89,26 @@ function GetStartedContent() {
 
     const cleanedDomain = cleanDomain(targetDomain);
     setDomain(cleanedDomain);
+
+    // Client-side validation
+    const domainRegex = /^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i;
+    if (!domainRegex.test(cleanedDomain)) {
+      setError(
+        "Invalid domain format. Please enter a valid domain (e.g., example.com)"
+      );
+      setStatus(null);
+      setExpandedSteps(new Set([0])); // Keep step 0 expanded
+      return;
+    }
+
+    if (!cleanedDomain.includes(".")) {
+      setError(
+        "Please enter a complete domain (e.g., example.com, not just 'example')"
+      );
+      setStatus(null);
+      setExpandedSteps(new Set([0])); // Keep step 0 expanded
+      return;
+    }
 
     // Update URL query param
     if (cleanedDomain) {
@@ -125,7 +146,7 @@ function GetStartedContent() {
           new Set([checkData.docCount && checkData.docCount > 0 ? 2 : 1])
         );
       } else {
-        // Domain doesn't exist - create it via POST
+        // Domain doesn't exist - create it via POST (this will validate the domain)
         const setupResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${cleanedDomain}/v1`,
           {
@@ -138,6 +159,10 @@ function GetStartedContent() {
 
         if (!setupResponse.ok) {
           const errorData = await setupResponse.json();
+          // Check if it's a validation error
+          if (errorData.error === "Domain validation failed") {
+            throw new Error(errorData.message || "Domain validation failed");
+          }
           throw new Error(errorData.message || "Failed to setup domain");
         }
 
@@ -163,6 +188,7 @@ function GetStartedContent() {
     } catch (err: any) {
       setError(err.message || "Failed to connect to server");
       setStatus(null);
+      setExpandedSteps(new Set([0])); // Keep step 0 expanded on error
     } finally {
       setIsLoading(false);
     }
@@ -317,7 +343,10 @@ function GetStartedContent() {
                         type="text"
                         placeholder="example.com"
                         value={domain}
-                        onChange={(e) => setDomain(e.target.value)}
+                        onChange={(e) => {
+                          setDomain(e.target.value);
+                          setError(null); // Clear error when user types
+                        }}
                         onKeyPress={(e) => e.key === "Enter" && checkDomain()}
                         className={styles.input}
                         disabled={isLoading}
@@ -336,7 +365,7 @@ function GetStartedContent() {
                             }}
                           >
                             <div className={styles.dotSpinner} />
-                            Setting up...
+                            Validating domain...
                           </span>
                         ) : (
                           "Continue"
@@ -429,6 +458,15 @@ function GetStartedContent() {
                 {/* Step 2: Integration */}
                 {index === 2 && isExpanded && (
                   <div className={styles.stepBody}>
+                    <div className={styles.testSection}>
+                      <button
+                        onClick={testQueryBox}
+                        className={styles.primaryButton}
+                        disabled={!isReady}
+                      >
+                        {isReady ? "Live preview" : "Loading QueryBox..."}
+                      </button>
+                    </div>
                     <div className={styles.configSection}>
                       <h4 className={styles.configTitle}>Configuration</h4>
                       <div className={styles.configGrid}>
@@ -469,15 +507,17 @@ function GetStartedContent() {
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div>
-                      <button
-                        onClick={testQueryBox}
-                        className={styles.primaryButton}
-                        disabled={!isReady}
-                      >
-                        {isReady ? "Live preview" : "Loading QueryBox..."}
-                      </button>
+                      <div className={styles.configItem}>
+                        <label htmlFor="title-input">Title</label>
+                        <input
+                          id="title-input"
+                          type="text"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                          className={styles.input}
+                          placeholder="e.g., Help Center, Support"
+                        />
+                      </div>
                     </div>
 
                     <InstallationTabs
@@ -485,6 +525,7 @@ function GetStartedContent() {
                       domain={domain}
                       theme={theme}
                       primaryColor={primaryColor}
+                      title={title}
                     />
 
                     <div className={styles.ctaButtons}>
