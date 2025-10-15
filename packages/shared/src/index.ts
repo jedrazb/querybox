@@ -9,7 +9,7 @@
 /**
  * QueryBox website URL
  */
-export const QUERYBOX_WEBSITE_URL = "https://querybox.io";
+export const QUERYBOX_WEBSITE_URL = "https://querybox-app.vercel.app";
 
 // ============================================================================
 // Widget Configuration

@@ -30,7 +30,7 @@ document.getElementById("chat-btn").onclick = () => querybox.chat();
 
 ## Documentation
 
-For full documentation, visit: https://querybox.io
+For full documentation, visit: https://querybox-app.vercel.app
 
 ## License
 
