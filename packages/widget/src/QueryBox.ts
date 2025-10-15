@@ -29,6 +29,7 @@ export class QueryBox {
         apiEndpoint: config.apiEndpoint,
         container: config.container || document.body,
         theme: config.theme || "auto",
+        primaryColor: config.primaryColor || "#007aff",
         classNames: config.classNames || {},
       };
     }
@@ -107,6 +108,53 @@ export class QueryBox {
     } else {
       document.documentElement.setAttribute("data-querybox-theme", theme);
     }
+
+    // Apply primary color if provided
+    if (this.config.primaryColor) {
+      this.applyPrimaryColor(this.config.primaryColor);
+    }
+  }
+
+  /**
+   * Apply primary color as CSS variables
+   */
+  private applyPrimaryColor(color: string): void {
+    try {
+      // Convert hex to RGB for use in rgba() functions
+      const hex = color.replace("#", "");
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+
+      // Set CSS variables on the root
+      document.documentElement.style.setProperty("--querybox-primary", color);
+      document.documentElement.style.setProperty(
+        "--querybox-primary-rgb",
+        `${r}, ${g}, ${b}`
+      );
+
+      // Calculate a darker hover color (reduce lightness by ~10%)
+      const hoverColor = this.darkenColor(color, 0.85);
+      document.documentElement.style.setProperty(
+        "--querybox-primary-hover",
+        hoverColor
+      );
+    } catch (error) {
+      console.error("Failed to apply primary color:", error);
+    }
+  }
+
+  /**
+   * Darken a hex color by a factor
+   */
+  private darkenColor(hex: string, factor: number): string {
+    const color = hex.replace("#", "");
+    const r = Math.floor(parseInt(color.substring(0, 2), 16) * factor);
+    const g = Math.floor(parseInt(color.substring(2, 4), 16) * factor);
+    const b = Math.floor(parseInt(color.substring(4, 6), 16) * factor);
+    return `#${r.toString(16).padStart(2, "0")}${g
+      .toString(16)
+      .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
   }
 
   /**

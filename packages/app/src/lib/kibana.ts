@@ -234,8 +234,96 @@ export class KibanaClient {
   }
 
   /**
+   * Send a chat message with streaming response using the converse/async endpoint
+   * Returns an async generator that yields SSE events
+   * Reference: https://www.elastic.co/docs/api/doc/serverless/operation/operation-post-agent-builder-converse-async
+   */
+  async *converseAsync(
+    agentId: string,
+    input: string,
+    conversationId?: string,
+    connectorId?: string
+  ): AsyncGenerator<any, void, unknown> {
+    const url = `${this.host}/api/agent_builder/converse/async`;
+    const headers = {
+      Authorization: `ApiKey ${this.apiKey}`,
+      "Content-Type": "application/json",
+      "kbn-xsrf": "true",
+    };
+
+    const body: any = {
+      input,
+      agent_id: agentId,
+    };
+
+    if (conversationId) {
+      body.conversation_id = conversationId;
+    }
+
+    if (connectorId) {
+      body.connector_id = connectorId;
+    }
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => response.statusText);
+      throw new Error(
+        `Kibana Agent Builder request failed: ${response.statusText} - ${errorText}`
+      );
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error("Response body is not readable");
+    }
+
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Process complete SSE messages
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || ""; // Keep incomplete line in buffer
+
+        let event = "";
+        let data = "";
+
+        for (const line of lines) {
+          if (line.startsWith("event: ")) {
+            event = line.slice(7).trim();
+          } else if (line.startsWith("data: ")) {
+            data = line.slice(6);
+            try {
+              const parsed = JSON.parse(data);
+              yield { event, data: parsed };
+              event = "";
+              data = "";
+            } catch (error) {
+              console.error("Failed to parse SSE data:", error, data);
+            }
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+  }
+
+  /**
    * Send a chat message with streaming response
    * Returns an async generator that yields message chunks
+   * @deprecated Use converseAsync instead for better streaming support
    */
   async *sendMessageStreaming(
     agentId: string,

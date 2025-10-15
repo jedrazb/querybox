@@ -497,10 +497,145 @@
   margin-bottom: 4px;
 }
 
-.querybox-chat__tool-call-result,
-.querybox-chat__tool-call-pending {
+.querybox-chat__tool-call-status {
   font-size: 11px;
   opacity: 0.7;
+  margin-top: 4px;
+}
+
+.querybox-chat__tool-call-status--completed {
+  color: #34c759;
+}
+
+.querybox-chat__tool-call-status--error {
+  color: #ff3b30;
+}
+
+.querybox-chat__tool-call-status--running {
+  color: var(--querybox-primary);
+}
+
+/* Progress indicator - simple text */
+.querybox-chat__progress {
+  font-size: 13px;
+  color: var(--querybox-text-secondary);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+/* Markdown content styling */
+.querybox-chat__markdown {
+  line-height: 1.6;
+}
+
+.querybox-chat__markdown p {
+  margin: 0 0 12px 0;
+}
+
+.querybox-chat__markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.querybox-chat__markdown h1,
+.querybox-chat__markdown h2,
+.querybox-chat__markdown h3,
+.querybox-chat__markdown h4,
+.querybox-chat__markdown h5,
+.querybox-chat__markdown h6 {
+  margin: 16px 0 8px 0;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.querybox-chat__markdown h1:first-child,
+.querybox-chat__markdown h2:first-child,
+.querybox-chat__markdown h3:first-child {
+  margin-top: 0;
+}
+
+.querybox-chat__markdown h1 {
+  font-size: 1.5em;
+}
+
+.querybox-chat__markdown h2 {
+  font-size: 1.3em;
+}
+
+.querybox-chat__markdown h3 {
+  font-size: 1.1em;
+}
+
+.querybox-chat__markdown code {
+  background: var(--querybox-input-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", monospace;
+  font-size: 0.9em;
+}
+
+.querybox-chat__markdown pre {
+  background: var(--querybox-input-bg);
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.querybox-chat__markdown pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85em;
+}
+
+.querybox-chat__markdown ul,
+.querybox-chat__markdown ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.querybox-chat__markdown li {
+  margin: 4px 0;
+}
+
+.querybox-chat__markdown a {
+  color: var(--querybox-primary);
+  text-decoration: none;
+}
+
+.querybox-chat__markdown a:hover {
+  text-decoration: underline;
+}
+
+.querybox-chat__markdown blockquote {
+  border-left: 3px solid var(--querybox-border);
+  padding-left: 12px;
+  margin: 12px 0;
+  color: var(--querybox-text-secondary);
+  font-style: italic;
+}
+
+.querybox-chat__markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+
+.querybox-chat__markdown th,
+.querybox-chat__markdown td {
+  border: 1px solid var(--querybox-border);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.querybox-chat__markdown th {
+  background: var(--querybox-input-bg);
+  font-weight: 600;
+}
+
+.querybox-chat__markdown hr {
+  border: none;
+  border-top: 1px solid var(--querybox-border);
+  margin: 16px 0;
 }
 
 .querybox-chat__input-wrapper {

@@ -26,6 +26,8 @@ export interface QueryBoxConfig {
   container?: HTMLElement | string;
   /** Theme configuration */
   theme?: "light" | "dark" | "auto";
+  /** Primary color for the widget (e.g., '#ec4899') */
+  primaryColor?: string;
   /** Custom CSS class names */
   classNames?: Partial<{
     panel: string;
@@ -82,6 +84,7 @@ export interface ChatMessage {
   content: string;
   timestamp: number;
   toolCalls?: ToolCall[];
+  thinking?: ThinkingUpdate[];
 }
 
 /**
@@ -92,16 +95,29 @@ export interface ToolCall {
   name: string;
   arguments: Record<string, unknown>;
   result?: unknown;
+  status?: "running" | "completed" | "error";
+}
+
+/**
+ * Thinking/reasoning update
+ */
+export interface ThinkingUpdate {
+  id: string;
+  content: string;
+  timestamp: number;
 }
 
 /**
  * Chat response chunk (for streaming)
  */
 export interface ChatChunk {
-  type: "text" | "tool_call" | "tool_result" | "done";
+  type: "text" | "tool_call" | "tool_result" | "thinking" | "done" | "error";
   content?: string;
   toolCall?: ToolCall;
+  thinking?: ThinkingUpdate;
   messageId?: string;
+  conversationId?: string;
+  error?: string;
 }
 
 /**

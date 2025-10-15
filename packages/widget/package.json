@@ -55,6 +55,7 @@
     "vite-plugin-dts": "^3.7.0"
   },
   "dependencies": {
-    "@jedrazb/querybox-shared": "workspace:*"
+    "@jedrazb/querybox-shared": "workspace:*",
+    "marked": "^16.4.0"
   }
 }

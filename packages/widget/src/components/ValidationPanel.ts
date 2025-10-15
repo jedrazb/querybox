@@ -22,6 +22,7 @@ export class ValidationPanel extends BasePanel {
       apiEndpoint: config.apiEndpoint || "",
       container: config.container || document.body,
       theme: config.theme || "auto",
+      primaryColor: config.primaryColor || "#007aff",
       classNames: config.classNames || {},
     };
     super(minimalConfig, container);

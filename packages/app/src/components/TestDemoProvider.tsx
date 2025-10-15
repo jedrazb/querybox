@@ -15,7 +15,10 @@ let QueryBox: any = null;
 interface TestDemoContextType {
   search: () => void;
   chat: () => void;
-  initializeForDomain: (domain: string) => Promise<void>;
+  initializeForDomain: (
+    domain: string,
+    config?: { theme?: "light" | "dark" | "auto"; primaryColor?: string }
+  ) => Promise<void>;
   isReady: boolean;
 }
 
@@ -49,7 +52,10 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const initializeForDomain = async (domain: string) => {
+  const initializeForDomain = async (
+    domain: string,
+    config?: { theme?: "light" | "dark" | "auto"; primaryColor?: string }
+  ) => {
     if (!QueryBox) {
       console.error("QueryBox module not loaded yet");
       return;
@@ -65,17 +71,19 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-      // Initialize with custom domain and pink theme
+      // Initialize with custom domain and configuration
       queryboxRef.current = new QueryBox({
         apiEndpoint: `${apiUrl}/api/querybox/${domain}/v1`,
-        primaryColor: "#ec4899", // Pink color for demo
+        theme: config?.theme || "auto",
+        primaryColor: config?.primaryColor || "#ec4899",
       });
 
       setIsReady(true);
       console.log(
         "✅ QueryBox initialized for domain:",
         domain,
-        "with pink theme"
+        "with config:",
+        config
       );
     } catch (error) {
       console.error("❌ Failed to initialize QueryBox:", error);

@@ -8,6 +8,7 @@ import type {
   ChatChunk,
 } from "@jedrazb/querybox-shared";
 import { QUERYBOX_WEBSITE_URL } from "@jedrazb/querybox-shared";
+import { marked } from "marked";
 
 export type PanelMode = "search" | "chat";
 
@@ -24,6 +25,7 @@ export class UnifiedPanel extends BasePanel {
   private searchClient: SearchClient;
   private chatClient: ChatClient;
   private messages: ChatMessage[] = [];
+  private messageElements: Map<string, HTMLElement> = new Map();
 
   constructor(
     config: Required<QueryBoxConfig>,
@@ -411,33 +413,111 @@ export class UnifiedPanel extends BasePanel {
     switch (chunk.type) {
       case "text":
         if (chunk.content) {
+          // Clear transient content when first real text arrives
+          if (
+            !message.content &&
+            (message.thinking?.length || message.toolCalls?.length)
+          ) {
+            message.thinking = [];
+            message.toolCalls = [];
+          }
+
           message.content += chunk.content;
-          this.renderMessages();
+          this.updateStreamingMessage(messageId);
         }
         break;
 
-      case "tool_call":
-        if (chunk.toolCall) {
-          message.toolCalls = message.toolCalls || [];
-          message.toolCalls.push(chunk.toolCall);
-          this.renderMessages();
-        }
-        break;
-
-      case "tool_result":
-        if (chunk.toolCall) {
-          const toolCall = message.toolCalls?.find(
-            (tc) => tc.id === chunk.toolCall!.id
-          );
-          if (toolCall) {
-            toolCall.result = chunk.toolCall.result;
-            this.renderMessages();
+      case "thinking":
+        if (chunk.thinking) {
+          // Only show progress text if no content yet
+          if (!message.content) {
+            message.thinking = message.thinking || [];
+            // Replace with latest progress message (don't accumulate)
+            message.thinking = [chunk.thinking];
+            this.updateStreamingMessage(messageId);
           }
         }
         break;
 
-      case "done":
+      case "tool_call":
+        // Don't render tool calls - just ignore them
         break;
+
+      case "tool_result":
+        // Don't render tool results - just ignore them
+        break;
+
+      case "error":
+        if (chunk.error) {
+          message.content = `Error: ${chunk.error}`;
+          // Clear transient content on error
+          message.thinking = [];
+          message.toolCalls = [];
+          this.renderMessages();
+        }
+        break;
+
+      case "done":
+        // Clear transient content when done if we have actual content
+        if (message.content) {
+          message.thinking = [];
+          message.toolCalls = [];
+          this.updateStreamingMessage(messageId);
+        }
+        break;
+    }
+  }
+
+  /**
+   * Update only the streaming message without re-rendering everything
+   */
+  private updateStreamingMessage(messageId: string): void {
+    const message = this.messages.find((m) => m.id === messageId);
+    if (!message) return;
+
+    const messageElement = this.messageElements.get(messageId);
+    if (!messageElement) return;
+
+    const contentContainer = messageElement.querySelector(
+      ".querybox-chat__message-content"
+    );
+    if (!contentContainer) return;
+
+    // Build the updated content
+    let html = "";
+
+    // Progress text
+    if (message.thinking && message.thinking.length > 0) {
+      html += `<div class="querybox-chat__progress">${this.escapeHtml(
+        message.thinking[0].content
+      )}</div>`;
+    }
+
+    // Main content
+    if (message.content) {
+      try {
+        const rawHtml = marked.parse(message.content, {
+          async: false,
+        }) as string;
+        html += `<div class="querybox-chat__markdown">${this.sanitizeMarkdown(
+          rawHtml
+        )}</div>`;
+      } catch (error) {
+        console.error("Failed to parse markdown:", error);
+        html += `<p>${this.escapeHtml(message.content)}</p>`;
+      }
+    } else if (!message.thinking || message.thinking.length === 0) {
+      html += '<div class="querybox-spinner"></div>';
+    }
+
+    contentContainer.innerHTML = html;
+
+    // Auto-scroll to bottom
+    const messagesContainer = this.panel?.querySelector(
+      ".querybox-chat__messages"
+    );
+    if (messagesContainer) {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
   }
 
@@ -470,50 +550,33 @@ export class UnifiedPanel extends BasePanel {
           <p>Hello! How can I help you today?</p>
         </div>
       `;
+      this.messageElements.clear();
       return;
     }
 
-    const messagesHtml = this.messages
-      .map((message) => {
-        const toolCallsHtml =
-          message.toolCalls
-            ?.map(
-              (toolCall) => `
-        <div class="querybox-chat__tool-call">
-          <div class="querybox-chat__tool-call-header">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            <span>Using tool: ${this.escapeHtml(toolCall.name)}</span>
-          </div>
-          ${
-            toolCall.result
-              ? '<div class="querybox-chat__tool-call-result">✓ Complete</div>'
-              : '<div class="querybox-chat__tool-call-pending">⏳ Running...</div>'
-          }
-        </div>
-      `
-            )
-            .join("") || "";
+    // Only render new messages, keep existing ones
+    this.messages.forEach((message) => {
+      if (!this.messageElements.has(message.id)) {
+        const messageEl = document.createElement("div");
+        messageEl.className = `querybox-chat__message querybox-chat__message--${message.role}`;
+        messageEl.dataset.messageId = message.id;
 
-        return `
-        <div class="querybox-chat__message querybox-chat__message--${
-          message.role
-        }">
-          <div class="querybox-chat__message-content">
-            ${
-              message.content
-                ? `<p>${this.escapeHtml(message.content)}</p>`
-                : '<div class="querybox-spinner"></div>'
-            }
-            ${toolCallsHtml}
-          </div>
-        </div>
-      `;
-      })
-      .join("");
+        const contentEl = document.createElement("div");
+        contentEl.className = "querybox-chat__message-content";
 
-    messagesContainer.innerHTML = messagesHtml;
+        // Initial content
+        if (message.role === "assistant" && !message.content) {
+          contentEl.innerHTML = '<div class="querybox-spinner"></div>';
+        } else if (message.content) {
+          contentEl.innerHTML = `<p>${this.escapeHtml(message.content)}</p>`;
+        }
+
+        messageEl.appendChild(contentEl);
+        messagesContainer.appendChild(messageEl);
+        this.messageElements.set(message.id, messageEl);
+      }
+    });
+
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 
@@ -536,6 +599,97 @@ export class UnifiedPanel extends BasePanel {
       .replace(/&lt;\/em&gt;/g, "</em>");
   }
 
+  /**
+   * Sanitize markdown HTML while allowing safe markdown elements
+   * Uses DOMParser to parse and filter HTML safely
+   */
+  private sanitizeMarkdown(html: string): string {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    // Allowed tags for markdown
+    const allowedTags = new Set([
+      "P",
+      "BR",
+      "STRONG",
+      "EM",
+      "U",
+      "CODE",
+      "PRE",
+      "A",
+      "UL",
+      "OL",
+      "LI",
+      "H1",
+      "H2",
+      "H3",
+      "H4",
+      "H5",
+      "H6",
+      "BLOCKQUOTE",
+      "HR",
+      "TABLE",
+      "THEAD",
+      "TBODY",
+      "TR",
+      "TH",
+      "TD",
+    ]);
+
+    // Recursively clean nodes
+    const cleanNode = (node: Node): Node | null => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node.cloneNode(true);
+      }
+
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const element = node as Element;
+
+        // Check if tag is allowed
+        if (!allowedTags.has(element.tagName)) {
+          return null;
+        }
+
+        const cleaned = document.createElement(element.tagName);
+
+        // Copy safe attributes
+        if (element.tagName === "A") {
+          const href = element.getAttribute("href");
+          if (
+            href &&
+            (href.startsWith("http://") || href.startsWith("https://"))
+          ) {
+            cleaned.setAttribute("href", href);
+            cleaned.setAttribute("target", "_blank");
+            cleaned.setAttribute("rel", "noopener noreferrer");
+          }
+        }
+
+        // Clean children
+        Array.from(element.childNodes).forEach((child) => {
+          const cleanedChild = cleanNode(child);
+          if (cleanedChild) {
+            cleaned.appendChild(cleanedChild);
+          }
+        });
+
+        return cleaned;
+      }
+
+      return null;
+    };
+
+    const cleanedBody = document.createElement("div");
+    Array.from(doc.body.childNodes).forEach((child) => {
+      const cleanedChild = cleanNode(child);
+      if (cleanedChild) {
+        cleanedBody.appendChild(cleanedChild);
+      }
+    });
+
+    return cleanedBody.innerHTML;
+  }
+
   protected onOpen(): void {
     this.focusInput();
   }
@@ -545,6 +699,7 @@ export class UnifiedPanel extends BasePanel {
       clearTimeout(this.searchDebounceTimer);
     }
     this.messages = [];
+    this.messageElements.clear();
     super.destroy();
   }
 }

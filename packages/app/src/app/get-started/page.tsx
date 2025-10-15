@@ -29,6 +29,8 @@ function GetStartedContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCrawling, setIsCrawling] = useState(false);
   const [installTab, setInstallTab] = useState<"cdn" | "npm">("cdn");
+  const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
+  const [primaryColor, setPrimaryColor] = useState("#ec4899");
 
   const cleanDomain = (input: string): string => {
     let cleaned = input.replace(/^https?:\/\//, "");
@@ -52,12 +54,12 @@ function GetStartedContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  // Initialize QueryBox when domain is ready and has docs
+  // Initialize QueryBox when domain is ready and has docs, or when config changes
   useEffect(() => {
     if (domain && status?.docCount && status.docCount > 0) {
-      initializeForDomain(domain);
+      initializeForDomain(domain, { theme, primaryColor });
     }
-  }, [domain, status?.docCount]);
+  }, [domain, status?.docCount, theme, primaryColor]);
 
   const testQueryBox = () => {
     if (isReady) {
@@ -118,7 +120,10 @@ function GetStartedContent() {
           docCount: checkData.docCount,
         });
         setStatus(checkData);
-        setExpandedSteps(new Set([1]));
+        // If crawl is completed (has docs), expand step 2, otherwise expand step 1
+        setExpandedSteps(
+          new Set([checkData.docCount && checkData.docCount > 0 ? 2 : 1])
+        );
       } else {
         // Domain doesn't exist - create it via POST
         const setupResponse = await fetch(
@@ -200,15 +205,16 @@ function GetStartedContent() {
 
   const steps = [
     {
-      title: "Add Your Website",
+      title: "Add your website",
+      description: "Create an AI agent",
     },
     {
-      title: "Crawl & Test",
-      description: "Crawl your website and test the search widget",
+      title: "Crawl",
+      description: "Crawl your website ",
     },
     {
-      title: "Install QueryBox",
-      description: "Add QueryBox widget to your website",
+      title: "Test and install",
+      description: "Try QueryBox with your data and install it",
     },
   ];
 
@@ -359,16 +365,6 @@ function GetStartedContent() {
                           </div>
                         </div>
 
-                        <div className={styles.testSection}>
-                          <button
-                            onClick={testQueryBox}
-                            className={styles.primaryButton}
-                            disabled={!isReady}
-                          >
-                            {isReady ? "Try QueryBox" : "Loading QueryBox..."}
-                          </button>
-                        </div>
-
                         <div className={styles.recrawlSection}>
                           <p className={styles.hint}>
                             Content changed? Crawl again to update the index
@@ -433,6 +429,56 @@ function GetStartedContent() {
                 {/* Step 2: Integration */}
                 {index === 2 && isExpanded && (
                   <div className={styles.stepBody}>
+                    <div className={styles.configSection}>
+                      <h4 className={styles.configTitle}>Configuration</h4>
+                      <div className={styles.configGrid}>
+                        <div className={styles.configItem}>
+                          <label htmlFor="theme-select">Theme</label>
+                          <select
+                            id="theme-select"
+                            value={theme}
+                            onChange={(e) =>
+                              setTheme(
+                                e.target.value as "light" | "dark" | "auto"
+                              )
+                            }
+                            className={styles.select}
+                          >
+                            <option value="auto">Auto</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                          </select>
+                        </div>
+                        <div className={styles.configItem}>
+                          <label htmlFor="color-input">Primary Color</label>
+                          <div className={styles.colorInputWrapper}>
+                            <input
+                              id="color-input"
+                              type="color"
+                              value={primaryColor}
+                              onChange={(e) => setPrimaryColor(e.target.value)}
+                              className={styles.colorInput}
+                            />
+                            <input
+                              type="text"
+                              value={primaryColor}
+                              onChange={(e) => setPrimaryColor(e.target.value)}
+                              className={styles.colorTextInput}
+                              placeholder="#ec4899"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        onClick={testQueryBox}
+                        className={styles.primaryButton}
+                        disabled={!isReady}
+                      >
+                        {isReady ? "Live preview" : "Loading QueryBox..."}
+                      </button>
+                    </div>
                     <div className={styles.tabs}>
                       <button
                         className={installTab === "cdn" ? styles.tabActive : ""}
@@ -461,7 +507,8 @@ function GetStartedContent() {
     apiEndpoint: '${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${
                             domain || "{your-domain}"
                           }/v1',
-    primaryColor: '#ec4899' // Customize the color
+    theme: '${theme}',
+    primaryColor: '${primaryColor}'
   });
 
   // Add keyboard shortcut (Cmd+K)
@@ -488,7 +535,8 @@ const querybox = new QueryBox({
   apiEndpoint: '${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${
                             domain || "{your-domain}"
                           }/v1',
-  primaryColor: '#ec4899' // Customize the color
+  theme: '${theme}',
+  primaryColor: '${primaryColor}'
 });
 
 // Open search
