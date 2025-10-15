@@ -17,7 +17,11 @@ interface TestDemoContextType {
   chat: () => void;
   initializeForDomain: (
     domain: string,
-    config?: { theme?: "light" | "dark" | "auto"; primaryColor?: string }
+    config?: {
+      theme?: "light" | "dark" | "auto";
+      primaryColor?: string;
+      title?: string;
+    }
   ) => Promise<void>;
   isReady: boolean;
 }
@@ -54,7 +58,11 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
 
   const initializeForDomain = async (
     domain: string,
-    config?: { theme?: "light" | "dark" | "auto"; primaryColor?: string }
+    config?: {
+      theme?: "light" | "dark" | "auto";
+      primaryColor?: string;
+      title?: string;
+    }
   ) => {
     if (!QueryBox) {
       console.error("QueryBox module not loaded yet");
@@ -76,6 +84,7 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
         apiEndpoint: `${apiUrl}/api/querybox/${domain}/v1`,
         theme: config?.theme || "auto",
         primaryColor: config?.primaryColor || "#ec4899",
+        title: config?.title,
       });
 
       setIsReady(true);

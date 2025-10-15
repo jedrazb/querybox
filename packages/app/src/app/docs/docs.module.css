@@ -255,6 +255,53 @@
   font-family: "Fira Code", monospace;
 }
 
+/* Steps */
+.steps {
+  display: grid;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.step {
+  padding: 1.5rem;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.step:hover {
+  background: rgba(30, 41, 59, 0.7);
+  border-left-color: #8b5cf6;
+  transform: translateX(4px);
+}
+
+.step h4 {
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.step p {
+  margin-bottom: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Links */
+.link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.link:hover {
+  border-bottom-color: var(--primary);
+}
+
 /* Footer */
 .docFooter {
   margin-top: 4rem;

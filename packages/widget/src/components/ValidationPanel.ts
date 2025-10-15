@@ -1,6 +1,10 @@
 import { BasePanel } from "./BasePanel";
 import type { QueryBoxConfig } from "@jedrazb/querybox-shared";
 
+// Type for validated config with all required fields and optional title
+type ValidatedConfig = Required<Omit<QueryBoxConfig, "title">> &
+  Pick<QueryBoxConfig, "title">;
+
 export interface ValidationError {
   field: string;
   message: string;
@@ -18,11 +22,12 @@ export class ValidationPanel extends BasePanel {
     errors: ValidationError[]
   ) {
     // Create a minimal valid config for BasePanel
-    const minimalConfig: Required<QueryBoxConfig> = {
+    const minimalConfig: ValidatedConfig = {
       apiEndpoint: config.apiEndpoint || "",
       container: config.container || document.body,
       theme: config.theme || "auto",
       primaryColor: config.primaryColor || "#007aff",
+      title: config.title,
       classNames: config.classNames || {},
     };
     super(minimalConfig, container);

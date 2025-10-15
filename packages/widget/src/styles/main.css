@@ -147,6 +147,24 @@
   display: block;
 }
 
+.querybox-header__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.querybox-header__title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--querybox-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
 .querybox-panel__close {
   display: flex;
   align-items: center;

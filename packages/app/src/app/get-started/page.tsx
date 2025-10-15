@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { useTestDemo } from "@/components/TestDemoProvider";
+import InstallationTabs from "@/components/InstallationTabs";
 
 type DomainStatus = {
   exists: boolean;
@@ -28,7 +29,6 @@ function GetStartedContent() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCrawling, setIsCrawling] = useState(false);
-  const [installTab, setInstallTab] = useState<"cdn" | "npm">("cdn");
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
   const [primaryColor, setPrimaryColor] = useState("#ec4899");
 
@@ -479,74 +479,13 @@ function GetStartedContent() {
                         {isReady ? "Live preview" : "Loading QueryBox..."}
                       </button>
                     </div>
-                    <div className={styles.tabs}>
-                      <button
-                        className={installTab === "cdn" ? styles.tabActive : ""}
-                        onClick={() => setInstallTab("cdn")}
-                      >
-                        CDN
-                      </button>
-                      <button
-                        className={installTab === "npm" ? styles.tabActive : ""}
-                        onClick={() => setInstallTab("npm")}
-                      >
-                        npm
-                      </button>
-                    </div>
 
-                    {installTab === "cdn" && (
-                      <div className={styles.codeBlock}>
-                        <pre>
-                          <code>{`<!-- Add to your HTML <head> -->
-<link rel="stylesheet" href="https://unpkg.com/@jedrazb/querybox/dist/style.css">
-<script src="https://unpkg.com/@jedrazb/querybox/dist/querybox.umd.js"></script>
-
-<!-- Add before closing </body> tag -->
-<script>
-  const querybox = new QueryBox({
-    apiEndpoint: '${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${
-                            domain || "{your-domain}"
-                          }/v1',
-    theme: '${theme}',
-    primaryColor: '${primaryColor}'
-  });
-
-  // Add keyboard shortcut (Cmd+K)
-  document.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault();
-      querybox.search();
-    }
-  });
-</script>`}</code>
-                        </pre>
-                      </div>
-                    )}
-
-                    {installTab === "npm" && (
-                      <div className={styles.codeBlock}>
-                        <pre>
-                          <code>{`npm install @jedrazb/querybox
-
-import QueryBox from '@jedrazb/querybox';
-import '@jedrazb/querybox/dist/style.css';
-
-const querybox = new QueryBox({
-  apiEndpoint: '${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${
-                            domain || "{your-domain}"
-                          }/v1',
-  theme: '${theme}',
-  primaryColor: '${primaryColor}'
-});
-
-// Open search
-querybox.search();
-
-// Open AI chat
-querybox.chat();`}</code>
-                        </pre>
-                      </div>
-                    )}
+                    <InstallationTabs
+                      apiUrl={process.env.NEXT_PUBLIC_API_URL}
+                      domain={domain}
+                      theme={theme}
+                      primaryColor={primaryColor}
+                    />
 
                     <div className={styles.ctaButtons}>
                       <button

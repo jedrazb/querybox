@@ -5,13 +5,17 @@ import {
   type ValidationError,
 } from "./components/ValidationPanel";
 
+// Type for validated config with all required fields and optional title
+type ValidatedConfig = Required<Omit<QueryBoxConfig, "title">> &
+  Pick<QueryBoxConfig, "title">;
+
 /**
  * Main QueryBox widget class
  * Provides search() and chat() methods to open the panel in the appropriate mode
  */
 export class QueryBox {
   private config: Partial<QueryBoxConfig>;
-  private validConfig: Required<QueryBoxConfig> | null = null;
+  private validConfig: ValidatedConfig | null = null;
   private panel: UnifiedPanel | ValidationPanel | null = null;
   private container: HTMLElement;
   private validationErrors: ValidationError[] = [];
@@ -30,6 +34,7 @@ export class QueryBox {
         container: config.container || document.body,
         theme: config.theme || "auto",
         primaryColor: config.primaryColor || "#007aff",
+        title: config.title || undefined,
         classNames: config.classNames || {},
       };
     }

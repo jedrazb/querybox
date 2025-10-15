@@ -167,82 +167,69 @@
   }
 }
 
-/* Example Section */
-.example {
+/* Add to Website Section */
+.addWebsite {
   padding: 6rem 2rem;
   background: rgba(30, 41, 59, 0.5);
 }
 
-/* Demo Modal */
-.demoModal {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-}
-
-.demoOverlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-}
-
-.demoContent {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 3rem;
-  max-width: 500px;
-  width: 90%;
+.addWebsiteSubtitle {
   text-align: center;
-}
-
-.demoClose {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  font-size: 2rem;
+  font-size: 1.125rem;
   color: var(--text-secondary);
-  cursor: pointer;
-  transition: color 0.2s;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
 }
 
-.demoClose:hover {
-  color: var(--text);
-}
-
-.demoButtons {
+.addWebsiteForm {
   display: flex;
   gap: 1rem;
-  margin: 2rem 0;
+  max-width: 600px;
+  margin: 0 auto;
   justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.demoButton {
-  padding: 1rem 2rem;
+.websiteInput {
+  flex: 1;
+  min-width: 300px;
+  padding: 1rem 1.5rem;
   font-size: 1.125rem;
+  background: rgba(30, 41, 59, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: var(--text);
+  transition: all 0.3s;
+}
+
+.websiteInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.websiteInput::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+.addButton {
+  padding: 1rem 2.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: white;
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
 }
 
-.demoButton:hover {
-  transform: scale(1.05);
-}
-
-.demoNote {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-top: 1rem;
+.addButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(99, 102, 241, 0.6);
 }
 
 .container {
@@ -255,73 +242,6 @@
   font-weight: 700;
   text-align: center;
   margin-bottom: 3rem;
-}
-
-/* Tabs */
-.tabs {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--border);
-}
-
-.tab {
-  padding: 0.75rem 1.5rem;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-}
-
-.tab:hover {
-  color: var(--text);
-  background: rgba(99, 102, 241, 0.1);
-}
-
-.tabActive {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-  font-weight: 600;
-}
-
-.tabContent {
-  animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.codeBlock {
-  background: #1e293b;
-  border-radius: 16px;
-  padding: 2rem;
-  overflow-x: auto;
-  border: 1px solid rgba(99, 102, 241, 0.2);
-}
-
-.codeBlock pre {
-  margin: 0;
-}
-
-.codeBlock code {
-  font-family: "Fira Code", "Monaco", "Courier New", monospace;
-  font-size: 0.95rem;
-  line-height: 1.8;
-  color: #e2e8f0;
 }
 
 /* Footer */
@@ -375,5 +295,18 @@
   .secondaryButton {
     width: 100%;
     text-align: center;
+  }
+
+  .addWebsiteForm {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .websiteInput {
+    min-width: 100%;
+  }
+
+  .addButton {
+    width: 100%;
   }
 }

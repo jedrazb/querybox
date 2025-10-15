@@ -28,6 +28,8 @@ export interface QueryBoxConfig {
   theme?: "light" | "dark" | "auto";
   /** Primary color for the widget (e.g., '#ec4899') */
   primaryColor?: string;
+  /** Optional title to display at the top of the QueryBox panel */
+  title?: string;
   /** Custom CSS class names */
   classNames?: Partial<{
     panel: string;

@@ -1,0 +1,120 @@
+.installationTabs {
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.tab {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #94a3b8;
+  transition: all 0.2s;
+  white-space: nowrap;
+  margin-bottom: -2px;
+}
+
+.tab:hover {
+  color: #e2e8f0;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.tabActive {
+  color: #6366f1 !important;
+  border-bottom-color: #6366f1 !important;
+  background: transparent !important;
+}
+
+.tabContent {
+  margin-top: 1.5rem;
+}
+
+.codeBlock {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.codeBlock pre {
+  margin: 0;
+  font-family: "SF Mono", "Monaco", "Inconsolata", "Fira Code",
+    "Droid Sans Mono", "Source Code Pro", monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.codeBlock code {
+  color: #e2e8f0;
+  font-family: inherit;
+}
+
+.usageTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #64748b;
+  margin: 1.5rem 0 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tabs {
+    border-bottom-color: rgba(99, 102, 241, 0.3);
+  }
+
+  .tab {
+    color: #94a3b8;
+  }
+
+  .tab:hover {
+    color: #e2e8f0;
+    background: rgba(99, 102, 241, 0.15);
+  }
+
+  .tabActive {
+    color: #8b5cf6 !important;
+    border-bottom-color: #8b5cf6 !important;
+  }
+
+  .codeBlock {
+    background: rgba(15, 23, 42, 0.7);
+    border-color: rgba(99, 102, 241, 0.3);
+  }
+
+  .usageTitle {
+    color: #e2e8f0;
+  }
+}
+
+@media (max-width: 768px) {
+  .tabs {
+    gap: 0.25rem;
+  }
+
+  .tab {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .codeBlock {
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .codeBlock pre {
+    font-size: 0.8rem;
+  }
+}

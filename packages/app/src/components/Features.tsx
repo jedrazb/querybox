@@ -5,13 +5,13 @@ const features = [
     icon: "🔍",
     title: "Instant Search",
     description:
-      "Full-text search with highlighting and fuzzy matching powered by Elasticsearch",
+      "Hybrid search on crawled content with highlighting and fuzzy matching powered by Elasticsearch",
   },
   {
     icon: "💬",
     title: "AI Chat",
     description:
-      "Conversational interface with your content using Elasticsearch agents",
+      "Agent instantly helps users chat about data on your website using Elasticsearch agents",
   },
   {
     icon: "🎨",

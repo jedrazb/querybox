@@ -1,16 +1,20 @@
 import type { QueryBoxConfig } from "@jedrazb/querybox-shared";
 
+// Type for validated config with all required fields and optional title
+type ValidatedConfig = Required<Omit<QueryBoxConfig, "title">> &
+  Pick<QueryBoxConfig, "title">;
+
 /**
  * Base panel class with common functionality
  */
 export abstract class BasePanel {
-  protected config: Required<QueryBoxConfig>;
+  protected config: ValidatedConfig;
   protected container: HTMLElement;
   protected overlay: HTMLElement | null = null;
   protected panel: HTMLElement | null = null;
   protected isOpen: boolean = false;
 
-  constructor(config: Required<QueryBoxConfig>, container: HTMLElement) {
+  constructor(config: ValidatedConfig, container: HTMLElement) {
     this.config = config;
     this.container = container;
   }

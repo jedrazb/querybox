@@ -17,12 +17,6 @@ export default function Header() {
         </Link>
 
         <nav className={styles.nav}>
-          <Link href="/#features" className={styles.link}>
-            Features
-          </Link>
-          <Link href="/#demo" className={styles.link}>
-            Demo
-          </Link>
           <Link href="/docs" className={styles.link}>
             Docs
           </Link>

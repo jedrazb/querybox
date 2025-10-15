@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQueryBox } from "@/components/QueryBoxProvider";
+import InstallationTabs from "@/components/InstallationTabs";
 import styles from "./docs.module.css";
 
 const sections = [
@@ -9,8 +10,6 @@ const sections = [
   { id: "installation", title: "Installation" },
   { id: "quick-start", title: "Quick Start" },
   { id: "configuration", title: "Configuration" },
-  { id: "usage", title: "Usage" },
-  { id: "styling", title: "Styling & Customization" },
   { id: "api", title: "API Reference" },
 ];
 
@@ -60,67 +59,57 @@ export default function Docs() {
 
         <section id="installation" className={styles.section}>
           <h2>Installation</h2>
-
-          <h3>npm</h3>
-          <pre className={styles.code}>
-            <code>npm install @jedrazb/querybox</code>
-          </pre>
-
-          <h3>pnpm</h3>
-          <pre className={styles.code}>
-            <code>pnpm add @jedrazb/querybox</code>
-          </pre>
-
-          <h3>yarn</h3>
-          <pre className={styles.code}>
-            <code>yarn add @jedrazb/querybox</code>
-          </pre>
-
-          <h3>CDN</h3>
-          <pre className={styles.code}>
-            <code>{`<link rel="stylesheet" href="https://unpkg.com/@jedrazb/querybox/dist/style.css">
-<script src="https://unpkg.com/@jedrazb/querybox/dist/querybox.umd.js"></script>`}</code>
-          </pre>
+          <p>Choose your preferred installation method below:</p>
+          <InstallationTabs />
         </section>
 
         <section id="quick-start" className={styles.section}>
           <h2>Quick Start</h2>
 
-          <p>Get up and running in under 5 minutes!</p>
+          <p>
+            The fastest way to get started is using our interactive{" "}
+            <a href="/get-started" className={styles.link}>
+              Get Started page
+            </a>
+            . It walks you through the entire setup process.
+          </p>
 
-          <h3>1. Import and Initialize</h3>
+          <h3>Manual Setup</h3>
+          <p>If you prefer to set up manually, here's a basic example:</p>
+
           <pre className={styles.code}>
             <code>{`import QueryBox from '@jedrazb/querybox';
 import '@jedrazb/querybox/dist/style.css';
 
 const querybox = new QueryBox({
-  apiEndpoint: 'https://api.querybox.io/api/querybox/yoursite.com/v1'
-});`}</code>
-          </pre>
+  apiEndpoint: 'https://api.querybox.io/api/querybox/yoursite.com/v1',
+  theme: 'auto',
+  primaryColor: '#ec4899'
+});
 
-          <h3>2. Add to Your Website</h3>
-          <pre className={styles.code}>
-            <code>{`// Open search
-document.getElementById('search-btn').onclick = () => {
-  querybox.search();
-};
+// Open search
+querybox.search();
 
-// Open chat
-document.getElementById('chat-btn').onclick = () => {
-  querybox.chat();
-};`}</code>
+// Open AI chat
+querybox.chat();`}</code>
           </pre>
         </section>
 
         <section id="configuration" className={styles.section}>
           <h2>Configuration</h2>
 
+          <p>
+            QueryBox is highly customizable to match your brand and user
+            experience. All options except <code>apiEndpoint</code> are optional
+            with sensible defaults.
+          </p>
+
           <table className={styles.table}>
             <thead>
               <tr>
                 <th>Option</th>
                 <th>Type</th>
-                <th>Required</th>
+                <th>Default</th>
                 <th>Description</th>
               </tr>
             </thead>
@@ -130,102 +119,76 @@ document.getElementById('chat-btn').onclick = () => {
                   <code>apiEndpoint</code>
                 </td>
                 <td>string</td>
-                <td>✅</td>
-                <td>Your QueryBox API endpoint URL</td>
-              </tr>
-              <tr>
                 <td>
-                  <code>container</code>
+                  <strong>required</strong>
                 </td>
-                <td>HTMLElement | string</td>
-                <td>❌</td>
-                <td>Container element or selector (default: document.body)</td>
+                <td>Your QueryBox API endpoint URL (generated during setup)</td>
               </tr>
               <tr>
                 <td>
                   <code>theme</code>
                 </td>
                 <td>'light' | 'dark' | 'auto'</td>
-                <td>❌</td>
-                <td>Theme mode (default: 'auto')</td>
+                <td>'auto'</td>
+                <td>Visual theme. 'auto' follows system preferences</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>primaryColor</code>
+                </td>
+                <td>string</td>
+                <td>'#007aff'</td>
+                <td>
+                  Primary color for buttons, links, and accents (hex format)
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <code>title</code>
+                </td>
+                <td>string</td>
+                <td>undefined</td>
+                <td>
+                  Optional title displayed at the top of the panel (e.g., "Help
+                  Center")
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <code>container</code>
+                </td>
+                <td>HTMLElement | string</td>
+                <td>document.body</td>
+                <td>
+                  Container element or CSS selector where QueryBox will be
+                  mounted
+                </td>
               </tr>
               <tr>
                 <td>
                   <code>classNames</code>
                 </td>
                 <td>object</td>
-                <td>❌</td>
-                <td>Custom CSS class names</td>
+                <td>{"{}"}</td>
+                <td>
+                  Custom CSS class names for advanced styling (panel,
+                  searchPanel, chatPanel, overlay)
+                </td>
               </tr>
             </tbody>
           </table>
-        </section>
 
-        <section id="usage" className={styles.section}>
-          <h2>Usage Examples</h2>
-
-          <h3>Vanilla JavaScript</h3>
-          <pre className={styles.code}>
-            <code>{`<button id="search">Search</button>
-<button id="chat">Chat</button>
-
-<script>
-  const querybox = new QueryBox({
-    apiEndpoint: 'https://api.querybox.io/api/querybox/yoursite.com/v1'
-  });
-
-  document.getElementById('search').onclick = () => querybox.search();
-  document.getElementById('chat').onclick = () => querybox.chat();
-</script>`}</code>
-          </pre>
-
-          <h3>React</h3>
-          <pre className={styles.code}>
-            <code>{`import { useEffect, useRef } from 'react';
-import QueryBox from '@jedrazb/querybox';
-import '@jedrazb/querybox/dist/style.css';
-
-function App() {
-  const qbRef = useRef(null);
-
-  useEffect(() => {
-    qbRef.current = new QueryBox({
-      apiEndpoint: 'https://api.querybox.io/...'
-    });
-  }, []);
-
-  return (
-    <>
-      <button onClick={() => qbRef.current?.search()}>Search</button>
-      <button onClick={() => qbRef.current?.chat()}>Chat</button>
-    </>
-  );
-}`}</code>
-          </pre>
-        </section>
-
-        <section id="styling" className={styles.section}>
-          <h2>Styling & Customization</h2>
-
-          <p>Override CSS variables to customize the appearance:</p>
-
-          <pre className={styles.code}>
-            <code>{`:root {
-  --querybox-primary: #6366f1;
-  --querybox-background: rgba(255, 255, 255, 0.9);
-  --querybox-text: #0f172a;
-  --querybox-border: rgba(0, 0, 0, 0.1);
-  --querybox-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}`}</code>
-          </pre>
-
-          <h3>Custom Classes</h3>
+          <h3>Example with All Options</h3>
           <pre className={styles.code}>
             <code>{`const querybox = new QueryBox({
-  apiEndpoint: '...',
+  apiEndpoint: 'https://api.querybox.io/api/querybox/yoursite.com/v1',
+  theme: 'dark',
+  primaryColor: '#10b981',
+  title: 'Documentation',
+  container: '#querybox-container',
   classNames: {
-    panel: 'my-custom-panel',
-    overlay: 'my-custom-overlay'
+    panel: 'custom-panel',
+    overlay: 'custom-overlay'
   }
 });`}</code>
           </pre>
