@@ -3,27 +3,33 @@
  * Handles all ES operations with server-side credentials
  */
 
+import { Client } from "@elastic/elasticsearch";
 import type {
   SearchRequest,
   SearchResponse,
   SearchResult,
   DomainConfig,
-  ElasticsearchSearchResponse,
 } from "@jedrazb/querybox-shared";
 
 export class ElasticsearchClient {
-  private host: string;
-  private apiKey: string;
+  private client: Client;
 
   constructor() {
-    this.host = process.env.ELASTICSEARCH_HOST || "";
-    this.apiKey = process.env.API_KEY || "";
+    const host = process.env.ELASTICSEARCH_HOST || "";
+    const apiKey = process.env.API_KEY || "";
 
-    if (!this.host || !this.apiKey) {
+    if (!host || !apiKey) {
       throw new Error(
         "Missing Elasticsearch credentials in environment variables"
       );
     }
+
+    this.client = new Client({
+      node: host,
+      auth: {
+        apiKey: apiKey,
+      },
+    });
   }
 
   /**
@@ -35,7 +41,8 @@ export class ElasticsearchClient {
   ): Promise<SearchResponse> {
     const { query, size = 10, from = 0 } = request;
 
-    const searchBody = {
+    const response = await this.client.search({
+      index: indexName,
       query: {
         multi_match: {
           query,
@@ -52,17 +59,9 @@ export class ElasticsearchClient {
           content: { fragment_size: 150, number_of_fragments: 3 },
         },
       },
-    };
+    });
 
-    const response = await this.makeRequest<ElasticsearchSearchResponse>(
-      `/${indexName}/_search`,
-      {
-        method: "POST",
-        body: JSON.stringify(searchBody),
-      }
-    );
-
-    const results: SearchResult[] = response.hits.hits.map((hit) => ({
+    const results: SearchResult[] = response.hits.hits.map((hit: any) => ({
       id: hit._id,
       title: (hit._source.title as string) || "",
       content: (hit._source.content as string) || "",
@@ -73,7 +72,10 @@ export class ElasticsearchClient {
 
     return {
       results,
-      total: response.hits.total.value,
+      total:
+        typeof response.hits.total === "number"
+          ? response.hits.total
+          : response.hits.total?.value || 0,
       took: response.took,
     };
   }
@@ -83,13 +85,13 @@ export class ElasticsearchClient {
    */
   async getDomainConfig(domain: string): Promise<DomainConfig | null> {
     try {
-      const response = await this.makeRequest<{ _source: DomainConfig }>(
-        `/querybox_configs/_doc/${domain}`,
-        { method: "GET" }
-      );
-      return response._source;
+      const response = await this.client.get<DomainConfig>({
+        index: "querybox-config",
+        id: domain,
+      });
+      return response._source || null;
     } catch (error: any) {
-      if (error.status === 404) {
+      if (error.meta?.statusCode === 404) {
         return null;
       }
       throw error;
@@ -100,36 +102,35 @@ export class ElasticsearchClient {
    * Save or update domain configuration
    */
   async saveDomainConfig(config: DomainConfig): Promise<void> {
-    await this.makeRequest(`/querybox_configs/_doc/${config.domain}`, {
-      method: "PUT",
-      body: JSON.stringify(config),
+    await this.client.index({
+      index: "querybox-config",
+      id: config.domain,
+      document: config,
     });
   }
 
   /**
    * Create index with proper mappings
    */
-  async createIndex(indexName: string): Promise<void> {
-    const mappings = {
+  async createCrawlerIndex(indexName: string): Promise<void> {
+    await this.client.indices.create({
+      index: indexName,
       mappings: {
         properties: {
-          title: { type: "text", analyzer: "standard" },
-          content: { type: "text", analyzer: "standard" },
-          url: { type: "keyword" },
-          domain: { type: "keyword" },
-          crawledAt: { type: "date" },
-          metadata: { type: "object", enabled: true },
+          title: {
+            type: "text",
+            copy_to: "semantic_body",
+          },
+          body: {
+            type: "text",
+            copy_to: "semantic_body",
+          },
+          semantic_text: {
+            type: "semantic_text",
+            inference_id: ".elser-2-elasticsearch",
+          },
         },
       },
-      settings: {
-        number_of_shards: 1,
-        number_of_replicas: 1,
-      },
-    };
-
-    await this.makeRequest(`/${indexName}`, {
-      method: "PUT",
-      body: JSON.stringify(mappings),
     });
   }
 
@@ -138,8 +139,7 @@ export class ElasticsearchClient {
    */
   async indexExists(indexName: string): Promise<boolean> {
     try {
-      await this.makeRequest(`/${indexName}`, { method: "HEAD" });
-      return true;
+      return await this.client.indices.exists({ index: indexName });
     } catch {
       return false;
     }
@@ -150,10 +150,7 @@ export class ElasticsearchClient {
    */
   async getDocumentCount(indexName: string): Promise<number> {
     try {
-      const response = await this.makeRequest<{ count: number }>(
-        `/${indexName}/_count`,
-        { method: "GET" }
-      );
+      const response = await this.client.count({ index: indexName });
       return response.count;
     } catch {
       return 0;
@@ -168,9 +165,10 @@ export class ElasticsearchClient {
     id: string,
     document: Record<string, unknown>
   ): Promise<void> {
-    await this.makeRequest(`/${indexName}/_doc/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(document),
+    await this.client.index({
+      index: indexName,
+      id: id,
+      document: document,
     });
   }
 
@@ -181,48 +179,12 @@ export class ElasticsearchClient {
     indexName: string,
     documents: Array<{ id: string; doc: Record<string, unknown> }>
   ): Promise<void> {
-    const bulkBody = documents.flatMap((doc) => [
+    const operations = documents.flatMap((doc) => [
       { index: { _index: indexName, _id: doc.id } },
       doc.doc,
     ]);
 
-    await this.makeRequest("/_bulk", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-ndjson",
-      },
-      body: bulkBody.map((line) => JSON.stringify(line)).join("\n") + "\n",
-    });
-  }
-
-  /**
-   * Make request to Elasticsearch
-   */
-  private async makeRequest<T = any>(
-    path: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${this.host}${path}`;
-    const headers = {
-      Authorization: `ApiKey ${this.apiKey}`,
-      "Content-Type": "application/json",
-      ...options.headers,
-    };
-
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
-
-    if (!response.ok) {
-      const error: any = new Error(
-        `Elasticsearch request failed: ${response.statusText}`
-      );
-      error.status = response.status;
-      throw error;
-    }
-
-    return response.json();
+    await this.client.bulk({ operations });
   }
 }
 

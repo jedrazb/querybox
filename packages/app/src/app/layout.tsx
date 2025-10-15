@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     title: "QueryBox - Website Search & Chat Widget",
     description:
       "Add powerful search and AI-powered chat to any website. Powered by Elasticsearch.",
-    images: ["/og-image.png"],
+    images: { url: "/og-image.jpg", alt: "QueryBox logo" },
   },
 };
 

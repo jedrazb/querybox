@@ -32,12 +32,9 @@ export default function Home() {
             <button className={styles.primaryButton} onClick={() => chat()}>
               Try It!
             </button>
-            <button
-              className={styles.secondaryButton}
-              onClick={() => setShowSetup(true)}
-            >
-              Get Started
-            </button>
+            <a href="/get-started">
+              <button className={styles.secondaryButton}>Get Started</button>
+            </a>
           </div>
           <div className={styles.installCommand}>
             <code>npm install @jedrazb/querybox</code>

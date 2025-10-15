@@ -10,7 +10,6 @@ import type {
   DomainConfig,
 } from "@jedrazb/querybox-shared";
 import { getElasticsearchClient } from "@/lib/elasticsearch";
-import { initiateCrawl } from "@/services/crawler";
 
 export async function POST(
   request: NextRequest,
@@ -37,47 +36,7 @@ export async function POST(
 
     const esClient = getElasticsearchClient();
 
-    // Check if domain already exists
-    let domainConfig = await esClient.getDomainConfig(domain);
-
-    if (domainConfig && domainConfig.status === "crawling") {
-      return NextResponse.json(
-        { error: "Crawl already in progress for this domain" },
-        { status: 400 }
-      );
-    }
-
-    // Create index name
-    const indexName = `querybox_${domain
-      .replace(/[^a-z0-9_]/gi, "_")
-      .toLowerCase()}`;
-
-    // Create or update domain config
-    const newConfig: DomainConfig = {
-      domain,
-      indexName,
-      status: "crawling",
-      crawlConfig: crawlRequest.config,
-      createdAt: domainConfig?.createdAt || Date.now(),
-      updatedAt: Date.now(),
-    };
-
-    await esClient.saveDomainConfig(newConfig);
-
-    // Create index if it doesn't exist
-    const indexExists = await esClient.indexExists(indexName);
-    if (!indexExists) {
-      await esClient.createIndex(indexName);
-    }
-
-    // Initiate crawl (async operation)
-    initiateCrawl(domain, crawlRequest.config, esClient);
-
-    const status: CrawlStatus = {
-      domain,
-      status: "crawling",
-      startedAt: Date.now(),
-    };
+    /// todo: trigger crawl
 
     return NextResponse.json(status, {
       status: 202,

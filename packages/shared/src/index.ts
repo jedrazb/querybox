@@ -133,7 +133,7 @@ export interface DomainConfig {
   agentId?: string;
   createdAt: number;
   updatedAt: number;
-  status: "active" | "crawling" | "error" | "pending";
+  crawlStatus: "success" | "crawling" | "error" | "pending";
   crawlConfig?: CrawlConfig;
 }
 
@@ -210,4 +210,45 @@ export interface ElasticsearchSearchResponse {
     max_score: number;
     hits: ElasticsearchHit[];
   };
+}
+
+/**
+ * Crawler document structure
+ * Represents a document indexed by the Elastic web crawler
+ */
+export interface CrawlerDocument {
+  /** Main body content of the page */
+  body?: string;
+  /** Page headings */
+  headings?: string;
+  /** Document ID */
+  id?: string;
+  /** Timestamp of last crawl */
+  last_crawled_at?: string;
+  /** Links found on the page */
+  links?: string;
+  /** Meta description tag content */
+  meta_description?: string;
+  /** Combined semantic field (title + body) */
+  semantic_body?: string;
+  /** ELSER semantic text field for semantic search */
+  semantic_text?: string;
+  /** Page title */
+  title?: string;
+  /** Full URL of the page */
+  url?: string;
+  /** URL host component */
+  url_host?: string;
+  /** URL path component */
+  url_path?: string;
+  /** First directory in URL path */
+  url_path_dir1?: string;
+  /** Second directory in URL path */
+  url_path_dir2?: string;
+  /** Third directory in URL path */
+  url_path_dir3?: string;
+  /** URL port number */
+  url_port?: number;
+  /** URL scheme (http/https) */
+  url_scheme?: string;
 }

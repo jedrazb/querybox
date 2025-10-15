@@ -34,14 +34,9 @@ export default function Header() {
           >
             GitHub
           </a>
-          <a
-            href="https://www.npmjs.com/package/@jedrazb/querybox"
-            className={styles.linkHighlight}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            npm
-          </a>
+          <Link href="/get-started" className={styles.linkHighlight}>
+            Get Started
+          </Link>
         </nav>
       </div>
     </header>

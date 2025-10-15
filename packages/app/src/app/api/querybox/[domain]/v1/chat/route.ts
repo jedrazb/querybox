@@ -49,9 +49,9 @@ export async function POST(
       );
     }
 
-    if (domainConfig.status !== "active") {
+    if (domainConfig.crawlStatus === "error") {
       return NextResponse.json(
-        { error: `Domain is not ready. Status: ${domainConfig.status}` },
+        { error: `Domain crawl failed. Status: ${domainConfig.crawlStatus}` },
         { status: 400 }
       );
     }

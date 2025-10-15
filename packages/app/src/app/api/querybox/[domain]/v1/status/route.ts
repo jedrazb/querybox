@@ -43,7 +43,10 @@ export async function GET(
       configured: true,
       indexName: domainConfig.indexName,
       agentId: domainConfig.agentId,
-      status: domainConfig.status,
+      status:
+        domainConfig.crawlStatus === "success"
+          ? "active"
+          : domainConfig.crawlStatus,
       documentCount,
     };
 
