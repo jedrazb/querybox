@@ -26,8 +26,9 @@ const features = [
   },
   {
     icon: "🔒",
-    title: "Secure",
-    description: "Backend proxy keeps your Elasticsearch credentials safe",
+    title: "Privacy First",
+    description:
+      "No chat history logging. Your data is never used for AI training",
   },
   {
     icon: "📱",

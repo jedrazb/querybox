@@ -2,6 +2,7 @@
 
 import { extractBaseDomain } from "@/lib/utils";
 import { createContext, useContext, useEffect, useRef, ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 // We'll dynamically import QueryBox to avoid SSR issues
 let QueryBox: any = null;
@@ -16,9 +17,15 @@ const QueryBoxContext = createContext<QueryBoxContextType | null>(null);
 
 export function QueryBoxProvider({ children }: { children: ReactNode }) {
   const queryboxRef = useRef<any>(null);
+  const pathname = usePathname();
 
   // Load QueryBox dynamically
   useEffect(() => {
+    // Don't initialize on get-started page - it has its own TestDemoProvider
+    if (pathname === "/get-started") {
+      return;
+    }
+
     const loadQueryBox = async () => {
       if (typeof window !== "undefined" && !QueryBox) {
         try {
@@ -60,7 +67,7 @@ export function QueryBoxProvider({ children }: { children: ReactNode }) {
         queryboxRef.current.destroy();
       }
     };
-  }, []);
+  }, [pathname]);
 
   const value: QueryBoxContextType = {
     search: () => {
