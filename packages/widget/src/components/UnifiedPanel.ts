@@ -22,6 +22,10 @@ export type PanelMode = "search" | "chat";
  * Unified panel that switches between search and chat modes
  */
 export class UnifiedPanel extends BasePanel {
+  private static readonly LOGO_SVG = `<svg width="40" height="40" viewBox="0 0 235 166" fill="none">
+    <path d="M208.4 166L166.16 157.6L167.84 148.48L147.44 154C133.84 154 123.12 152.16 115.28 148.48C107.44 144.64 101.84 139.36 98.48 132.64C95.28 125.92 93.68 118.08 93.68 109.12C93.68 104.64 93.92 99.92 94.4 94.96C95.04 90 95.84 84.72 96.8 79.12C99.84 61.68 104.32 47.2 110.24 35.68C116.16 24 124.48 15.2 135.2 9.27999C145.92 3.35999 160.08 0.399989 177.68 0.399989C198.32 0.399989 212.88 4.55999 221.36 12.88C229.84 21.2 234.08 33.52 234.08 49.84C234.08 60.24 232.96 70.56 230.72 80.8C228.48 90.88 225.52 100.08 221.84 108.4C218.32 116.72 214.48 123.36 210.32 128.32L225.2 138.4L208.4 166ZM118.4 11.92L44.96 4H129.2C127.28 5.12 125.44 6.31999 123.68 7.6C121.92 8.87999 120.16 10.32 118.4 11.92ZM101.6 36.64L11.84 27.04H106.4C105.6 28.64 104.8 30.24 104 31.84C103.2 33.28 102.4 34.88 101.6 36.64ZM139.04 116.56H158C163.28 116.56 167.6 115.92 170.96 114.64C174.48 113.36 176.8 109.76 177.92 103.84L188.96 41.44H169.76C164.48 41.44 160.16 42.08 156.8 43.36C153.44 44.64 151.2 48.24 150.08 54.16L139.04 116.56ZM93.68 59.92L0.559998 50.08H96.56L93.68 59.92ZM89.12 83.2L-5.2 73.12H90.8L89.12 83.2ZM86.72 106.24L-7.84 96.16H87.44C86.96 99.68 86.72 103.04 86.72 106.24ZM88.88 129.28L-4.72 119.2H86.96C87.28 120.96 87.6 122.72 87.92 124.48C88.24 126.08 88.56 127.68 88.88 129.28ZM105.2 151.36L18.32 142.48H95.6C96.88 143.76 98.4 145.28 100.16 147.04C102.08 148.64 103.76 150.08 105.2 151.36Z" fill="currentColor" fill-opacity="0.6"/>
+  </svg>`;
+
   private currentMode: PanelMode = "search";
   private searchInput: HTMLInputElement | null = null;
   private chatInput: HTMLInputElement | null = null;
@@ -147,10 +151,7 @@ export class UnifiedPanel extends BasePanel {
       <div class="querybox-chat-container" style="display: none;">
         <div class="querybox-chat__messages">
           <div class="querybox-chat__welcome">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-              <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2"/>
-              <path d="M14 18h4M22 18h4M14 24h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+            ${UnifiedPanel.LOGO_SVG}
             <p>Hello! How can I help you today?</p>
           </div>
         </div>
@@ -593,10 +594,7 @@ export class UnifiedPanel extends BasePanel {
     if (this.messages.length === 0) {
       messagesContainer.innerHTML = `
         <div class="querybox-chat__welcome">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2"/>
-            <path d="M14 18h4M22 18h4M14 24h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
+          ${UnifiedPanel.LOGO_SVG}
           <p>Hello! How can I help you today?</p>
         </div>
       `;
