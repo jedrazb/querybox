@@ -15,9 +15,9 @@ const features = [
   },
   {
     icon: "🎨",
-    title: "Beautiful UI",
+    title: "Customizable UI",
     description:
-      "Glassmorphic design with dark mode support and smooth animations",
+      "Customize the UI to match your brand with themes, colors, and options",
   },
   {
     icon: "⚡",
