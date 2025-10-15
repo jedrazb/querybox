@@ -14,7 +14,7 @@ interface InstallationTabsProps {
 }
 
 export default function InstallationTabs({
-  apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.querybox.io",
+  apiUrl = process.env.NEXT_PUBLIC_API_URL,
   domain = "{your-domain}",
   theme = "auto",
   primaryColor = "#ec4899",
