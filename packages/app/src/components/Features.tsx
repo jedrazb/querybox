@@ -3,13 +3,13 @@ import styles from "./Features.module.css";
 const features = [
   {
     icon: "🔍",
-    title: "Instant Search",
+    title: "Website Search",
     description:
       "Hybrid search on crawled content with highlighting and fuzzy matching powered by Elasticsearch",
   },
   {
     icon: "💬",
-    title: "AI Chat",
+    title: "Website Chat",
     description:
       "Agent instantly helps users chat about data on your website using Elasticsearch agents",
   },
