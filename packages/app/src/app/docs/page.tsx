@@ -11,6 +11,7 @@ const sections = [
   { id: "quick-start", title: "Quick Start" },
   { id: "configuration", title: "Configuration" },
   { id: "api", title: "API Reference" },
+  { id: "crawler", title: "Crawler" },
 ];
 
 export default function Docs() {
@@ -49,6 +50,10 @@ export default function Docs() {
             <li>
               <a href="#api">API Reference</a> - Complete API documentation for
               QueryBox methods
+            </li>
+            <li>
+              <a href="#crawler">Crawler</a> - Automatic web content crawling
+              and indexing
             </li>
           </ul>
         </nav>
@@ -106,7 +111,16 @@ export default function Docs() {
             <a href="/get-started" className={styles.link}>
               Get Started page
             </a>
-            . It walks you through the entire setup process.
+            . It walks you through the entire setup process including domain
+            setup and automatic crawling.
+          </p>
+
+          <p>
+            QueryBox can{" "}
+            <a href="#crawler" className={styles.link}>
+              crawl your web content
+            </a>{" "}
+            automatically to keep your search index up-to-date.
           </p>
 
           <h3>Manual Setup</h3>
@@ -290,6 +304,19 @@ querybox.chat();`}</code>
             </h4>
             <p>Returns the current configuration object.</p>
           </div>
+        </section>
+
+        <section id="crawler" className={styles.section}>
+          <h2>Crawler</h2>
+
+          <p>
+            QueryBox can automatically crawl your website content and index it
+            into Elasticsearch for search and AI chat.
+          </p>
+          <p>
+            You can trigger a crawl manually from the{" "}
+            <a href="/get-started">Get Started</a> page.
+          </p>
         </section>
 
         <footer className={styles.docFooter}>
