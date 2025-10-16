@@ -57,10 +57,9 @@
   -webkit-backdrop-filter: blur(2px);
   z-index: 9998;
   opacity: 0;
-  transition: opacity var(--querybox-transition),
-    backdrop-filter var(--querybox-transition);
+  transition: opacity var(--querybox-transition);
   pointer-events: none;
-  will-change: opacity, backdrop-filter;
+  will-change: opacity;
 }
 
 .querybox-overlay--visible {
