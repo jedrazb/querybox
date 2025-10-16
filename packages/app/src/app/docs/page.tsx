@@ -139,90 +139,94 @@ querybox.chat();`}</code>
             with sensible defaults.
           </p>
 
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Option</th>
-                <th>Type</th>
-                <th>Default</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <code>apiEndpoint</code>
-                </td>
-                <td>string</td>
-                <td>
-                  <strong>required</strong>
-                </td>
-                <td>Your QueryBox API endpoint URL (generated during setup)</td>
-              </tr>
-              <tr>
-                <td>
-                  <code>theme</code>
-                </td>
-                <td>'light' | 'dark' | 'auto'</td>
-                <td>'auto'</td>
-                <td>Visual theme. 'auto' follows system preferences</td>
-              </tr>
-              <tr>
-                <td>
-                  <code>primaryColor</code>
-                </td>
-                <td>string</td>
-                <td>'#007aff'</td>
-                <td>
-                  Primary color for buttons, links, and accents (hex format)
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <code>title</code>
-                </td>
-                <td>string</td>
-                <td>undefined</td>
-                <td>
-                  Optional title displayed at the top of the panel (e.g., "Help
-                  Center")
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <code>initialQuestions</code>
-                </td>
-                <td>string[]</td>
-                <td>undefined</td>
-                <td>
-                  Array of suggested questions to display in empty chat state
-                  (max 3). Users can click these to start a conversation.
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <code>container</code>
-                </td>
-                <td>HTMLElement | string</td>
-                <td>document.body</td>
-                <td>
-                  Container element or CSS selector where QueryBox will be
-                  mounted
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <code>classNames</code>
-                </td>
-                <td>object</td>
-                <td>{"{}"}</td>
-                <td>
-                  Custom CSS class names for advanced styling (panel,
-                  searchPanel, chatPanel, overlay)
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div className={styles.tableWrapper}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Option</th>
+                  <th>Type</th>
+                  <th>Default</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code>apiEndpoint</code>
+                  </td>
+                  <td>string</td>
+                  <td>
+                    <strong>required</strong>
+                  </td>
+                  <td>
+                    Your QueryBox API endpoint URL (generated during setup)
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <code>theme</code>
+                  </td>
+                  <td>'light' | 'dark' | 'auto'</td>
+                  <td>'auto'</td>
+                  <td>Visual theme. 'auto' follows system preferences</td>
+                </tr>
+                <tr>
+                  <td>
+                    <code>primaryColor</code>
+                  </td>
+                  <td>string</td>
+                  <td>'#007aff'</td>
+                  <td>
+                    Primary color for buttons, links, and accents (hex format)
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <code>title</code>
+                  </td>
+                  <td>string</td>
+                  <td>undefined</td>
+                  <td>
+                    Optional title displayed at the top of the panel (e.g.,
+                    "Help Center")
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <code>initialQuestions</code>
+                  </td>
+                  <td>string[]</td>
+                  <td>undefined</td>
+                  <td>
+                    Array of suggested questions to display in empty chat state
+                    (max 3). Users can click these to start a conversation.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <code>container</code>
+                  </td>
+                  <td>HTMLElement | string</td>
+                  <td>document.body</td>
+                  <td>
+                    Container element or CSS selector where QueryBox will be
+                    mounted
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <code>classNames</code>
+                  </td>
+                  <td>object</td>
+                  <td>{"{}"}</td>
+                  <td>
+                    Custom CSS class names for advanced styling (panel,
+                    searchPanel, chatPanel, overlay)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <h3>Example with All Options</h3>
           <pre className={styles.code}>
