@@ -20,7 +20,7 @@ export const QUERYBOX_WEBSITE_URL = "https://querybox-app.vercel.app";
  * Now simplified - widget only needs API endpoint
  */
 export interface QueryBoxConfig {
-  /** API endpoint for QueryBox backend (e.g., https://api.querybox.io/api/querybox/yourdomain.com/v1) */
+  /** API endpoint for QueryBox backend (e.g., ${process.env.NEXT_PUBLIC_API_URL}/api/querybox/yourdomain.com/v1) */
   apiEndpoint: string;
   /** Container element or selector */
   container?: HTMLElement | string;

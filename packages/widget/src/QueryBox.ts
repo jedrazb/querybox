@@ -74,7 +74,7 @@ export class QueryBox {
       errors.push({
         field: "apiEndpoint",
         message:
-          "API endpoint is required (e.g., https://api.querybox.io/api/querybox/yourdomain.com/v1 or /api/querybox/yourdomain.com/v1)",
+          "API endpoint is required (e.g., ${process.env.NEXT_PUBLIC_API_URL}/api/querybox/yourdomain.com/v1 or /api/querybox/yourdomain.com/v1)",
       });
     } else {
       // Validate URL format - allow absolute URLs or relative paths

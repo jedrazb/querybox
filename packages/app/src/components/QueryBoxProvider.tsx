@@ -3,6 +3,7 @@
 import { extractBaseDomain } from "@/lib/utils";
 import { createContext, useContext, useEffect, useRef, ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { QUERYBOX_WEBSITE_URL } from "@jedrazb/querybox-shared";
 
 // We'll dynamically import QueryBox to avoid SSR issues
 let QueryBox: any = null;
@@ -34,7 +35,7 @@ export function QueryBoxProvider({ children }: { children: ReactNode }) {
           QueryBox = module.default;
 
           // Use environment variable for API URL, fallback to production
-          const publicUrl = process.env.NEXT_PUBLIC_API_URL || "";
+          const publicUrl = QUERYBOX_WEBSITE_URL;
           const processedDomain = extractBaseDomain(publicUrl);
 
           // Initialize with demo endpoint
