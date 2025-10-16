@@ -50,13 +50,13 @@ importers:
 
   packages/widget:
     dependencies:
-      '@jedrazb/querybox-shared':
-        specifier: workspace:*
-        version: link:../shared
       marked:
         specifier: ^16.4.0
         version: 16.4.0
     devDependencies:
+      '@jedrazb/querybox-shared':
+        specifier: workspace:*
+        version: link:../shared
       '@types/node':
         specifier: ^20.10.0
         version: 20.19.21
