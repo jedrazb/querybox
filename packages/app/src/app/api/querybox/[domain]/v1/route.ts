@@ -357,7 +357,7 @@ export async function POST(
         name: `${baseDomain} Assistant`,
         description: `AI assistant for ${baseDomain} that can search and answer questions about the website.`,
         configuration: {
-          instructions: `You are a helpful assistant for ${baseDomain}. Use the search tool to find relevant information when answering questions. Always cite your sources by mentioning the relevant URLs and page titles.`,
+          instructions: `You are a helpful assistant for ${baseDomain}. Use the search tool to find relevant information from the crawled content when answering questions. Be concise and on-point in your responses. Always cite sources as markdown links using the format [Page Title](URL).`,
           tools: [
             {
               tool_ids: [tool.id],
