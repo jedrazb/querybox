@@ -71,6 +71,14 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 1rem 1.5rem;
+  }
+
+  .logoImage {
+    width: 180px;
+  }
+
   .nav {
     gap: 1rem;
   }
@@ -82,5 +90,28 @@
 
   .linkHighlight {
     padding: 0.4rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.75rem 1rem;
+  }
+
+  .logoImage {
+    width: 140px;
+  }
+
+  .nav {
+    gap: 0.5rem;
+  }
+
+  .link,
+  .linkHighlight {
+    font-size: 0.8rem;
+  }
+
+  .linkHighlight {
+    padding: 0.35rem 0.75rem;
   }
 }
