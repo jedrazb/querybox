@@ -145,6 +145,15 @@ export interface ChatResponse {
 // ============================================================================
 
 /**
+ * Crawl configuration
+ */
+export interface CrawlConfig {
+  startUrl: string;
+  maxPages?: number;
+  crawlDepth?: number;
+}
+
+/**
  * Domain configuration stored in Elasticsearch
  */
 export interface DomainConfig {
@@ -153,54 +162,9 @@ export interface DomainConfig {
   agentId?: string;
   createdAt: number;
   updatedAt: number;
-  crawlStatus: "success" | "crawling" | "error" | "pending";
+  crawlExecutionId?: string;
+  crawlStatus?: "pending" | "running" | "completed" | "failed" | "not_started";
   crawlConfig?: CrawlConfig;
-}
-
-/**
- * Crawl configuration
- */
-export interface CrawlConfig {
-  startUrl: string;
-  maxPages?: number;
-  allowedDomains?: string[];
-  excludePatterns?: string[];
-  crawlDepth?: number;
-}
-
-/**
- * Crawl request
- */
-export interface CrawlRequest {
-  domain: string;
-  config: CrawlConfig;
-}
-
-/**
- * Crawl status response
- */
-export interface CrawlStatus {
-  domain: string;
-  status: "pending" | "crawling" | "completed" | "error";
-  progress?: {
-    pagesProcessed: number;
-    totalPages: number;
-  };
-  error?: string;
-  startedAt?: number;
-  completedAt?: number;
-}
-
-/**
- * Domain status response
- */
-export interface DomainStatus {
-  domain: string;
-  configured: boolean;
-  indexName?: string;
-  agentId?: string;
-  status?: "active" | "crawling" | "error" | "pending";
-  documentCount?: number;
 }
 
 // ============================================================================

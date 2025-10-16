@@ -13,7 +13,8 @@ type DomainStatus = {
   agentId?: string;
   toolIds?: string[];
   docCount?: number;
-  crawlStatus?: string;
+  crawlStatus?: "pending" | "running" | "completed" | "failed" | "not_started";
+  crawlExecutionId?: string;
   createdAt?: number;
   updatedAt?: number;
 };
@@ -33,12 +34,77 @@ function GetStartedContent() {
   const [primaryColor, setPrimaryColor] = useState("#ec4899");
   const [title, setTitle] = useState("");
   const [initialQuestions, setinitialQuestions] = useState<string[]>([]);
+  const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(
+    null
+  );
 
   const cleanDomain = (input: string): string => {
     let cleaned = input.replace(/^https?:\/\//, "");
     cleaned = cleaned.replace(/\/$/, "");
     cleaned = cleaned.replace(/^www\./, "");
     return cleaned;
+  };
+
+  const testQueryBox = () => {
+    if (isReady) {
+      chat();
+    } else {
+      console.warn("QueryBox not ready yet");
+    }
+  };
+
+  const toggleStep = (stepIndex: number) => {
+    const newExpanded = new Set(expandedSteps);
+    if (newExpanded.has(stepIndex)) {
+      newExpanded.delete(stepIndex);
+    } else {
+      newExpanded.add(stepIndex);
+    }
+    setExpandedSteps(newExpanded);
+  };
+
+  const checkCrawlStatus = async () => {
+    if (!domain) return;
+
+    try {
+      const statusResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${domain}/v1/crawl/status`
+      );
+
+      if (!statusResponse.ok) {
+        console.error("Failed to check crawl status");
+        return;
+      }
+
+      const statusData = await statusResponse.json();
+      console.log("Crawl status:", statusData);
+
+      // Update status with new data (including real-time doc count)
+      setStatus((prevStatus) => {
+        if (!prevStatus) return null;
+
+        const newDocCount = statusData.docCount || prevStatus.docCount || 0;
+        const hasNewDocs = newDocCount > (prevStatus.docCount || 0);
+
+        return {
+          ...prevStatus,
+          crawlStatus: statusData.status,
+          docCount: newDocCount,
+          crawlExecutionId: statusData.executionId,
+        };
+      });
+
+      // If crawl completed, expand step 2
+      if (statusData.status === "completed" && statusData.docCount > 0) {
+        setExpandedSteps(new Set([2]));
+        setIsCrawling(false);
+      } else if (statusData.status === "failed") {
+        setError("Crawl failed. Please try again.");
+        setIsCrawling(false);
+      }
+    } catch (err: any) {
+      console.error("Error checking crawl status:", err);
+    }
   };
 
   // Load domain from URL on mount
@@ -68,23 +134,31 @@ function GetStartedContent() {
     }
   }, [domain, status?.docCount, theme, primaryColor, title, initialQuestions]);
 
-  const testQueryBox = () => {
-    if (isReady) {
-      chat();
-    } else {
-      console.warn("QueryBox not ready yet");
-    }
-  };
+  // Poll crawl status when crawl is running
+  useEffect(() => {
+    if (status?.crawlStatus === "running" && domain) {
+      // Start polling
+      const interval = setInterval(() => {
+        checkCrawlStatus();
+      }, 5000); // Check every 5 seconds
 
-  const toggleStep = (stepIndex: number) => {
-    const newExpanded = new Set(expandedSteps);
-    if (newExpanded.has(stepIndex)) {
-      newExpanded.delete(stepIndex);
+      setPollingInterval(interval);
+
+      // Check immediately
+      checkCrawlStatus();
+
+      return () => {
+        clearInterval(interval);
+      };
     } else {
-      newExpanded.add(stepIndex);
+      // Stop polling
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+        setPollingInterval(null);
+      }
     }
-    setExpandedSteps(newExpanded);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status?.crawlStatus, domain]);
 
   const checkDomain = async (domainToCheck?: string) => {
     const targetDomain = domainToCheck || domain;
@@ -145,8 +219,16 @@ function GetStartedContent() {
           agentId: checkData.agentId,
           toolIds: checkData.toolIds,
           docCount: checkData.docCount,
+          crawlStatus: checkData.crawlStatus,
+          crawlExecutionId: checkData.crawlExecutionId,
         });
         setStatus(checkData);
+
+        // Check crawl status if we have an execution ID
+        if (checkData.crawlExecutionId) {
+          checkCrawlStatus();
+        }
+
         // If crawl is completed (has docs), expand step 2, otherwise expand step 1
         setExpandedSteps(
           new Set([checkData.docCount && checkData.docCount > 0 ? 2 : 1])
@@ -207,17 +289,14 @@ function GetStartedContent() {
     setError(null);
 
     try {
-      // Start crawl
+      // Start async crawl
       const crawlResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${domain}/v1/crawl`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${domain}/v1/crawl/start`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            startUrl: `https://${domain}`,
-          }),
         }
       );
 
@@ -226,11 +305,23 @@ function GetStartedContent() {
         throw new Error(errorData.message || "Failed to start crawl");
       }
 
-      // Refresh status after a delay to show updated doc count
-      setTimeout(() => checkDomain(), 2000);
+      const crawlData = await crawlResponse.json();
+      console.log("Crawl started:", crawlData);
+
+      // Update status with execution ID and running state
+      setStatus((prevStatus) => {
+        if (!prevStatus) return null;
+        return {
+          ...prevStatus,
+          crawlExecutionId: crawlData.executionId,
+          crawlStatus: "running",
+        };
+      });
+
+      // Start polling for status
+      checkCrawlStatus();
     } catch (err: any) {
-      setError(err.message || "Failed to crawl");
-    } finally {
+      setError(err.message || "Failed to start crawl");
       setIsCrawling(false);
     }
   };
@@ -452,31 +543,51 @@ function GetStartedContent() {
                 {/* Step 1: Crawl & Test */}
                 {index === 1 && isExpanded && (
                   <div className={styles.stepBody}>
-                    {status?.docCount && status.docCount > 0 ? (
+                    {status?.exists ? (
                       <>
+                        {/* Always show domain and doc count */}
                         <div className={styles.statusGrid}>
                           <div className={styles.statusItem}>
                             <label>Domain</label>
                             <span>{status.domain}</span>
                           </div>
                           <div className={styles.statusItem}>
-                            <label>Pages indexed</label>
+                            <label>
+                              Pages indexed
+                              {status.crawlStatus === "running" && (
+                                <span className={styles.liveIndicator} />
+                              )}
+                            </label>
                             <span className={styles.badge}>
-                              {status.docCount}
+                              {status.docCount || 0}
                             </span>
                           </div>
                         </div>
 
+                        {status.crawlStatus === "failed" && (
+                          <div className={styles.error}>
+                            Crawl failed. Please try again.
+                          </div>
+                        )}
+
                         <div className={styles.recrawlSection}>
-                          <p className={styles.hint}>
-                            Content changed? Crawl again to update the index
-                          </p>
+                          {!!status.docCount && status.docCount > 0 && (
+                            <p className={styles.hint}>
+                              Content changed? Crawl again to update the index
+                            </p>
+                          )}
                           <button
                             onClick={triggerCrawl}
-                            className={styles.secondaryButton}
-                            disabled={isCrawling}
+                            className={
+                              !!status.docCount && status.docCount > 0
+                                ? styles.secondaryButton
+                                : styles.primaryButton
+                            }
+                            disabled={
+                              status.crawlStatus === "running" || isCrawling
+                            }
                           >
-                            {isCrawling ? (
+                            {status.crawlStatus === "running" || isCrawling ? (
                               <span
                                 style={{
                                   display: "flex",
@@ -487,43 +598,30 @@ function GetStartedContent() {
                                 <div className={styles.dotSpinner} />
                                 Crawling...
                               </span>
-                            ) : (
+                            ) : !!status.docCount && status.docCount > 0 ? (
                               "Crawl Again"
+                            ) : (
+                              "Crawl now"
                             )}
                           </button>
+                          {status.crawlStatus === "running" && (
+                            <p className={styles.hint}>
+                              Crawl usually takes a couple of minutes. You can
+                              check your domain status later.
+                            </p>
+                          )}
                         </div>
                       </>
                     ) : (
-                      <>
-                        <button
-                          onClick={triggerCrawl}
-                          className={styles.primaryButton}
-                          disabled={isCrawling || !domain || !status?.exists}
-                        >
-                          {isCrawling ? (
-                            <span
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.5rem",
-                              }}
-                            >
-                              <div className={styles.dotSpinner} />
-                              Crawling...
-                            </span>
-                          ) : (
-                            "Crawl now"
-                          )}
-                        </button>
-                        {!isStepCompleted(0) && (
-                          <p className={styles.hint}>
-                            {!domain
-                              ? "Enter your domain in step 1 first"
-                              : "Complete step 1 to set up your domain first"}
-                          </p>
-                        )}
-                        {error && <div className={styles.error}>{error}</div>}
-                      </>
+                      <p className={styles.hint}>
+                        {!domain
+                          ? "Enter your domain in step 1 first"
+                          : "Complete step 1 to set up your domain first"}
+                      </p>
+                    )}
+
+                    {error && status?.crawlStatus !== "failed" && (
+                      <div className={styles.error}>{error}</div>
                     )}
                   </div>
                 )}

@@ -233,6 +233,7 @@ export async function GET(
         agentId: config.agentId,
         docCount,
         crawlStatus: config.crawlStatus,
+        crawlExecutionId: config.crawlExecutionId,
         createdAt: config.createdAt,
         updatedAt: config.updatedAt,
       },
