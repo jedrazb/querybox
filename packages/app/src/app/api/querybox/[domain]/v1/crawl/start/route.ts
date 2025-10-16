@@ -44,6 +44,24 @@ export async function POST(
       );
     }
 
+    // Check if domain has a subdomain (e.g., blog.example.com vs example.com)
+    const hasSubdomain = baseDomain.split(".").length > 2;
+
+    // Build domains array - add www. only if no subdomain exists
+    const domains = [
+      {
+        url: `https://${baseDomain}`,
+        seed_urls: [`https://${baseDomain}`],
+      },
+    ];
+
+    if (!hasSubdomain) {
+      domains.push({
+        url: `https://www.${baseDomain}`,
+        seed_urls: [`https://www.${baseDomain}`],
+      });
+    }
+
     // Start async crawl via external service
     const crawlResponse = await fetch(crawlerEndpoint, {
       method: "POST",
@@ -52,12 +70,7 @@ export async function POST(
         "X-API-Key": crawlerApiKey,
       },
       body: JSON.stringify({
-        domains: [
-          {
-            url: `https://${baseDomain}`,
-            seed_urls: [`https://${baseDomain}`],
-          },
-        ],
+        domains,
         output_index: config.indexName,
       }),
     });

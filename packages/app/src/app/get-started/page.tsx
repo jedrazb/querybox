@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { useTestDemo } from "@/components/TestDemoProvider";
@@ -39,11 +39,11 @@ function GetStartedContent() {
   const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(
     null
   );
+  const checkingDomainRef = useRef<string | null>(null);
 
   const cleanDomain = (input: string): string => {
     let cleaned = input.replace(/^https?:\/\//, "");
     cleaned = cleaned.replace(/\/$/, "");
-    cleaned = cleaned.replace(/^www\./, "");
     return cleaned;
   };
 
@@ -113,7 +113,7 @@ function GetStartedContent() {
   // Load domain from URL on mount
   useEffect(() => {
     const domainParam = searchParams.get("domain");
-    if (domainParam) {
+    if (domainParam && !isLoading) {
       const cleanedDomain = cleanDomain(domainParam);
       console.log("Loading domain from URL:", cleanedDomain);
       setDomain(cleanedDomain);
@@ -171,6 +171,14 @@ function GetStartedContent() {
     }
 
     const cleanedDomain = cleanDomain(targetDomain);
+
+    // Prevent duplicate calls for the same domain
+    if (checkingDomainRef.current === cleanedDomain) {
+      console.log("Already checking domain:", cleanedDomain);
+      return;
+    }
+
+    checkingDomainRef.current = cleanedDomain;
     setDomain(cleanedDomain);
 
     // Client-side validation
@@ -181,6 +189,7 @@ function GetStartedContent() {
       );
       setStatus(null);
       setExpandedSteps(new Set([0])); // Keep step 0 expanded
+      checkingDomainRef.current = null;
       return;
     }
 
@@ -190,6 +199,7 @@ function GetStartedContent() {
       );
       setStatus(null);
       setExpandedSteps(new Set([0])); // Keep step 0 expanded
+      checkingDomainRef.current = null;
       return;
     }
 
@@ -226,15 +236,42 @@ function GetStartedContent() {
         });
         setStatus(checkData);
 
-        // Check crawl status if we have an execution ID
-        if (checkData.crawlExecutionId) {
-          checkCrawlStatus();
+        // Always check crawl status to detect in-progress crawls
+        let currentCrawlStatus = null;
+        let updatedDocCount = checkData.docCount || 0;
+        try {
+          const statusResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${cleanedDomain}/v1/crawl/status`
+          );
+          if (statusResponse.ok) {
+            const statusData = await statusResponse.json();
+            currentCrawlStatus = statusData.status;
+            setCrawlStatus(statusData.status);
+            updatedDocCount = statusData.docCount || checkData.docCount || 0;
+
+            // Update status with real-time data
+            setStatus({
+              ...checkData,
+              docCount: updatedDocCount,
+              crawlExecutionId: statusData.executionId,
+            });
+          }
+        } catch (err) {
+          console.error("Error checking crawl status on load:", err);
         }
 
-        // If crawl is completed (has docs), expand step 2, otherwise expand step 1
-        setExpandedSteps(
-          new Set([checkData.docCount && checkData.docCount > 0 ? 2 : 1])
-        );
+        // Determine which step to expand:
+        // - If crawl is running: keep step 1 expanded
+        // - If crawl completed (has docs): expand step 2
+        // - Otherwise: expand step 1
+        if (currentCrawlStatus === "running") {
+          setExpandedSteps(new Set([1]));
+          setIsCrawling(true);
+        } else if (updatedDocCount > 0) {
+          setExpandedSteps(new Set([2]));
+        } else {
+          setExpandedSteps(new Set([1]));
+        }
       } else {
         // Domain doesn't exist - create it via POST (this will validate the domain)
         const setupResponse = await fetch(
@@ -281,6 +318,7 @@ function GetStartedContent() {
       setExpandedSteps(new Set([0])); // Keep step 0 expanded on error
     } finally {
       setIsLoading(false);
+      checkingDomainRef.current = null;
     }
   };
 
@@ -357,8 +395,12 @@ function GetStartedContent() {
       return isComplete;
     }
     if (index === 1) {
-      // Step 1 is complete only if content is crawled
-      return !!(status?.docCount && status.docCount > 0);
+      // Step 1 is complete only if content is crawled AND not currently crawling
+      return !!(
+        status?.docCount &&
+        status.docCount > 0 &&
+        crawlStatus !== "running"
+      );
     }
     return false;
   };

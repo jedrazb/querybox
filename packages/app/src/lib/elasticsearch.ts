@@ -191,7 +191,7 @@ export class ElasticsearchClient {
           },
           semantic_text: {
             type: "semantic_text",
-            inference_id: ".elser-2-elasticsearch",
+            inference_id: ".elser-2-elastic",
           },
           url: {
             type: "text",
