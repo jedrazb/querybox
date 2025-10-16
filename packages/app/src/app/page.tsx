@@ -119,6 +119,7 @@ export default function Home() {
             GitHub
           </a>
           <a href="/docs">Docs</a>
+          <a href="https://www.npmjs.com/package/@jedrazb/querybox">npm</a>
         </div>
       </footer>
     </main>
