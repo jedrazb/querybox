@@ -4,18 +4,18 @@
   --querybox-primary-rgb: 0, 122, 255;
 
   /* Glassmorphism colors */
-  --querybox-glass-bg: rgba(255, 255, 255, 0.7);
+  --querybox-glass-bg: rgba(255, 255, 255, 0.95);
   --querybox-glass-border: rgba(255, 255, 255, 0.3);
   --querybox-glass-shadow: rgba(0, 0, 0, 0.1);
 
   --querybox-text: #1d1d1f;
   --querybox-text-secondary: #86868b;
   --querybox-border: rgba(0, 0, 0, 0.08);
-  --querybox-overlay-bg: rgba(0, 0, 0, 0.4);
+  --querybox-overlay-bg: rgba(0, 0, 0, 0.5);
 
   /* Card backgrounds with glass effect */
-  --querybox-card-bg: rgba(255, 255, 255, 0.8);
-  --querybox-input-bg: rgba(255, 255, 255, 0.5);
+  --querybox-card-bg: rgba(255, 255, 255, 0.92);
+  --querybox-input-bg: rgba(255, 255, 255, 0.7);
   --querybox-hover-bg: rgba(0, 0, 0, 0.04);
 
   --querybox-panel-width: 600px;
@@ -60,6 +60,7 @@
   transition: opacity var(--querybox-transition),
     backdrop-filter var(--querybox-transition);
   pointer-events: none;
+  will-change: opacity, backdrop-filter;
 }
 
 .querybox-overlay--visible {
@@ -99,6 +100,8 @@
   transition: opacity var(--querybox-transition),
     transform var(--querybox-transition);
   pointer-events: none;
+  will-change: opacity, transform;
+  isolation: isolate;
 }
 
 .querybox-panel--visible {
