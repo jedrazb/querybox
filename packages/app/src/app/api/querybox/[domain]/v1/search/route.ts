@@ -42,13 +42,6 @@ export async function POST(
       );
     }
 
-    if (domainConfig.crawlStatus === "error") {
-      return NextResponse.json(
-        { error: `Domain crawl failed. Status: ${domainConfig.crawlStatus}` },
-        { status: 400 }
-      );
-    }
-
     // Perform search
     const searchResponse = await esClient.search(
       domainConfig.indexName,

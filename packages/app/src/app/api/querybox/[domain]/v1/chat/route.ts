@@ -60,15 +60,6 @@ export async function POST(
       );
     }
 
-    if (domainConfig.crawlStatus === "error") {
-      return new Response(
-        JSON.stringify({
-          error: `Domain crawl failed. Status: ${domainConfig.crawlStatus}`,
-        }),
-        { status: 400 }
-      );
-    }
-
     // Create SSE stream
     const encoder = new TextEncoder();
     const stream = new ReadableStream({

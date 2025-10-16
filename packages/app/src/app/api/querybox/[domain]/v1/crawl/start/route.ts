@@ -84,11 +84,10 @@ export async function POST(
       );
     }
 
-    // Update domain config with execution ID and status
+    // Update domain config with execution ID
     await esClient.saveDomainConfig({
       ...config,
       crawlExecutionId: executionId,
-      crawlStatus: "running",
       updatedAt: Date.now(),
     });
 

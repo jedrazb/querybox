@@ -92,22 +92,8 @@ export async function GET(
     if (statusData.status === "completed") {
       crawlStatus = "completed";
       stats = statusData.result?.stats;
-
-      // Update domain config with completed status
-      await esClient.saveDomainConfig({
-        ...config,
-        crawlStatus: "completed",
-        updatedAt: Date.now(),
-      });
     } else if (statusData.status === "failed") {
       crawlStatus = "failed";
-
-      // Update domain config with failed status
-      await esClient.saveDomainConfig({
-        ...config,
-        crawlStatus: "failed",
-        updatedAt: Date.now(),
-      });
     } else if (statusData.status === "running") {
       crawlStatus = "running";
     }

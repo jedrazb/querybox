@@ -163,7 +163,6 @@ export interface DomainConfig {
   createdAt: number;
   updatedAt: number;
   crawlExecutionId?: string;
-  crawlStatus?: "pending" | "running" | "completed" | "failed" | "not_started";
   crawlConfig?: CrawlConfig;
 }
 

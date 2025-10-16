@@ -232,7 +232,6 @@ export async function GET(
         indexName: config.indexName,
         agentId: config.agentId,
         docCount,
-        crawlStatus: config.crawlStatus,
         crawlExecutionId: config.crawlExecutionId,
         createdAt: config.createdAt,
         updatedAt: config.updatedAt,
@@ -377,7 +376,6 @@ export async function POST(
       agentId: agent.id,
       createdAt: now,
       updatedAt: now,
-      crawlStatus: "pending",
       crawlConfig: {
         startUrl: baseDomain,
       },

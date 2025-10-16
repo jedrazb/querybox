@@ -13,7 +13,6 @@ type DomainStatus = {
   agentId?: string;
   toolIds?: string[];
   docCount?: number;
-  crawlStatus?: "pending" | "running" | "completed" | "failed" | "not_started";
   crawlExecutionId?: string;
   createdAt?: number;
   updatedAt?: number;
@@ -27,6 +26,9 @@ function GetStartedContent() {
   const [domain, setDomain] = useState("");
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set([0]));
   const [status, setStatus] = useState<DomainStatus | null>(null);
+  const [crawlStatus, setCrawlStatus] = useState<
+    "pending" | "running" | "completed" | "failed" | "not_started" | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCrawling, setIsCrawling] = useState(false);
@@ -79,16 +81,17 @@ function GetStartedContent() {
       const statusData = await statusResponse.json();
       console.log("Crawl status:", statusData);
 
-      // Update status with new data (including real-time doc count)
+      // Update crawl status
+      setCrawlStatus(statusData.status);
+
+      // Update domain status with new data (including real-time doc count)
       setStatus((prevStatus) => {
         if (!prevStatus) return null;
 
         const newDocCount = statusData.docCount || prevStatus.docCount || 0;
-        const hasNewDocs = newDocCount > (prevStatus.docCount || 0);
 
         return {
           ...prevStatus,
-          crawlStatus: statusData.status,
           docCount: newDocCount,
           crawlExecutionId: statusData.executionId,
         };
@@ -136,7 +139,7 @@ function GetStartedContent() {
 
   // Poll crawl status when crawl is running
   useEffect(() => {
-    if (status?.crawlStatus === "running" && domain) {
+    if (crawlStatus === "running" && domain) {
       // Start polling
       const interval = setInterval(() => {
         checkCrawlStatus();
@@ -158,7 +161,7 @@ function GetStartedContent() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status?.crawlStatus, domain]);
+  }, [crawlStatus, domain]);
 
   const checkDomain = async (domainToCheck?: string) => {
     const targetDomain = domainToCheck || domain;
@@ -219,7 +222,6 @@ function GetStartedContent() {
           agentId: checkData.agentId,
           toolIds: checkData.toolIds,
           docCount: checkData.docCount,
-          crawlStatus: checkData.crawlStatus,
           crawlExecutionId: checkData.crawlExecutionId,
         });
         setStatus(checkData);
@@ -308,15 +310,17 @@ function GetStartedContent() {
       const crawlData = await crawlResponse.json();
       console.log("Crawl started:", crawlData);
 
-      // Update status with execution ID and running state
+      // Update status with execution ID
       setStatus((prevStatus) => {
         if (!prevStatus) return null;
         return {
           ...prevStatus,
           crawlExecutionId: crawlData.executionId,
-          crawlStatus: "running",
         };
       });
+
+      // Set crawl status to running
+      setCrawlStatus("running");
 
       // Start polling for status
       checkCrawlStatus();
@@ -554,7 +558,7 @@ function GetStartedContent() {
                           <div className={styles.statusItem}>
                             <label>
                               Pages indexed
-                              {status.crawlStatus === "running" && (
+                              {crawlStatus === "running" && (
                                 <span className={styles.liveIndicator} />
                               )}
                             </label>
@@ -564,7 +568,7 @@ function GetStartedContent() {
                           </div>
                         </div>
 
-                        {status.crawlStatus === "failed" && (
+                        {crawlStatus === "failed" && (
                           <div className={styles.error}>
                             Crawl failed. Please try again.
                           </div>
@@ -583,11 +587,9 @@ function GetStartedContent() {
                                 ? styles.secondaryButton
                                 : styles.primaryButton
                             }
-                            disabled={
-                              status.crawlStatus === "running" || isCrawling
-                            }
+                            disabled={crawlStatus === "running" || isCrawling}
                           >
-                            {status.crawlStatus === "running" || isCrawling ? (
+                            {crawlStatus === "running" || isCrawling ? (
                               <span
                                 style={{
                                   display: "flex",
@@ -604,7 +606,7 @@ function GetStartedContent() {
                               "Crawl now"
                             )}
                           </button>
-                          {status.crawlStatus === "running" && (
+                          {crawlStatus === "running" && (
                             <p className={styles.hint}>
                               Crawl usually takes a couple of minutes. You can
                               check your domain status later.
@@ -620,7 +622,7 @@ function GetStartedContent() {
                       </p>
                     )}
 
-                    {error && status?.crawlStatus !== "failed" && (
+                    {error && crawlStatus !== "failed" && (
                       <div className={styles.error}>{error}</div>
                     )}
                   </div>

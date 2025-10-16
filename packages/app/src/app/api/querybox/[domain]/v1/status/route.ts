@@ -4,7 +4,6 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import type { DomainStatus } from "@jedrazb/querybox-shared";
 import { getElasticsearchClient } from "@/lib/elasticsearch";
 
 export async function GET(
@@ -38,25 +37,22 @@ export async function GET(
       domainConfig.indexName
     );
 
-    const status: DomainStatus = {
-      domain,
-      configured: true,
-      indexName: domainConfig.indexName,
-      agentId: domainConfig.agentId,
-      status:
-        domainConfig.crawlStatus === "success"
-          ? "active"
-          : domainConfig.crawlStatus,
-      documentCount,
-    };
-
-    return NextResponse.json(status, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
+    return NextResponse.json(
+      {
+        domain,
+        configured: true,
+        indexName: domainConfig.indexName,
+        agentId: domainConfig.agentId,
+        documentCount,
       },
-    });
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      }
+    );
   } catch (error: any) {
     console.error("Status error:", error);
     return NextResponse.json(
