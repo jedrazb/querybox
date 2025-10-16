@@ -1,6 +1,6 @@
 {
   "name": "@jedrazb/querybox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lightweight embeddable search and chat widget powered by Elasticsearch",
   "type": "module",
   "main": "./dist/querybox.umd.js",
@@ -49,13 +49,13 @@
   },
   "homepage": "https://github.com/jedrazb/querybox#readme",
   "devDependencies": {
+    "@jedrazb/querybox-shared": "workspace:*",
     "@types/node": "^20.10.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.8",
     "vite-plugin-dts": "^3.7.0"
   },
   "dependencies": {
-    "@jedrazb/querybox-shared": "workspace:*",
     "marked": "^16.4.0"
   }
 }
