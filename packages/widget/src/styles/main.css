@@ -53,8 +53,8 @@
   right: 0;
   bottom: 0;
   background: var(--querybox-overlay-bg);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   z-index: 9998;
   opacity: 0;
   transition: opacity var(--querybox-transition),
