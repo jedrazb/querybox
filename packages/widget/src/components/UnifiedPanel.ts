@@ -88,12 +88,12 @@ export class UnifiedPanel extends BasePanel {
             </svg>
             <span>Ask</span>
           </button>
+          <button class="querybox-panel__close" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
-        <button class="querybox-panel__close" aria-label="Close">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </button>
       </div>
       <div class="querybox-unified-body">
         ${this.createSearchContent()}

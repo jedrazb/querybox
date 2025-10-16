@@ -167,6 +167,18 @@
   border-right: 2px solid var(--querybox-border);
 }
 
+/* Mode Switcher with Close Button Group */
+.querybox-mode-switcher {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--querybox-input-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--querybox-border);
+  border-radius: 10px;
+}
+
 .querybox-panel__close {
   display: flex;
   align-items: center;
@@ -174,39 +186,22 @@
   width: 36px;
   height: 36px;
   padding: 0;
-  background: var(--querybox-input-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--querybox-border);
-  border-radius: 50%;
+  background: transparent;
+  border: none;
   color: var(--querybox-text-secondary);
   cursor: pointer;
-  transition: all var(--querybox-transition);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  opacity: 0.6;
 }
 
 .querybox-panel__close:hover {
-  background: var(--querybox-hover-bg);
-  border-color: var(--querybox-primary);
-  color: var(--querybox-primary);
-  transform: scale(1.05);
+  color: var(--querybox-text);
+  opacity: 1;
 }
 
 .querybox-panel__close:active {
-  transform: scale(0.95);
-}
-
-/* Mode Switcher */
-.querybox-mode-switcher {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
-  margin-right: 12px;
-  padding: 4px;
-  background: var(--querybox-input-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--querybox-border);
-  border-radius: 10px;
+  opacity: 0.4;
 }
 
 .querybox-mode-btn {
@@ -707,16 +702,20 @@
 
 .querybox-chat__input-wrapper {
   display: flex;
-  gap: 12px;
+  align-items: stretch;
+  gap: 0;
   padding: 16px 28px 24px;
   background: transparent;
+  position: relative;
 }
 
 .querybox-chat__input {
   flex: 1;
-  padding: 14px 18px;
+  padding: 16px 20px;
+  padding-right: 62px;
   font-size: 15px;
   color: var(--querybox-text);
+  line-height: 1.5;
 
   /* Glass input */
   background: var(--querybox-input-bg);
@@ -724,7 +723,7 @@
   -webkit-backdrop-filter: blur(10px);
 
   border: 1.5px solid var(--querybox-border);
-  border-radius: 18px;
+  border-radius: var(--querybox-radius-sm);
   outline: none;
 
   transition: all var(--querybox-transition);
@@ -746,38 +745,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   padding: 0;
+  position: absolute;
+  right: 34px;
+  top: 22px;
 
   /* Primary button with glass effect */
   background: var(--querybox-primary);
   color: white;
   border: none;
-  border-radius: 50%;
+  border-radius: 10px;
   cursor: pointer;
 
-  box-shadow: 0 4px 16px rgba(var(--querybox-primary-rgb), 0.3),
-    0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(var(--querybox-primary-rgb), 0.3);
 
-  transition: all var(--querybox-transition);
+  transition: all 0.2s ease;
 }
 
 .querybox-chat__send:hover {
   background: var(--querybox-primary-hover);
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(var(--querybox-primary-rgb), 0.4),
-    0 3px 10px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 6px rgba(var(--querybox-primary-rgb), 0.4);
 }
 
 .querybox-chat__send:active {
-  transform: scale(0.95);
+  box-shadow: 0 1px 2px rgba(var(--querybox-primary-rgb), 0.3);
 }
 
 .querybox-chat__send:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: scale(1);
 }
 
 /* Spinner with Apple style */
@@ -838,12 +836,61 @@
 /* Responsive */
 @media (max-width: 768px) {
   :root {
-    --querybox-panel-width: 100vw;
-    --querybox-panel-height: 100vh;
+    --querybox-panel-width: 95vw;
+    --querybox-panel-height: 90vh;
   }
 
   .querybox-panel {
-    border-radius: 0;
+    max-width: 95vw;
+    max-height: 90vh;
+  }
+
+  .querybox-panel__header {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 20px;
+    justify-content: center;
+  }
+
+  .querybox-header__left {
+    flex: 0 0 auto;
+    justify-content: center;
+  }
+
+  .querybox-header__title {
+    max-width: 200px;
+    font-size: 14px;
+  }
+
+  .querybox-mode-switcher {
+    order: 3;
+    width: 100%;
+  }
+
+  .querybox-mode-btn {
+    flex: 1;
+    padding: 8px 12px;
+  }
+
+  .querybox-panel__close {
+    width: 32px;
+    height: 32px;
+  }
+
+  .querybox-chat__input-wrapper {
+    padding: 12px 20px 20px;
+  }
+
+  .querybox-chat__send {
+    width: 40px;
+    height: 40px;
+    right: 26px;
+    top: 20px;
+  }
+
+  .querybox-chat__input {
+    padding: 14px 18px;
+    padding-right: 56px;
   }
 }
 
