@@ -472,7 +472,10 @@ function GetStartedContent() {
       <div className={styles.header}>
         <h1 className={styles.title}>Get Started with QueryBox</h1>
         <p className={styles.subtitle}>
-          Set up search and AI chat for your website in 3 simple steps
+          Set up search and AI chat for your website in 3 simple steps.{" "}
+          <a href="/examples" className={styles.examplesLink}>
+            See examples of existing integrations →
+          </a>
         </p>
       </div>
 

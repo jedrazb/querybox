@@ -37,7 +37,10 @@ export default function Home() {
           <p className={styles.subtitle}>
             A lightweight, embeddable JavaScript widget for search and AI chat
             <br />
-            powered by Elastic Agent Builder.
+            powered by Elastic Agent Builder.{" "}
+            <a href="/examples" className={styles.examplesLink}>
+              See examples →
+            </a>
           </p>
           <div className={styles.cta}>
             <a href="/get-started">

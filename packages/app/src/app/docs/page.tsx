@@ -93,7 +93,11 @@ export default function Docs() {
           <h1>QueryBox Documentation</h1>
           <p className={styles.lead}>
             A lightweight, embeddable JavaScript widget for search and AI chat
-            powered by Elastic Agent Builder.
+            powered by Elastic Agent Builder.{" "}
+            <a href="/examples" className={styles.link}>
+              See live examples
+            </a>{" "}
+            of QueryBox in action across different websites.
           </p>
         </section>
 
