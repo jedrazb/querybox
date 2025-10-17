@@ -79,11 +79,9 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
       // Initialize with custom domain and configuration
       queryboxRef.current = new QueryBox({
-        apiEndpoint: `${apiUrl}/api/querybox/${domain}/v1`,
+        apiEndpoint: `/api/${domain}/v1`,
         theme: config?.theme || "auto",
         primaryColor: config?.primaryColor || "#ec4899",
         title: config?.title,
@@ -91,12 +89,6 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
       });
 
       setIsReady(true);
-      console.log(
-        "✅ QueryBox initialized for domain:",
-        domain,
-        "with config:",
-        config
-      );
     } catch (error) {
       console.error("❌ Failed to initialize QueryBox:", error);
       setIsReady(false);
@@ -106,18 +98,12 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
   const value: TestDemoContextType = {
     search: () => {
       if (queryboxRef.current) {
-        console.log("🔍 Opening search...");
         queryboxRef.current.search();
-      } else {
-        console.warn("QueryBox not initialized yet");
       }
     },
     chat: () => {
       if (queryboxRef.current) {
-        console.log("💬 Opening chat...");
         queryboxRef.current.chat();
-      } else {
-        console.warn("QueryBox not initialized yet");
       }
     },
     initializeForDomain,

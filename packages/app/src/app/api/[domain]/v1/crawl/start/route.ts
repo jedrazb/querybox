@@ -3,7 +3,7 @@ import { getElasticsearchClient } from "@/lib/elasticsearch";
 import { extractBaseDomain } from "@/lib/utils";
 
 /**
- * POST /api/querybox/{domain}/v1/crawl/start
+ * POST /{domain}/v1/crawl/start
  * Start async crawl via external crawler service
  */
 export async function POST(

@@ -1,6 +1,6 @@
 /**
  * Chat API endpoint - App Router with SSE streaming
- * POST /api/querybox/{domain}/v1/chat
+ * POST /{domain}/v1/chat
  */
 
 import { NextRequest, NextResponse } from "next/server";

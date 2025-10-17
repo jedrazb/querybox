@@ -69,9 +69,7 @@ function GetStartedContent() {
     if (!domain) return;
 
     try {
-      const statusResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${domain}/v1/crawl/status`
-      );
+      const statusResponse = await fetch(`/api/${domain}/v1/crawl/status`);
 
       if (!statusResponse.ok) {
         console.error("Failed to check crawl status");
@@ -213,9 +211,7 @@ function GetStartedContent() {
 
     try {
       // Check if domain exists
-      const checkResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${cleanedDomain}/v1`
-      );
+      const checkResponse = await fetch(`/api/${cleanedDomain}/v1`);
 
       if (!checkResponse.ok) {
         throw new Error("Failed to check domain status");
@@ -241,7 +237,7 @@ function GetStartedContent() {
         let updatedDocCount = checkData.docCount || 0;
         try {
           const statusResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${cleanedDomain}/v1/crawl/status`
+            `/api/${cleanedDomain}/v1/crawl/status`
           );
           if (statusResponse.ok) {
             const statusData = await statusResponse.json();
@@ -274,15 +270,12 @@ function GetStartedContent() {
         }
       } else {
         // Domain doesn't exist - create it via POST (this will validate the domain)
-        const setupResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${cleanedDomain}/v1`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const setupResponse = await fetch(`/api/${cleanedDomain}/v1`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!setupResponse.ok) {
           const errorData = await setupResponse.json();
@@ -330,15 +323,12 @@ function GetStartedContent() {
 
     try {
       // Start async crawl
-      const crawlResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/querybox/${domain}/v1/crawl/start`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const crawlResponse = await fetch(`/api/${domain}/v1/crawl/start`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!crawlResponse.ok) {
         const errorData = await crawlResponse.json();

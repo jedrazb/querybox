@@ -27,8 +27,7 @@ import QueryBox from "@jedrazb/querybox";
 import "@jedrazb/querybox/dist/style.css";
 
 const querybox = new QueryBox({
-  apiEndpoint:
-    "${process.env.NEXT_PUBLIC_API_URL}/api/querybox/yoursite.com/v1",
+  apiEndpoint: "https://api.querybox.dev/{yoursite.com}/v1",
 });
 
 // Open search

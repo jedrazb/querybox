@@ -1,6 +1,6 @@
 /**
  * Domain status API endpoint - App Router
- * GET /api/querybox/{domain}/v1/status
+ * GET /{domain}/v1/status
  */
 
 import { NextRequest, NextResponse } from "next/server";

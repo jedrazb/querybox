@@ -40,7 +40,7 @@ export function QueryBoxProvider({ children }: { children: ReactNode }) {
 
           // Initialize with demo endpoint
           queryboxRef.current = new QueryBox({
-            apiEndpoint: `/api/querybox/${processedDomain}/v1`,
+            apiEndpoint: `/api/${processedDomain}/v1`,
             primaryColor: "#FF10D3",
             initialQuestions: [
               "What is QueryBox?",

@@ -1,6 +1,6 @@
 /**
  * Search API endpoint - App Router
- * POST /api/querybox/{domain}/v1/search
+ * POST /{domain}/v1/search
  */
 
 import { NextRequest, NextResponse } from "next/server";

@@ -3,7 +3,7 @@ import { getElasticsearchClient } from "@/lib/elasticsearch";
 import { extractBaseDomain } from "@/lib/utils";
 
 /**
- * GET /api/querybox/{domain}/v1/crawl/status
+ * GET /{domain}/v1/crawl/status
  * Check crawl execution status via external crawler service
  */
 export async function GET(

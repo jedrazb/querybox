@@ -131,7 +131,7 @@ export default function Docs() {
 import '@jedrazb/querybox/dist/style.css';
 
 const querybox = new QueryBox({
-  apiEndpoint: '${process.env.NEXT_PUBLIC_API_URL}/api/querybox/yoursite.com/v1',
+  apiEndpoint: '${process.env.NEXT_PUBLIC_API_URL}/yoursite.com/v1',
   theme: 'auto',
   primaryColor: '#ec4899'
 });
@@ -245,7 +245,7 @@ querybox.chat();`}</code>
           <h3>Example with All Options</h3>
           <pre className={styles.code}>
             <code>{`const querybox = new QueryBox({
-  apiEndpoint: '${process.env.NEXT_PUBLIC_API_URL}/api/querybox/yoursite.com/v1',
+  apiEndpoint: '${process.env.NEXT_PUBLIC_API_URL}/yoursite.com/v1',
   theme: 'dark',
   primaryColor: '#10b981',
   title: 'Documentation',

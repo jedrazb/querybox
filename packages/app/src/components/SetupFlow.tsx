@@ -34,12 +34,12 @@ export default function SetupFlow({ onClose }: SetupFlowProps) {
 
     const pollStatus = async () => {
       try {
-        const response = await fetch(`/api/querybox/${domain}/v1/status`);
+        const response = await fetch(`/api/${domain}/v1/status`);
         const data = await response.json();
 
         if (data.status === "active") {
           setStep("complete");
-          setApiEndpoint(`${window.location.origin}/api/querybox/${domain}/v1`);
+          setApiEndpoint(`/api/${domain}/v1`);
         } else if (data.status === "error") {
           setError("Crawl failed. Please try again.");
           setStep("domain");
@@ -65,7 +65,7 @@ export default function SetupFlow({ onClose }: SetupFlowProps) {
 
     try {
       // Initiate crawl
-      const response = await fetch(`/api/querybox/${domain}/v1/crawl`, {
+      const response = await fetch(`/api/${domain}/v1/crawl`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

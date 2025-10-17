@@ -43,7 +43,7 @@ import QueryBox from "@jedrazb/querybox";
 import "@jedrazb/querybox/dist/style.css";
 
 const querybox = new QueryBox({
-  apiEndpoint: "https://api.querybox.io/api/querybox/yoursite.com/v1",
+  apiEndpoint: "https://api.querybox.dev/{yoursite.com}/v1",
   theme: "auto",
   primaryColor: "#6366f1",
   initialQuestions: [

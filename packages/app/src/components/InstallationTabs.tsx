@@ -24,7 +24,7 @@ export default function InstallationTabs({
 }: InstallationTabsProps) {
   const [activeTab, setActiveTab] = useState<InstallationType>("cdn");
 
-  const apiEndpoint = `${apiUrl}/api/querybox/${domain}/v1`;
+  const apiEndpoint = `${apiUrl}/${domain}/v1`;
 
   // Helper to generate config string
   const initialQuestionsStr =
