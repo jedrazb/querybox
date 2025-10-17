@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { QueryBoxProvider } from "@/components/QueryBoxProvider";
 import "../styles/globals.css";
 
@@ -63,6 +64,9 @@ export default function RootLayout({
           </footer>
         </QueryBoxProvider>
       </body>
+      {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS ? (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+      ) : null}
     </html>
   );
 }
