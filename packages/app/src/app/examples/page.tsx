@@ -111,12 +111,12 @@ export default function ExamplesPage() {
         {/* Header Section */}
         <section className={styles.header}>
           <h1 className={styles.title}>
-            Live Examples
+            QueryBox
             <span className={styles.titleGradient}> in Action</span>
           </h1>
           <p className={styles.subtitle}>
-            See how QueryBox can be used to power search and AI chat across
-            different websites.
+            See how QueryBox can be integrated to power search and AI chat
+            across different websites.
           </p>
         </section>
 
