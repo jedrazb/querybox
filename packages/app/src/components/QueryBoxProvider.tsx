@@ -45,6 +45,7 @@ export function QueryBoxProvider({ children }: { children: ReactNode }) {
             initialQuestions: [
               "What is QueryBox?",
               "How can I add QueryBox to my site?",
+              "How can I use public API?",
             ],
           });
         } catch (error) {
@@ -59,7 +60,7 @@ export function QueryBoxProvider({ children }: { children: ReactNode }) {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        console.log("⌨️  Cmd+K pressed, opening search...");
+
         queryboxRef.current?.search();
       }
     };
@@ -76,11 +77,9 @@ export function QueryBoxProvider({ children }: { children: ReactNode }) {
 
   const value: QueryBoxContextType = {
     search: () => {
-      console.log("🔍 Opening search...");
       queryboxRef.current?.search();
     },
     chat: () => {
-      console.log("💬 Opening chat...");
       queryboxRef.current?.chat();
     },
     instance: queryboxRef.current,
