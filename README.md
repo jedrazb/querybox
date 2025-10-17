@@ -97,8 +97,6 @@ QueryBox is a monorepo with three packages:
   primaryColor?: string;      // Default: '#007aff'
   title?: string;             // Optional header title
   initialQuestions?: string[];  // Optional suggested questions (max 3)
-  container?: HTMLElement|string;
-  classNames?: { panel, overlay, ... }
 }
 ```
 
