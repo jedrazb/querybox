@@ -49,6 +49,7 @@ export default function RootLayout({
             <div className="footerLinks">
               <a href="/get-started">Get Started</a>
               <a href="/examples">Examples</a>
+              <a href="/docs#public-api">Public API</a>
               <a
                 href="https://github.com/jedrazb/querybox"
                 target="_blank"
