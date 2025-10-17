@@ -22,7 +22,7 @@ const features = [
   {
     icon: "⚡",
     title: "Lightning Fast",
-    description: "Optimized bundle size (~25KB) with instant search results",
+    description: "Optimized bundle size (~29KB) with instant search results",
   },
   {
     icon: "🔒",
