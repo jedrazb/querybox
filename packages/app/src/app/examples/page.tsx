@@ -115,8 +115,8 @@ export default function ExamplesPage() {
             <span className={styles.titleGradient}> in Action</span>
           </h1>
           <p className={styles.subtitle}>
-            See how QueryBox powers search and AI chat across different
-            websites.
+            See how QueryBox can be used to power search and AI chat across
+            different websites.
           </p>
         </section>
 
