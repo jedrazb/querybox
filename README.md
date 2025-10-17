@@ -9,7 +9,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Built with Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 
-[Demo](https://querybox-app.vercel.app) · [Documentation](https://querybox-app.vercel.app/docs) · [Get Started](https://querybox-app.vercel.app/get-started)
+[Demo](https://www.querybox.dev) · [Documentation](https://www.querybox.dev/docs) · [Get Started](https://www.querybox.dev/get-started)
 
 </div>
 
@@ -58,7 +58,7 @@ querybox.search();
 querybox.chat();
 ```
 
-**Interactive Setup:** Visit [querybox.io/get-started](https://querybox-app.vercel.app/get-started) to crawl your site, configure the widget, and get installation code for your framework.
+**Interactive Setup:** Visit [querybox.dev/get-started](https://www.querybox.dev/get-started) to crawl your site, configure the widget, and get installation code for your framework.
 
 ### Self-Hosting
 
@@ -130,8 +130,8 @@ MIT © [jedrazb](https://github.com/jedrazb)
 
 ## 🔗 Links
 
-- [Website](https://querybox-app.vercel.app)
-- [Documentation](https://querybox-app.vercel.app/docs)
+- [Website](https://www.querybox.dev)
+- [Documentation](https://www.querybox.dev/docs)
 - [npm Package](https://www.npmjs.com/package/@jedrazb/querybox)
 - [Issues](https://github.com/jedrazb/querybox/issues)
 

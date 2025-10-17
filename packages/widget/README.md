@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 
-[Demo](https://querybox-app.vercel.app) · [Documentation](https://querybox-app.vercel.app/docs) · [Get Started](https://querybox-app.vercel.app/get-started)
+[Demo](https://www.querybox.dev) · [Documentation](https://www.querybox.dev/docs) · [Get Started](https://www.querybox.dev/get-started)
 
 </div>
 
@@ -39,7 +39,7 @@ document.getElementById("chat-btn").onclick = () => querybox.chat();
 
 ## Documentation
 
-For full documentation, visit: https://querybox-app.vercel.app
+For full documentation, visit: https://www.querybox.dev
 
 ## License
 
