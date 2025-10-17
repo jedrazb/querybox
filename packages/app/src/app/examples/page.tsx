@@ -14,7 +14,7 @@ interface ExampleConfig {
 
 const EXAMPLES: ExampleConfig[] = [
   {
-    title: "modelcontextprotocol.io",
+    title: "MCP",
     description:
       "MCP (Model Context Protocol) is an open-source standard for connecting AI applications to external systems.",
     website: "https://modelcontextprotocol.io",
@@ -26,7 +26,7 @@ const EXAMPLES: ExampleConfig[] = [
     ],
   },
   {
-    title: "a2a-protocol.org",
+    title: "A2A",
     description:
       "A2A (Agent-to-Agent Protocol) is an open-source standard for connecting AI agents to external systems.",
     website: "https://a2a-protocol.org",
@@ -38,7 +38,7 @@ const EXAMPLES: ExampleConfig[] = [
     ],
   },
   {
-    title: "elastic.co",
+    title: "Elastic",
     description:
       "Elastic is the company behind the Elasticsearch, leading provider of vector database solutions.",
     website: "https://elastic.co",
@@ -50,7 +50,7 @@ const EXAMPLES: ExampleConfig[] = [
     ],
   },
   {
-    title: "www.searchkit.co",
+    title: "SearchKit",
     description:
       "Searchkit - UI Widgets for Elasticsearch. React, Vue & Javascript supported.",
     website: "https://www.searchkit.co",
@@ -62,7 +62,7 @@ const EXAMPLES: ExampleConfig[] = [
     ],
   },
   {
-    title: "search-labs.elastic.co",
+    title: "Search Labs",
     description:
       "Search news, experiments, and research from the creators of Elasticsearch",
     website: "https://search-labs.elastic.co",
@@ -71,7 +71,7 @@ const EXAMPLES: ExampleConfig[] = [
     initialQuestions: ["What is Elastic Agent Builder?"],
   },
   {
-    title: "cyclingdoppio.cc",
+    title: "CyclingDoppio",
     description: "Cycling Doppio is a blog about cycling and lifestyle.",
     website: "https://www.cyclingdoppio.cc",
     color: "#5ca168",

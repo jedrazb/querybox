@@ -50,6 +50,7 @@ const chatWithAI = async (message, conversationId = null) => {
 
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
+  let buffer = '';  // Buffer for incomplete SSE messages
   let fullResponse = '';
   let newConversationId = conversationId;
 
@@ -57,9 +58,12 @@ const chatWithAI = async (message, conversationId = null) => {
     const { done, value } = await reader.read();
     if (done) break;
 
-    // Parse SSE events
-    const chunk = decoder.decode(value);
-    const lines = chunk.split('\\n');
+    // Accumulate chunks in buffer
+    buffer += decoder.decode(value, { stream: true });
+
+    // Process complete SSE messages
+    const lines = buffer.split('\\n');
+    buffer = lines.pop() || '';  // Keep incomplete line in buffer
 
     for (const line of lines) {
       if (line.startsWith('data: ')) {
@@ -118,12 +122,17 @@ const chatWithAI = async (message, conversationId = null) => {
     body: JSON.stringify({ message, conversationId })
   });
 
+  let buffer = '';  // Buffer for incomplete SSE messages
   let fullResponse = '';
   let newConversationId = conversationId;
 
   // Stream processing
   for await (const chunk of response.body) {
-    const lines = chunk.toString().split('\\n');
+    buffer += chunk.toString();
+
+    // Process complete SSE messages
+    const lines = buffer.split('\\n');
+    buffer = lines.pop() || '';  // Keep incomplete line in buffer
 
     for (const line of lines) {
       if (line.startsWith('data: ')) {
@@ -137,12 +146,14 @@ const chatWithAI = async (message, conversationId = null) => {
         if (data.conversationId) {
           newConversationId = data.conversationId;
         }
+
+        if (data.type === 'done') {
+          console.log('\\n');
+          return { response: fullResponse, conversationId: newConversationId };
+        }
       }
     }
   }
-
-  console.log('\\n');
-  return { response: fullResponse, conversationId: newConversationId };
 };`;
 
   const searchPythonExample = `# Python with requests
@@ -191,11 +202,12 @@ def chat_with_ai(message: str, conversation_id: str = None):
                 if 'conversationId' in data:
                     new_conversation_id = data['conversationId']
 
-    print()  # New line after streaming
-    return {
-        'response': full_response,
-        'conversationId': new_conversation_id
-    }
+                if data['type'] == 'done':
+                    print()  # New line after streaming
+                    return {
+                        'response': full_response,
+                        'conversationId': new_conversation_id
+                    }
 
 # Usage
 result = chat_with_ai('What is QueryBox?')
