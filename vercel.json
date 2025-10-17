@@ -3,5 +3,17 @@
   "buildCommand": "pnpm run build",
   "installCommand": "pnpm install --frozen-lockfile --prod=false",
   "framework": "nextjs",
-  "outputDirectory": "packages/app/.next"
+  "outputDirectory": "packages/app/.next",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "api.querybox.dev"
+        }
+      ],
+      "destination": "/api/$1"
+    }
+  ]
 }
