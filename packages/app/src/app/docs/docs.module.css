@@ -238,6 +238,41 @@
   color: #a5b4fc;
 }
 
+/* API Endpoint Display */
+.apiEndpoint {
+  padding: 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(139, 92, 246, 0.1) 100%
+  );
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  margin: 2rem 0;
+}
+
+.apiEndpoint label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.apiEndpoint code {
+  display: block;
+  font-family: "Fira Code", monospace;
+  font-size: 1.1rem;
+  color: #a5b4fc;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  overflow-x: auto;
+}
+
 /* API Methods */
 .apiMethod {
   padding: 1.5rem;

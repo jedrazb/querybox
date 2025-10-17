@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQueryBox } from "@/components/QueryBoxProvider";
 import InstallationTabs from "@/components/InstallationTabs";
+import ApiIntegration from "@/components/ApiIntegration";
 import styles from "./docs.module.css";
 
 const sections = [
@@ -11,6 +12,7 @@ const sections = [
   { id: "quick-start", title: "Quick Start" },
   { id: "configuration", title: "Configuration" },
   { id: "api", title: "Widget Interface" },
+  { id: "public-api", title: "Public API" },
   { id: "crawler", title: "Crawler" },
 ];
 
@@ -50,6 +52,10 @@ export default function Docs() {
             <li>
               <a href="#api">Widget Interface</a> - JavaScript methods for
               controlling QueryBox widget
+            </li>
+            <li>
+              <a href="#public-api">Public API</a> - Direct API access for
+              search and chat endpoints
             </li>
             <li>
               <a href="#crawler">Crawler</a> - Automatic web content crawling
@@ -286,6 +292,45 @@ querybox.chat();`}</code>
             </h4>
             <p>Returns the current configuration object.</p>
           </div>
+        </section>
+
+        <section id="public-api" className={styles.section}>
+          <h2>Public API</h2>
+
+          <p>
+            QueryBox provides public REST API endpoints for direct integration
+            without the widget. Perfect for custom implementations, mobile apps,
+            or backend services.
+          </p>
+
+          <div className={styles.apiEndpoint}>
+            <label>API Base URL</label>
+            <code>{process.env.NEXT_PUBLIC_API_URL}</code>
+          </div>
+
+          <h3>Available Endpoints</h3>
+
+          <div className={styles.apiMethod}>
+            <h4>
+              <code>{`POST {your-domain}/v1/search`}</code>
+            </h4>
+            <p>
+              Search your indexed content. Returns matching results with titles,
+              URLs, and relevance scores.
+            </p>
+          </div>
+
+          <div className={styles.apiMethod}>
+            <h4>
+              <code>{`POST {your-domain}/v1/chat`}</code>
+            </h4>
+            <p>
+              AI-powered chat with Server-Sent Events (SSE) streaming. Maintains
+              conversation context for multi-turn conversations.
+            </p>
+          </div>
+
+          <ApiIntegration />
         </section>
 
         <section id="crawler" className={styles.section}>

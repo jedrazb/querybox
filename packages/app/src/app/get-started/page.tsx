@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { useTestDemo } from "@/components/TestDemoProvider";
 import InstallationTabs from "@/components/InstallationTabs";
+import ApiIntegration from "@/components/ApiIntegration";
 
 type DomainStatus = {
   exists: boolean;
@@ -39,6 +40,7 @@ function GetStartedContent() {
   const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(
     null
   );
+  const [showPublicApi, setShowPublicApi] = useState(false);
   const checkingDomainRef = useRef<string | null>(null);
 
   const cleanDomain = (input: string): string => {
@@ -803,6 +805,56 @@ function GetStartedContent() {
                       title={title}
                       initialQuestions={initialQuestions}
                     />
+
+                    <div className={styles.apiSection}>
+                      <div
+                        className={styles.apiSectionHeader}
+                        onClick={() => setShowPublicApi(!showPublicApi)}
+                      >
+                        <div>
+                          <h4 className={styles.configTitle}>
+                            Or use QueryBox API
+                            <span className={styles.advancedBadge}>
+                              Advanced
+                            </span>
+                          </h4>
+                          <p className={styles.hint}>
+                            Integrate search and chat directly into your app
+                            without the widget.
+                          </p>
+                        </div>
+                        <button className={styles.expandButton}>
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            style={{
+                              transform: showPublicApi
+                                ? "rotate(180deg)"
+                                : "rotate(0deg)",
+                              transition: "transform 0.2s",
+                            }}
+                          >
+                            <path
+                              d="M5 7.5L10 12.5L15 7.5"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      {showPublicApi && (
+                        <div className={styles.apiSectionBody}>
+                          <ApiIntegration
+                            apiUrl={process.env.NEXT_PUBLIC_API_URL}
+                            domain={domain}
+                          />
+                        </div>
+                      )}
+                    </div>
 
                     <div className={styles.ctaButtons}>
                       <button

@@ -510,6 +510,56 @@
   margin: 0 0 1rem 0;
 }
 
+/* API Integration Section */
+.apiSection {
+  margin-top: 3rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.apiSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.apiSectionHeader:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.apiSectionBody {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.advancedBadge {
+  display: inline-block;
+  margin-left: 0.75rem;
+  padding: 0.25rem 0.625rem;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .configGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
