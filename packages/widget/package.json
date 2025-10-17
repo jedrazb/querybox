@@ -1,7 +1,7 @@
 {
   "name": "@jedrazb/querybox",
   "version": "0.1.6",
-  "description": "Lightweight embeddable search and chat widget powered by Elasticsearch",
+  "description": "A lightweight, embeddable JavaScript widget for search and AI chat powered by Elastic Agent Builder",
   "type": "module",
   "main": "./dist/querybox.umd.js",
   "module": "./dist/querybox.es.js",
@@ -47,7 +47,7 @@
   "bugs": {
     "url": "https://github.com/jedrazb/querybox/issues"
   },
-  "homepage": "https://github.com/jedrazb/querybox#readme",
+  "homepage": "https://www.querybox.dev",
   "devDependencies": {
     "@jedrazb/querybox-shared": "workspace:*",
     "@types/node": "^20.10.0",

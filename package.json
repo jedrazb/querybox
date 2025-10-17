@@ -2,7 +2,7 @@
   "name": "querybox-monorepo",
   "version": "0.1.0",
   "private": true,
-  "description": "Monorepo for QueryBox widget and API backend",
+  "description": "A lightweight, embeddable JavaScript widget for search and AI chat powered by Elastic Agent Builder",
   "packageManager": "pnpm@8.15.0",
   "scripts": {
     "dev": "pnpm --parallel dev",
