@@ -10,7 +10,7 @@ const sections = [
   { id: "installation", title: "Installation" },
   { id: "quick-start", title: "Quick Start" },
   { id: "configuration", title: "Configuration" },
-  { id: "api", title: "API Reference" },
+  { id: "api", title: "Widget Interface" },
   { id: "crawler", title: "Crawler" },
 ];
 
@@ -48,8 +48,8 @@ export default function Docs() {
               with themes, colors, and options
             </li>
             <li>
-              <a href="#api">API Reference</a> - Complete API documentation for
-              QueryBox methods
+              <a href="#api">Widget Interface</a> - JavaScript methods for
+              controlling QueryBox widget
             </li>
             <li>
               <a href="#crawler">Crawler</a> - Automatic web content crawling
@@ -220,28 +220,6 @@ querybox.chat();`}</code>
                     (max 3). Users can click these to start a conversation.
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <code>container</code>
-                  </td>
-                  <td>HTMLElement | string</td>
-                  <td>document.body</td>
-                  <td>
-                    Container element or CSS selector where QueryBox will be
-                    mounted
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <code>classNames</code>
-                  </td>
-                  <td>object</td>
-                  <td>{"{}"}</td>
-                  <td>
-                    Custom CSS class names for advanced styling (panel,
-                    searchPanel, chatPanel, overlay)
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -268,7 +246,7 @@ querybox.chat();`}</code>
         </section>
 
         <section id="api" className={styles.section}>
-          <h2>API Reference</h2>
+          <h2>Widget Interface</h2>
 
           <h3>Methods</h3>
 
