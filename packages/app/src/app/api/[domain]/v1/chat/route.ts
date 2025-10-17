@@ -164,9 +164,6 @@ function transformKibanaEvent(
   const eventType = event.event;
   const data = event.data?.data;
 
-  // Log all events for debugging
-  console.log("Kibana event:", eventType);
-
   if (!data) {
     console.warn("Event has no data:", event);
     return chunks;

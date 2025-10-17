@@ -714,7 +714,7 @@
   flex: 1;
   padding: 16px 20px;
   padding-right: 62px;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--querybox-text);
   line-height: 1.5;
 
@@ -892,6 +892,7 @@
   .querybox-chat__input {
     padding: 14px 18px;
     padding-right: 56px;
+    font-size: 16px;
   }
 }
 
