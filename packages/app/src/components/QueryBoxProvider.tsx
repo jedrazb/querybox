@@ -22,8 +22,8 @@ export function QueryBoxProvider({ children }: { children: ReactNode }) {
 
   // Load QueryBox dynamically
   useEffect(() => {
-    // Don't initialize on get-started page - it has its own TestDemoProvider
-    if (pathname === "/get-started") {
+    // Don't initialize on get-started or examples page - it has its own TestDemoProvider
+    if (pathname === "/get-started" || pathname === "/examples") {
       return;
     }
 

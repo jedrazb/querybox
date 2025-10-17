@@ -89,40 +89,6 @@ export default function Home() {
       <section id="features">
         <Features />
       </section>
-
-      {/* Footer */}
-      <footer className={styles.footer}>
-        <div className={styles.footerContent}>
-          <img
-            src="/querybox.svg"
-            alt="QueryBox"
-            className={styles.footerLogo}
-          />
-          <p>
-            Built with ❤️ by{" "}
-            <a
-              href="https://github.com/jedrazb"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              jedrazb
-            </a>
-          </p>
-        </div>
-        <div className={styles.footerLinks}>
-          <a href="/get-started">Get Started</a>
-          <a href="/examples">Examples</a>
-          <a
-            href="https://github.com/jedrazb/querybox"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
-          <a href="/docs">Docs</a>
-          <a href="https://www.npmjs.com/package/@jedrazb/querybox">npm</a>
-        </div>
-      </footer>
     </main>
   );
 }

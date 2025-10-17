@@ -32,6 +32,34 @@ export default function RootLayout({
           <div style={{ paddingTop: "70px", minHeight: "100vh" }}>
             {children}
           </div>
+          <footer className="footer">
+            <div className="footerContent">
+              <img src="/querybox.svg" alt="QueryBox" className="footerLogo" />
+              <p>
+                Built with ❤️ by{" "}
+                <a
+                  href="https://github.com/jedrazb"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  jedrazb
+                </a>
+              </p>
+            </div>
+            <div className="footerLinks">
+              <a href="/get-started">Get Started</a>
+              <a href="/examples">Examples</a>
+              <a
+                href="https://github.com/jedrazb/querybox"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </a>
+              <a href="/docs">Docs</a>
+              <a href="https://www.npmjs.com/package/@jedrazb/querybox">npm</a>
+            </div>
+          </footer>
         </QueryBoxProvider>
       </body>
     </html>

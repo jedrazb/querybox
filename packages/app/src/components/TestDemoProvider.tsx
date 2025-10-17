@@ -25,6 +25,7 @@ interface TestDemoContextType {
     }
   ) => Promise<void>;
   isReady: boolean;
+  isModuleLoaded: boolean;
 }
 
 const TestDemoContext = createContext<TestDemoContextType | null>(null);
@@ -32,6 +33,7 @@ const TestDemoContext = createContext<TestDemoContextType | null>(null);
 export function TestDemoProvider({ children }: { children: ReactNode }) {
   const queryboxRef = useRef<any>(null);
   const [isReady, setIsReady] = useState(false);
+  const [isModuleLoaded, setIsModuleLoaded] = useState(false);
 
   // Load QueryBox module once on mount
   useEffect(() => {
@@ -41,9 +43,13 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
           const module = await import("@jedrazb/querybox");
           QueryBox = module.default;
           console.log("✅ QueryBox module loaded");
+          setIsModuleLoaded(true);
         } catch (error) {
           console.error("❌ Failed to load QueryBox module:", error);
+          setIsModuleLoaded(false);
         }
+      } else if (QueryBox) {
+        setIsModuleLoaded(true);
       }
     };
 
@@ -108,6 +114,7 @@ export function TestDemoProvider({ children }: { children: ReactNode }) {
     },
     initializeForDomain,
     isReady,
+    isModuleLoaded,
   };
 
   return (

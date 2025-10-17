@@ -18,7 +18,7 @@ const EXAMPLES: ExampleConfig[] = [
     description:
       "MCP (Model Context Protocol) is an open-source standard for connecting AI applications to external systems.",
     website: "https://modelcontextprotocol.io",
-    color: "#6366f1",
+    color: "#c6613f",
     domain: "modelcontextprotocol.io",
     initialQuestions: [
       "In 2 sentences, what is the Model Context Protocol?",
@@ -42,7 +42,7 @@ const EXAMPLES: ExampleConfig[] = [
     description:
       "Elastic is the company behind the Elasticsearch, leading provider of vector database solutions.",
     website: "https://elastic.co",
-    color: "#00758F",
+    color: "#0b64dd",
     domain: "elastic.co",
     initialQuestions: [
       "In 2 sentences, what is Elastic?",
@@ -52,9 +52,9 @@ const EXAMPLES: ExampleConfig[] = [
   {
     title: "www.searchkit.co",
     description:
-      "Searchkit is a library for building search interfaces with Elasticsearch.",
+      "Searchkit - UI Widgets for Elasticsearch. React, Vue & Javascript supported.",
     website: "https://www.searchkit.co",
-    color: "#6366f1",
+    color: "#266769",
     domain: "www.searchkit.co",
     initialQuestions: [
       "In 2 sentences, what is Searchkit?",
@@ -66,7 +66,7 @@ const EXAMPLES: ExampleConfig[] = [
     description:
       "Search news, experiments, and research from the creators of Elasticsearch",
     website: "https://search-labs.elastic.co",
-    color: "#00758F",
+    color: "#36b9ff",
     domain: "search-labs.elastic.co",
     initialQuestions: ["What is Elastic Agent Builder?"],
   },
@@ -74,7 +74,7 @@ const EXAMPLES: ExampleConfig[] = [
     title: "cyclingdoppio.cc",
     description: "Cycling Doppio is a blog about cycling and lifestyle.",
     website: "https://www.cyclingdoppio.cc",
-    color: "#6366f1",
+    color: "#5ca168",
     domain: "cyclingdoppio.cc",
     initialQuestions: [
       "In 2 sentences, what is Cycling Doppio?",
@@ -84,7 +84,7 @@ const EXAMPLES: ExampleConfig[] = [
 ];
 
 export default function ExamplesPage() {
-  const { initializeForDomain, chat, isReady } = useTestDemo();
+  const { initializeForDomain, chat, isModuleLoaded } = useTestDemo();
 
   const handleTryDemo = async (example: ExampleConfig) => {
     // Extract domain from website URL
@@ -117,8 +117,6 @@ export default function ExamplesPage() {
           <p className={styles.subtitle}>
             See how QueryBox powers search and AI chat across different
             websites.
-            <br />
-            Click "Try Demo" to interact with each example.
           </p>
         </section>
 
@@ -209,21 +207,27 @@ export default function ExamplesPage() {
                         style={{
                           backgroundColor: example.color,
                         }}
-                        disabled={!isReady}
+                        disabled={!isModuleLoaded}
                       >
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5 3.5L11 8L5 12.5V3.5Z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                        Try Demo
+                        {isModuleLoaded ? (
+                          <>
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5 3.5L11 8L5 12.5V3.5Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                            Try Demo
+                          </>
+                        ) : (
+                          "Loading..."
+                        )}
                       </button>
                     </div>
                   </div>
