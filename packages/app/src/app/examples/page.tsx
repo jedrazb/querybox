@@ -45,8 +45,8 @@ const EXAMPLES: ExampleConfig[] = [
     color: "#0b64dd",
     domain: "elastic.co",
     initialQuestions: [
-      "In 2 sentences, what is Elastic?",
-      "How Elastic supports AI agents?",
+      "In 2 sentences, what is an Elastic Serverless project?",
+      "Who founded Elastic?",
     ],
   },
   {
