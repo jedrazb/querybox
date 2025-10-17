@@ -312,7 +312,7 @@ querybox.chat();`}</code>
 
           <div className={styles.apiMethod}>
             <h4>
-              <code>{`POST {your-domain}/v1/search`}</code>
+              <code>{`POST /{your-domain}/v1/search`}</code>
             </h4>
             <p>
               Search your indexed content. Returns matching results with titles,
@@ -322,7 +322,7 @@ querybox.chat();`}</code>
 
           <div className={styles.apiMethod}>
             <h4>
-              <code>{`POST {your-domain}/v1/chat`}</code>
+              <code>{`POST /{your-domain}/v1/chat`}</code>
             </h4>
             <p>
               AI-powered chat with Server-Sent Events (SSE) streaming. Maintains
