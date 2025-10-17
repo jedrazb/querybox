@@ -20,6 +20,9 @@ export default function Header() {
           <Link href="/docs" className={styles.link}>
             Docs
           </Link>
+          <Link href="/examples" className={styles.link}>
+            Examples
+          </Link>
           <a
             href="https://github.com/jedrazb/querybox"
             className={styles.link}

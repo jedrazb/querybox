@@ -111,6 +111,7 @@ export default function Home() {
         </div>
         <div className={styles.footerLinks}>
           <a href="/get-started">Get Started</a>
+          <a href="/examples">Examples</a>
           <a
             href="https://github.com/jedrazb/querybox"
             target="_blank"
