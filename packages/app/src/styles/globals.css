@@ -101,6 +101,13 @@ button {
   gap: 2rem;
   justify-content: center;
   margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .footerLinks {
+    gap: 1rem;
+  }
 }
 
 .footerLinks a {

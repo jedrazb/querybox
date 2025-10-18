@@ -111,23 +111,11 @@
 
   .useCaseChips {
     gap: 0.75rem;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding-left: 1rem;
-  }
-
-  .useCaseChips::-webkit-scrollbar {
-    display: none;
   }
 
   .chip {
     padding: 0.625rem 1.25rem;
     font-size: 0.9rem;
-    flex-shrink: 0;
   }
 
   .ctaButton {
