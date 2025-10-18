@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description:
     "Add powerful search and AI-powered chat to any website. Powered by Elasticsearch.",
   keywords: ["search", "chat", "widget", "elasticsearch", "ai"],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_API_URL!),
   openGraph: {
     title: "QueryBox - Website Search & Chat Widget",
     description:
