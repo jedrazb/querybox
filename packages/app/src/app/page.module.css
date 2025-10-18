@@ -198,6 +198,39 @@
   transform: translateY(-2px);
 }
 
+/* GitHub Section */
+.githubSection {
+  padding: 2rem;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.githubCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.75rem;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.githubCta:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(99, 102, 241, 0.15);
+  transform: translateY(-2px);
+}
+
+.githubCta svg {
+  flex-shrink: 0;
+}
+
 /* Animated Background */
 .heroBackground {
   position: absolute;
