@@ -3,9 +3,9 @@ import styles from "./Features.module.css";
 const features = [
   {
     icon: "🔍",
-    title: "Website Search",
+    title: "Semantic Search",
     description:
-      "Hybrid search on crawled content with highlighting and fuzzy matching powered by Elasticsearch",
+      "Hybrid semantic and keyword search on crawled content with highlighting powered by Elasticsearch",
   },
   {
     icon: "💬",
