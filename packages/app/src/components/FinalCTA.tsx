@@ -17,7 +17,7 @@ export default function FinalCTA() {
             </p>
             <div className={styles.buttons}>
               <a href="/get-started" className={styles.primaryButton}>
-                Start Free Now
+                Start Now
               </a>
               <a
                 href="https://github.com/jedrazb/querybox"
