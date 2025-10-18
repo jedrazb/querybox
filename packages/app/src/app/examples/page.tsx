@@ -71,14 +71,15 @@ const EXAMPLES: ExampleConfig[] = [
     initialQuestions: ["What is Elastic Agent Builder?"],
   },
   {
-    title: "CyclingDoppio",
-    description: "Cycling Doppio is a blog about cycling and lifestyle.",
-    website: "https://www.cyclingdoppio.cc",
+    title: "Elastic Docs",
+    description:
+      "Official Elastic documentation. Explore guides for Elastic Cloud (Hosted and Serverless) or on-prem deployments.",
+    website: "https://www.elastic.co/docs",
     color: "#5ca168",
-    domain: "cyclingdoppio.cc",
+    domain: "docs.elastic.co",
     initialQuestions: [
-      "In 2 sentences, what is Cycling Doppio?",
-      "What are cool bikepacking routes?",
+      "What's the easiest way to run ES locally?",
+      "What mappings should I use for easy semantic search?",
     ],
   },
 ];
