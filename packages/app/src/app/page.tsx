@@ -40,9 +40,9 @@ export default function Home() {
             <span className={styles.titleGradient}>to Your Website</span>
           </h1>
           <p className={styles.subtitle}>
-            Lightweight JavaScript widget powered by Elasticsearch.
+            Lightweight search and AI chat widget powered by Elasticsearch.
             <br />
-            Crawl your site, embed the widget, done.{" "}
+            Crawl your site, add the widget, done.{" "}
             <a href="/examples" className={styles.examplesLink}>
               See examples →
             </a>
