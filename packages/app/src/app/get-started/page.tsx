@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import * as Popover from "@radix-ui/react-popover";
 import styles from "./page.module.css";
 import { useTestDemo } from "@/components/TestDemoProvider";
 import InstallationTabs from "@/components/InstallationTabs";
 import ApiIntegration from "@/components/ApiIntegration";
+import { MAX_CRAWL_URL_COUNT } from "../constants";
 
 type DomainStatus = {
   exists: boolean;
@@ -598,6 +600,31 @@ function GetStartedContent() {
                               {crawlStatus === "running" && (
                                 <span className={styles.liveIndicator} />
                               )}
+                              <Popover.Root>
+                                <Popover.Trigger asChild>
+                                  <span
+                                    className={styles.infoIcon}
+                                    role="button"
+                                    tabIndex={0}
+                                  >
+                                    ⓘ
+                                  </span>
+                                </Popover.Trigger>
+                                <Popover.Portal>
+                                  <Popover.Content
+                                    className={styles.infoTooltip}
+                                    sideOffset={55}
+                                    side="bottom"
+                                    align="start"
+                                  >
+                                    To ensure fair use, we limit crawling to{" "}
+                                    {MAX_CRAWL_URL_COUNT} pages. Need more?{" "}
+                                    <a href="mailto:jedrazb@gmail.com">
+                                      Reach out
+                                    </a>
+                                  </Popover.Content>
+                                </Popover.Portal>
+                              </Popover.Root>
                             </label>
                             <span className={styles.badge}>
                               {status.docCount || 0}

@@ -31,9 +31,9 @@ const features = [
       "No chat history logging. Your data is never used for AI training",
   },
   {
-    icon: "📱",
-    title: "Responsive",
-    description: "Works perfectly on all devices and screen sizes",
+    icon: "🧩",
+    title: "Easy Integration",
+    description: "Lightweight UI widget or API-first headless mode",
   },
 ];
 

@@ -394,6 +394,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  position: relative;
 }
 
 .statusItem label {
@@ -411,6 +412,74 @@
   font-size: 1.125rem;
   color: white;
   font-weight: 600;
+}
+
+.infoIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 0.875rem !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px;
+  font-weight: 500 !important;
+  outline: none;
+}
+
+.infoIcon:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.infoTooltip {
+  padding: 0.75rem 1rem;
+  background: rgba(30, 41, 59, 0.98);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 8px;
+  font-size: 0.875rem !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  line-height: 1.5;
+  max-width: 280px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: tooltipFadeIn 0.2s ease-out;
+}
+
+@media (max-width: 768px) {
+  .infoTooltip {
+    max-width: calc(100vw - 4rem);
+  }
+}
+
+.infoTooltip a {
+  color: #a5b4fc;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.infoTooltip a:hover {
+  color: #6366f1;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .badge {

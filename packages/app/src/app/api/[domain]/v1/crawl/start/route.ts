@@ -1,6 +1,80 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getElasticsearchClient } from "@/lib/elasticsearch";
 import { extractBaseDomain } from "@/lib/utils";
+import {
+  CRAWLER_USER_AGENT,
+  MAX_CRAWL_DEPTH,
+  MAX_CRAWL_URL_COUNT,
+} from "@/app/constants";
+
+/**
+ * Discovers sitemap URLs for a domain by checking robots.txt and common locations
+ */
+async function discoverSitemaps(domain: string): Promise<string[]> {
+  const sitemaps: string[] = [];
+  const baseUrl = `https://${domain}`;
+
+  try {
+    // First, try to fetch robots.txt
+    const robotsUrl = `${baseUrl}/robots.txt`;
+    const robotsResponse = await fetch(robotsUrl, {
+      method: "GET",
+      headers: {
+        "User-Agent": CRAWLER_USER_AGENT,
+      },
+      signal: AbortSignal.timeout(5000), // 5 second timeout
+    });
+
+    if (robotsResponse.ok) {
+      const robotsText = await robotsResponse.text();
+
+      // Parse sitemap declarations from robots.txt
+      // Format: Sitemap: https://example.com/sitemap.xml
+      const sitemapRegex = /^Sitemap:\s*(.+)$/gim;
+      let match;
+
+      while ((match = sitemapRegex.exec(robotsText)) !== null) {
+        const sitemapUrl = match[1].trim();
+        if (sitemapUrl) {
+          sitemaps.push(sitemapUrl);
+        }
+      }
+    }
+  } catch (error) {
+    console.log(`Could not fetch robots.txt for ${domain}:`, error);
+  }
+
+  // If no sitemaps found in robots.txt, try common sitemap locations
+  if (sitemaps.length === 0) {
+    const commonSitemapPaths = [
+      "/sitemap.xml",
+      "/sitemap_index.xml",
+      "/sitemap-index.xml",
+    ];
+
+    for (const path of commonSitemapPaths) {
+      try {
+        const sitemapUrl = `${baseUrl}${path}`;
+        const response = await fetch(sitemapUrl, {
+          method: "HEAD",
+          headers: {
+            "User-Agent": CRAWLER_USER_AGENT,
+          },
+          signal: AbortSignal.timeout(1000),
+        });
+
+        if (response.ok) {
+          sitemaps.push(sitemapUrl);
+          break; // Found one, that's enough
+        }
+      } catch (error) {
+        // Silently continue to next path
+      }
+    }
+  }
+
+  return sitemaps;
+}
 
 /**
  * POST /{domain}/v1/crawl/start
@@ -47,20 +121,36 @@ export async function POST(
     // Check if domain has a subdomain (e.g., blog.example.com vs example.com)
     const hasSubdomain = baseDomain.split(".").length > 2;
 
+    // Discover sitemaps for the base domain
+    const baseSitemaps = await discoverSitemaps(baseDomain);
+
     // Build domains array - add www. only if no subdomain exists
     const domains = [
       {
         url: `https://${baseDomain}`,
         seed_urls: [`https://${baseDomain}`],
+        ...(baseSitemaps.length > 0 && { sitemap_urls: baseSitemaps }),
       },
     ];
 
     if (!hasSubdomain) {
+      // Discover sitemaps for www version
+      const wwwSitemaps = await discoverSitemaps(`www.${baseDomain}`);
+
       domains.push({
         url: `https://www.${baseDomain}`,
         seed_urls: [`https://www.${baseDomain}`],
+        ...(wwwSitemaps.length > 0 && { sitemap_urls: wwwSitemaps }),
       });
     }
+
+    const crawlConfig = {
+      domains,
+      user_agent: CRAWLER_USER_AGENT,
+      max_crawl_depth: MAX_CRAWL_DEPTH,
+      max_unique_url_count: MAX_CRAWL_URL_COUNT,
+      output_index: config.indexName,
+    };
 
     // Start async crawl via external service
     const crawlResponse = await fetch(crawlerEndpoint, {
@@ -69,10 +159,7 @@ export async function POST(
         "Content-Type": "application/json",
         "X-API-Key": crawlerApiKey,
       },
-      body: JSON.stringify({
-        domains,
-        output_index: config.indexName,
-      }),
+      body: JSON.stringify(crawlConfig),
     });
 
     if (!crawlResponse.ok) {
