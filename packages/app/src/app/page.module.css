@@ -98,13 +98,18 @@
   flex-wrap: wrap;
 }
 
+.cta a {
+  display: inline-block;
+  text-decoration: none;
+}
+
 .primaryButton {
   padding: 1rem 2.5rem;
   font-size: 1.125rem;
   font-weight: 600;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: white;
-  border: none;
+  border: 2px solid transparent;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s;
