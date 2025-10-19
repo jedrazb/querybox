@@ -38,6 +38,18 @@ const EXAMPLES: ExampleConfig[] = [
     ],
   },
   {
+    title: "Elastic Docs",
+    description:
+      "Official Elastic documentation. Explore guides for Elastic Cloud (Hosted and Serverless) or on-prem deployments.",
+    website: "https://www.elastic.co/docs",
+    color: "#0b64dd",
+    domain: "docs.elastic.co",
+    initialQuestions: [
+      "What's the easiest way to run ES locally?",
+      "What mappings should I use for easy semantic search?",
+    ],
+  },
+  {
     title: "Elastic",
     description:
       "Elastic is the company behind the Elasticsearch, leading provider of vector database solutions.",
@@ -69,18 +81,6 @@ const EXAMPLES: ExampleConfig[] = [
     color: "#36b9ff",
     domain: "search-labs.elastic.co",
     initialQuestions: ["What is Elastic Agent Builder?"],
-  },
-  {
-    title: "Elastic Docs",
-    description:
-      "Official Elastic documentation. Explore guides for Elastic Cloud (Hosted and Serverless) or on-prem deployments.",
-    website: "https://www.elastic.co/docs",
-    color: "#5ca168",
-    domain: "docs.elastic.co",
-    initialQuestions: [
-      "What's the easiest way to run ES locally?",
-      "What mappings should I use for easy semantic search?",
-    ],
   },
 ];
 
