@@ -27,6 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="/querybox.css" />
+        <meta name="apple-mobile-web-app-title" content="QueryBox" />
       </head>
       <body>
         <QueryBoxProvider>
