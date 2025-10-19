@@ -30,7 +30,7 @@ export default function Home() {
       <section className={styles.hero} id="home">
         <div className={styles.heroContent}>
           <div className={styles.freeBadge}>
-            <span className={styles.freeBadgeText}>✨ Start free</span>
+            <span className={styles.freeBadgeText}>✨ Start now</span>
             <span className={styles.freeBadgeDivider}>•</span>
             <span className={styles.freeBadgeText}>Up to 500 pages</span>
           </div>
