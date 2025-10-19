@@ -6,6 +6,7 @@ import UseCases from "@/components/UseCases";
 import FinalCTA from "@/components/FinalCTA";
 import { useQueryBox } from "@/components/QueryBoxProvider";
 import styles from "./page.module.css";
+import { MAX_CRAWL_URL_COUNT } from "./constants";
 
 export default function Home() {
   const [websiteUrl, setWebsiteUrl] = useState("");
@@ -32,7 +33,9 @@ export default function Home() {
           <div className={styles.freeBadge}>
             <span className={styles.freeBadgeText}>✨ Start now</span>
             <span className={styles.freeBadgeDivider}>•</span>
-            <span className={styles.freeBadgeText}>Up to 500 pages</span>
+            <span
+              className={styles.freeBadgeText}
+            >{`Up to ${MAX_CRAWL_URL_COUNT} pages`}</span>
           </div>
           <h1 className={styles.title}>
             Add AI Search & Chat
