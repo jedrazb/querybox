@@ -322,25 +322,46 @@ export async function POST(
       console.log(`Index already exists: ${indexName}`);
     }
 
-    // 2. Create or get agent builder tool to search this index
-    const toolId = `querybox.search.public.${sanitizedDomain}`;
-    let tool;
+    // 2. Create or get agent builder tools to search this index
+    const searchToolId = `querybox.search.public.${sanitizedDomain}`;
+    let searchTool;
     try {
-      tool = await kibanaClient.getTool(toolId);
-      console.log(`Tool already exists: ${toolId}`);
+      searchTool = await kibanaClient.getTool(searchToolId);
+      console.log(`Tool already exists: ${searchToolId}`);
     } catch (error: any) {
-      // Tool doesn't exist, create it
-      console.log(`Creating tool: ${toolId}`);
-      tool = await kibanaClient.createTool({
-        id: toolId,
+      searchTool = await kibanaClient.createTool({
+        id: searchToolId,
         description: `Search the ${baseDomain} public crawled content. Use this tool to find information about the public content available on ${baseDomain}.`,
         type: "index_search",
-        tags: ["querybox", "search"],
+        tags: ["querybox", "search", domain],
         configuration: {
           pattern: indexName,
         },
       });
-      console.log(`Tool created: ${toolId}`);
+      console.log(`Tool created: ${searchToolId}`);
+    }
+    const lookupPageToolId = `querybox.get_page.public.${sanitizedDomain}`;
+    let lookupPageTool;
+    try {
+      lookupPageTool = await kibanaClient.getTool(lookupPageToolId);
+      console.log(`Tool already exists: ${lookupPageToolId}`);
+    } catch (error: any) {
+      lookupPageTool = await kibanaClient.createTool({
+        id: lookupPageToolId,
+        description: `Use this tool to fetch the title, and URL for a given document IDs, as referenced in tool call responses. This tool retrieves page details from the ${indexName} index, which stores content from ${domain}.`,
+        type: "esql",
+        tags: ["querybox", "get_page", domain],
+        configuration: {
+          query: `FROM ${indexName} | WHERE id == ?docID | KEEP title, url`,
+          params: {
+            docID: {
+              type: "keyword",
+              description: "Referenced doc ID",
+              optional: false,
+            },
+          },
+        },
+      });
     }
 
     // 3. Create or get agent with the tool
@@ -356,11 +377,14 @@ export async function POST(
         id: agentId,
         name: `${baseDomain} Assistant`,
         description: `AI assistant for ${baseDomain} that can search and answer questions about the website.`,
+
         configuration: {
-          instructions: `You are a helpful assistant for ${baseDomain}. Use the search tool to find relevant information from the crawled content when answering questions. Be concise and on-point in your responses. Always cite sources as markdown links using the format [Page Title](URL).`,
+          instructions: `You are a helpful assistant for ${baseDomain}. Use the search tool to find relevant information from the crawled content when answering questions. Be concise and on-point in your responses. Always cite relevant references as markdown links using the format [Page Title](URL) from the references of the tool results (doc id is reference.id) in result object. You have tool get_page to lookup page details and fetch correct URL and Title.
+
+          Please look up URLs, titles for all relavant results with ${lookupPageTool.id} tool. This tool is very fast to execute. Keep only most relevant references, up to 4 pages, as markdown links. `,
           tools: [
             {
-              tool_ids: [tool.id],
+              tool_ids: [searchTool.id, lookupPageTool.id],
             },
           ],
         },
@@ -390,7 +414,7 @@ export async function POST(
         success: true,
         domain: baseDomain,
         indexName: indexName,
-        toolIds: [tool.id],
+        toolIds: [searchTool.id, lookupPageTool.id],
         agentId: agent.id,
         docCount,
         message: indexExists
