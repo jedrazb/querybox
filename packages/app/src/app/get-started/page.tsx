@@ -618,7 +618,8 @@ function GetStartedContent() {
                                     align="start"
                                   >
                                     To ensure fair use, we limit crawling to{" "}
-                                    {MAX_CRAWL_URL_COUNT} pages. Need more?{" "}
+                                    {MAX_CRAWL_URL_COUNT.toLocaleString()}{" "}
+                                    pages. Need more?{" "}
                                     <a href="mailto:jedrazb@gmail.com">
                                       Reach out
                                     </a>

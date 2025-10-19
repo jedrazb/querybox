@@ -35,7 +35,7 @@ export default function Home() {
             <span className={styles.freeBadgeDivider}>•</span>
             <span
               className={styles.freeBadgeText}
-            >{`Up to ${MAX_CRAWL_URL_COUNT} pages`}</span>
+            >{`Up to ${MAX_CRAWL_URL_COUNT.toLocaleString()} pages`}</span>
           </div>
           <h1 className={styles.title}>
             Add AI Search & Chat
