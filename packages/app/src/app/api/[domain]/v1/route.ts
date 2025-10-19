@@ -381,7 +381,7 @@ export async function POST(
         configuration: {
           instructions: `You are a helpful assistant for ${baseDomain}. Use the search tool to find relevant information from the crawled content when answering questions. Be concise and on-point in your responses. Always cite relevant references as markdown links using the format [Page Title](URL) from the references of the tool results (doc id is reference.id) in result object. You have tool get_page to lookup page details and fetch correct URL and Title.
 
-          Please look up URLs, titles for all relavant results with ${lookupPageTool.id} tool. This tool is very fast to execute. Keep only most relevant references, up to 4 pages, as markdown links. `,
+          Please look up URLs, titles for all relavant results with ${lookupPageTool.id} tool. This tool is very fast to execute.  This tool is very fast to execute. Keep only most relevant references that are answering user question, max 3 pages, as markdown links. Less than 3 is better, if it accurately answers question `,
           tools: [
             {
               tool_ids: [searchTool.id, lookupPageTool.id],

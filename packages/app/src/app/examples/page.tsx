@@ -62,6 +62,15 @@ const EXAMPLES: ExampleConfig[] = [
     ],
   },
   {
+    title: "Search Labs",
+    description:
+      "Search news, experiments, and research from the creators of Elasticsearch",
+    website: "https://search-labs.elastic.co",
+    color: "#36b9ff",
+    domain: "search-labs.elastic.co",
+    initialQuestions: ["What is Elastic Agent Builder?"],
+  },
+  {
     title: "SearchKit",
     description:
       "Searchkit - UI Widgets for Elasticsearch. React, Vue & Javascript supported.",
@@ -72,15 +81,6 @@ const EXAMPLES: ExampleConfig[] = [
       "In 2 sentences, what is Searchkit?",
       "How Searchkit can be used with Elasticsearch?",
     ],
-  },
-  {
-    title: "Search Labs",
-    description:
-      "Search news, experiments, and research from the creators of Elasticsearch",
-    website: "https://search-labs.elastic.co",
-    color: "#36b9ff",
-    domain: "search-labs.elastic.co",
-    initialQuestions: ["What is Elastic Agent Builder?"],
   },
 ];
 
