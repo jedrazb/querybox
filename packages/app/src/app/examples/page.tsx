@@ -47,6 +47,7 @@ const EXAMPLES: ExampleConfig[] = [
     initialQuestions: [
       "What's the easiest way to run ES locally?",
       "What mappings should I use for easy semantic search?",
+      "How can I use ES|QL in Kibana?",
     ],
   },
   {
