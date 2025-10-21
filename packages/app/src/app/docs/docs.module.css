@@ -169,6 +169,28 @@
   margin-bottom: 2rem !important;
 }
 
+/* Lists */
+.docList {
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.docList li {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+  padding-left: 0.5rem;
+}
+
+.docList code {
+  background: rgba(99, 102, 241, 0.15);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: "Fira Code", monospace;
+  font-size: 0.875rem;
+  color: #a5b4fc;
+}
+
 /* Code Blocks */
 .code {
   background: #1e293b;

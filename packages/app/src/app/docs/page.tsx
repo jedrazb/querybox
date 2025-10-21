@@ -337,12 +337,54 @@ querybox.chat();`}</code>
           <h2>Crawler</h2>
 
           <p>
-            QueryBox can automatically crawl your website content and index it
-            into Elasticsearch for search and AI chat.
+            You can trigger crawls manually from the{" "}
+            <a href="/get-started" className={styles.link}>
+              Get Started
+            </a>{" "}
+            page. Re-crawling updates your search index with new or changed
+            content.
           </p>
+
+          <h3>Crawler Configuration</h3>
+
           <p>
-            You can trigger a crawl manually from the{" "}
-            <a href="/get-started">Get Started</a> page.
+            <strong>Crawling only a subset of your site</strong> (e.g.,{" "}
+            <code>your-domain.com/docs/*</code>):
+          </p>
+
+          <ol className={styles.docList}>
+            <li>
+              Set up an HTTP redirect from <code>docs.your-domain.com</code> to{" "}
+              <code>your-domain.com/docs</code>
+            </li>
+            <li>
+              Add <code>docs.your-domain.com</code> as your crawler domain
+            </li>
+            <li>
+              The crawler will automatically detect the redirect and create a
+              configuration scoped to <code>/docs/*</code> only
+            </li>
+          </ol>
+
+          <p>
+            This allows you to create multiple instances of QueryBox for
+            different sections of your site (e.g., <code>docs</code>,{" "}
+            <code>help</code>, <code>blog</code>), each with its own search
+            index and AI chat.
+          </p>
+
+          <h3>Common Issues</h3>
+
+          <p>
+            <strong>robots.txt blocking crawlers:</strong> Ensure your{" "}
+            <code>robots.txt</code> doesn't disallow crawlers. Whitelist the
+            QueryBox crawler by allowing <code>QueryBox-Crawler/1.0</code> user
+            agent.
+          </p>
+
+          <p>
+            <strong>HTTPS required:</strong> Your website must be served over
+            HTTPS. The crawler only supports secure connections.
           </p>
         </section>
 

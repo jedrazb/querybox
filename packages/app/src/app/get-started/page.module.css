@@ -251,6 +251,16 @@
   padding-top: 1rem;
 }
 
+.hint .link {
+  color: #a5b4fc;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.hint .link:hover {
+  color: #6366f1;
+}
+
 .inputGroup {
   display: flex;
   gap: 1rem;

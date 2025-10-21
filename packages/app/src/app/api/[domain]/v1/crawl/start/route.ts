@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getElasticsearchClient } from "@/lib/elasticsearch";
 import { extractBaseDomain } from "@/lib/utils";
+import { checkDomainRedirect } from "@/lib/redirect-utils";
 import {
   CRAWLER_USER_AGENT,
   MAX_CRAWL_DEPTH,
@@ -118,20 +119,80 @@ export async function POST(
       );
     }
 
-    // Check if domain has a subdomain (e.g., blog.example.com vs example.com)
-    const hasSubdomain = baseDomain.split(".").length > 2;
+    // Check if the domain redirects using shared utility
+    let crawlDomain = baseDomain;
+    let seedUrls = [`https://${baseDomain}`];
+    let crawlRules: any[] | undefined = undefined;
+    let sitemaps: string[] = [];
 
-    // Discover sitemaps for the base domain
-    const baseSitemaps = await discoverSitemaps(baseDomain);
+    // Check for redirects
+    const redirectInfo = await checkDomainRedirect(baseDomain, 10000);
+
+    if (redirectInfo && redirectInfo.isSubdomainToPathRedirect) {
+      // This is a subdomain-to-path redirect (e.g., docs.elastic.co -> elastic.co/docs)
+      console.log(
+        `Using subdomain-to-path redirect: ${baseDomain} -> ${redirectInfo.finalDomain}${redirectInfo.finalPath}`
+      );
+
+      crawlDomain = redirectInfo.finalDomain;
+      seedUrls = [redirectInfo.finalUrl];
+
+      // Add crawl rules to only crawl the specific path
+      crawlRules = [
+        {
+          policy: "allow",
+          type: "begins",
+          pattern: redirectInfo.finalPath,
+        },
+        {
+          policy: "deny",
+          type: "regex",
+          pattern: ".*",
+        },
+      ];
+
+      // Try to discover sitemap at the specific path
+      try {
+        const pathSitemapUrl = `https://${redirectInfo.finalDomain}${redirectInfo.finalPath}/sitemap.xml`;
+        const sitemapResponse = await fetch(pathSitemapUrl, {
+          method: "HEAD",
+          signal: AbortSignal.timeout(2000),
+        });
+        if (sitemapResponse.ok) {
+          sitemaps.push(pathSitemapUrl);
+        }
+      } catch (e) {
+        // Sitemap not found at path, that's ok
+      }
+    } else if (redirectInfo && redirectInfo.finalDomain !== baseDomain) {
+      // Simple domain redirect (e.g., cnn.com -> edition.cnn.com)
+      console.log(
+        `Using domain redirect: ${baseDomain} -> ${redirectInfo.finalDomain}`
+      );
+      crawlDomain = redirectInfo.finalDomain;
+      seedUrls = [`https://${redirectInfo.finalDomain}`];
+    }
+
+    // Discover sitemaps if not already found
+    if (sitemaps.length === 0) {
+      sitemaps = await discoverSitemaps(crawlDomain);
+    }
 
     // Build domains array
-    const domains = [
-      {
-        url: `https://${baseDomain}`,
-        seed_urls: [`https://${baseDomain}`],
-        ...(baseSitemaps.length > 0 && { sitemap_urls: baseSitemaps }),
-      },
-    ];
+    const domainConfig: any = {
+      url: `https://${crawlDomain}`,
+      seed_urls: seedUrls,
+    };
+
+    if (sitemaps.length > 0) {
+      domainConfig.sitemap_urls = sitemaps;
+    }
+
+    if (crawlRules) {
+      domainConfig.crawl_rules = crawlRules;
+    }
+
+    const domains = [domainConfig];
 
     const crawlConfig = {
       domains,

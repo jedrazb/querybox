@@ -46,6 +46,8 @@ function GetStartedContent() {
   const [redirectInfo, setRedirectInfo] = useState<{
     from: string;
     to: string;
+    isSubdomainToPath: boolean;
+    finalPath?: string;
   } | null>(null);
   const checkingDomainRef = useRef<string | null>(null);
 
@@ -215,25 +217,35 @@ function GetStartedContent() {
 
     // First, check for redirects
     let finalDomain = cleanedDomain;
+    let redirectData = null;
     try {
       const redirectResponse = await fetch(
         `/api/${cleanedDomain}/v1/check-redirect`
       );
 
       if (redirectResponse.ok) {
-        const redirectData = await redirectResponse.json();
+        redirectData = await redirectResponse.json();
 
         if (redirectData.redirected && redirectData.finalDomain) {
-          finalDomain = redirectData.finalDomain;
+          // Only update the domain input if it's NOT a subdomain-to-path redirect
+          // For subdomain-to-path redirects (e.g., docs.elastic.co -> elastic.co/docs),
+          // we keep the original domain as the identifier
+          if (!redirectData.isSubdomainToPathRedirect) {
+            finalDomain = redirectData.finalDomain;
 
-          // Update the domain input smoothly
-          setDomain(finalDomain);
-          checkingDomainRef.current = finalDomain;
+            // Update the domain input smoothly
+            setDomain(finalDomain);
+            checkingDomainRef.current = finalDomain;
+          }
 
           // Show redirect info to user
           setRedirectInfo({
             from: cleanedDomain,
-            to: finalDomain,
+            to: redirectData.isSubdomainToPathRedirect
+              ? `${redirectData.finalDomain}${redirectData.finalPath || ""}`
+              : redirectData.finalDomain,
+            isSubdomainToPath: redirectData.isSubdomainToPathRedirect || false,
+            finalPath: redirectData.finalPath,
           });
         }
       }
@@ -615,9 +627,12 @@ function GetStartedContent() {
                     </div>
                     {redirectInfo && (
                       <p className={styles.hint}>
-                        Domain redirects to{" "}
-                        <a href={redirectInfo.to} target="_blank">
-                          {redirectInfo.to}
+                        {redirectInfo.isSubdomainToPath
+                          ? `${redirectInfo.from} redirects to ${redirectInfo.to}. Crawling only ${redirectInfo.to}* URLs.`
+                          : `Domain redirects to ${redirectInfo.to}`}
+                        <br />
+                        <a href="/docs#crawler" className={styles.link}>
+                          Learn more about configuring crawler
                         </a>
                       </p>
                     )}

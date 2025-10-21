@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { extractBaseDomain } from "@/lib/utils";
+import { checkDomainRedirect } from "@/lib/redirect-utils";
 
 // Check if domain redirects and return the final domain
 export async function GET(
@@ -19,43 +20,20 @@ export async function GET(
     // Extract base domain (no protocol)
     const baseDomain = extractBaseDomain(domain);
 
-    // Try to access the domain and follow redirects
-    const httpsUrl = `https://${baseDomain}`;
+    // Check for redirects using shared utility
+    const redirectInfo = await checkDomainRedirect(baseDomain, 10000);
 
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
-      const response = await fetch(httpsUrl, {
-        method: "HEAD",
-        signal: controller.signal,
-        redirect: "follow",
-      });
-
-      clearTimeout(timeoutId);
-
-      // Extract the final URL after redirects
-      const finalUrl = response.url;
-      let finalDomain = baseDomain;
-
-      if (finalUrl) {
-        try {
-          const url = new URL(finalUrl);
-          finalDomain = url.hostname;
-        } catch (e) {
-          console.error("Failed to parse final URL:", finalUrl);
-        }
-      }
-
-      // Check if redirect occurred
-      const redirected = finalDomain !== baseDomain;
-
+    if (!redirectInfo) {
+      // No redirect detected
       return NextResponse.json(
         {
           originalDomain: baseDomain,
-          finalDomain,
-          redirected,
-          accessible: response.ok || response.status === 405,
+          finalDomain: baseDomain,
+          finalUrl: `https://${baseDomain}`,
+          finalPath: "/",
+          redirected: false,
+          isSubdomainToPathRedirect: false,
+          accessible: true,
         },
         {
           status: 200,
@@ -66,73 +44,31 @@ export async function GET(
           },
         }
       );
-    } catch (error: any) {
-      // If HEAD fails, try GET
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-        const response = await fetch(httpsUrl, {
-          method: "GET",
-          signal: controller.signal,
-          redirect: "follow",
-        });
-
-        clearTimeout(timeoutId);
-
-        // Extract the final URL after redirects
-        const finalUrl = response.url;
-        let finalDomain = baseDomain;
-
-        if (finalUrl) {
-          try {
-            const url = new URL(finalUrl);
-            finalDomain = url.hostname;
-          } catch (e) {
-            console.error("Failed to parse final URL:", finalUrl);
-          }
-        }
-
-        // Check if redirect occurred
-        const redirected = finalDomain !== baseDomain;
-
-        return NextResponse.json(
-          {
-            originalDomain: baseDomain,
-            finalDomain,
-            redirected,
-            accessible: response.ok,
-          },
-          {
-            status: 200,
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "GET, OPTIONS",
-              "Access-Control-Allow-Headers": "Content-Type",
-            },
-          }
-        );
-      } catch (getError: any) {
-        // Return error info
-        return NextResponse.json(
-          {
-            originalDomain: baseDomain,
-            finalDomain: baseDomain,
-            redirected: false,
-            accessible: false,
-            error: getError.message,
-          },
-          {
-            status: 200,
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "GET, OPTIONS",
-              "Access-Control-Allow-Headers": "Content-Type",
-            },
-          }
-        );
-      }
     }
+
+    // Redirect detected
+    const redirected =
+      redirectInfo.finalDomain !== baseDomain || redirectInfo.finalPath !== "/";
+
+    return NextResponse.json(
+      {
+        originalDomain: baseDomain,
+        finalDomain: redirectInfo.finalDomain,
+        finalUrl: redirectInfo.finalUrl,
+        finalPath: redirectInfo.finalPath,
+        redirected,
+        isSubdomainToPathRedirect: redirectInfo.isSubdomainToPathRedirect,
+        accessible: true,
+      },
+      {
+        status: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      }
+    );
   } catch (error: any) {
     console.error("Error checking redirect:", error);
 

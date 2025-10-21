@@ -400,9 +400,6 @@ export async function POST(
       agentId: agent.id,
       createdAt: now,
       updatedAt: now,
-      crawlConfig: {
-        startUrl: baseDomain,
-      },
     });
 
     // Get document count

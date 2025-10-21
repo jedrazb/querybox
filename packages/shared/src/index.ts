@@ -145,15 +145,6 @@ export interface ChatResponse {
 // ============================================================================
 
 /**
- * Crawl configuration
- */
-export interface CrawlConfig {
-  startUrl: string;
-  maxPages?: number;
-  crawlDepth?: number;
-}
-
-/**
  * Domain configuration stored in Elasticsearch
  */
 export interface DomainConfig {
@@ -163,7 +154,6 @@ export interface DomainConfig {
   createdAt: number;
   updatedAt: number;
   crawlExecutionId?: string;
-  crawlConfig?: CrawlConfig;
 }
 
 // ============================================================================
