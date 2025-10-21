@@ -124,7 +124,7 @@ export async function POST(
     // Discover sitemaps for the base domain
     const baseSitemaps = await discoverSitemaps(baseDomain);
 
-    // Build domains array - add www. only if no subdomain exists
+    // Build domains array
     const domains = [
       {
         url: `https://${baseDomain}`,
@@ -132,17 +132,6 @@ export async function POST(
         ...(baseSitemaps.length > 0 && { sitemap_urls: baseSitemaps }),
       },
     ];
-
-    if (!hasSubdomain) {
-      // Discover sitemaps for www version
-      const wwwSitemaps = await discoverSitemaps(`www.${baseDomain}`);
-
-      domains.push({
-        url: `https://www.${baseDomain}`,
-        seed_urls: [`https://www.${baseDomain}`],
-        ...(wwwSitemaps.length > 0 && { sitemap_urls: wwwSitemaps }),
-      });
-    }
 
     const crawlConfig = {
       domains,

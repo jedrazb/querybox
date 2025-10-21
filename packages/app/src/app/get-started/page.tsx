@@ -43,6 +43,10 @@ function GetStartedContent() {
     null
   );
   const [showPublicApi, setShowPublicApi] = useState(false);
+  const [redirectInfo, setRedirectInfo] = useState<{
+    from: string;
+    to: string;
+  } | null>(null);
   const checkingDomainRef = useRef<string | null>(null);
 
   const cleanDomain = (input: string): string => {
@@ -205,17 +209,47 @@ function GetStartedContent() {
       return;
     }
 
-    // Update URL query param
-    if (cleanedDomain) {
-      router.push(`/get-started?domain=${encodeURIComponent(cleanedDomain)}`);
-    }
-
     setIsLoading(true);
     setError(null);
+    setRedirectInfo(null);
+
+    // First, check for redirects
+    let finalDomain = cleanedDomain;
+    try {
+      const redirectResponse = await fetch(
+        `/api/${cleanedDomain}/v1/check-redirect`
+      );
+
+      if (redirectResponse.ok) {
+        const redirectData = await redirectResponse.json();
+
+        if (redirectData.redirected && redirectData.finalDomain) {
+          finalDomain = redirectData.finalDomain;
+
+          // Update the domain input smoothly
+          setDomain(finalDomain);
+          checkingDomainRef.current = finalDomain;
+
+          // Show redirect info to user
+          setRedirectInfo({
+            from: cleanedDomain,
+            to: finalDomain,
+          });
+        }
+      }
+    } catch (redirectError) {
+      console.warn("Failed to check redirects:", redirectError);
+      // Continue with original domain if redirect check fails
+    }
+
+    // Update URL query param with final domain
+    if (finalDomain) {
+      router.push(`/get-started?domain=${encodeURIComponent(finalDomain)}`);
+    }
 
     try {
-      // Check if domain exists
-      const checkResponse = await fetch(`/api/${cleanedDomain}/v1`);
+      // Check if domain exists (use finalDomain after redirect check)
+      const checkResponse = await fetch(`/api/${finalDomain}/v1`);
 
       if (!checkResponse.ok) {
         throw new Error("Failed to check domain status");
@@ -241,7 +275,7 @@ function GetStartedContent() {
         let updatedDocCount = checkData.docCount || 0;
         try {
           const statusResponse = await fetch(
-            `/api/${cleanedDomain}/v1/crawl/status`
+            `/api/${finalDomain}/v1/crawl/status`
           );
           if (statusResponse.ok) {
             const statusData = await statusResponse.json();
@@ -274,7 +308,7 @@ function GetStartedContent() {
         }
       } else {
         // Domain doesn't exist - create it via POST (this will validate the domain)
-        const setupResponse = await fetch(`/api/${cleanedDomain}/v1`, {
+        const setupResponse = await fetch(`/api/${finalDomain}/v1`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -579,6 +613,14 @@ function GetStartedContent() {
                         )}
                       </button>
                     </div>
+                    {redirectInfo && (
+                      <p className={styles.hint}>
+                        Domain redirects to{" "}
+                        <a href={redirectInfo.to} target="_blank">
+                          {redirectInfo.to}
+                        </a>
+                      </p>
+                    )}
                     {error && <div className={styles.error}>{error}</div>}
                   </div>
                 )}

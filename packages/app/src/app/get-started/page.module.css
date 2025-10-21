@@ -818,6 +818,19 @@
   font-weight: 500;
 }
 
+.info {
+  padding: 1rem 1.25rem;
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  margin-top: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .questionsContainer {
   display: flex;
   flex-direction: column;
