@@ -34,6 +34,7 @@ function GetStartedContent() {
   >(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
   const [isCrawling, setIsCrawling] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
   const [primaryColor, setPrimaryColor] = useState("#ec4899");
@@ -170,6 +171,22 @@ function GetStartedContent() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [crawlStatus, domain]);
+
+  // Progressive loading steps effect
+  useEffect(() => {
+    if (isLoading) {
+      setLoadingStep(0);
+      const timer1 = setTimeout(() => setLoadingStep(1), 1000);
+      const timer2 = setTimeout(() => setLoadingStep(2), 2000);
+
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+      };
+    } else {
+      setLoadingStep(0);
+    }
+  }, [isLoading]);
 
   const checkDomain = async (domainToCheck?: string) => {
     const targetDomain = domainToCheck || domain;
@@ -618,7 +635,9 @@ function GetStartedContent() {
                             }}
                           >
                             <div className={styles.dotSpinner} />
-                            Validating domain...
+                            {loadingStep === 0 && "Validating domain..."}
+                            {loadingStep === 1 && "Creating index..."}
+                            {loadingStep === 2 && "Setting up agent..."}
                           </span>
                         ) : (
                           "Continue"

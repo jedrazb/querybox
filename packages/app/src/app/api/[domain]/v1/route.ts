@@ -352,11 +352,31 @@ export async function POST(
         type: "esql",
         tags: ["querybox", "get_page", domain],
         configuration: {
-          query: `FROM ${indexName} | WHERE id == ?docID | KEEP title, url`,
+          query: `FROM ${indexName}\n | WHERE id IN (?reference_id1, ?reference_id2, ?reference_id3, ?reference_id4, ?reference_id5)\n| KEEP title, url`,
           params: {
-            docID: {
+            reference_id1: {
               type: "keyword",
-              description: "Referenced doc ID",
+              description: "Reference doc id 1",
+              optional: false,
+            },
+            reference_id2: {
+              type: "keyword",
+              description: "Reference doc id 2, leave empty if not needed",
+              optional: false,
+            },
+            reference_id3: {
+              type: "keyword",
+              description: "Reference doc id 3, leave empty if not needed",
+              optional: false,
+            },
+            reference_id4: {
+              type: "keyword",
+              description: "Reference doc id 4, leave empty if not needed",
+              optional: false,
+            },
+            reference_id5: {
+              type: "keyword",
+              description: "Reference doc id 5, leave empty if not needed",
               optional: false,
             },
           },
@@ -379,9 +399,10 @@ export async function POST(
         description: `AI assistant for ${baseDomain} that can search and answer questions about the website.`,
 
         configuration: {
-          instructions: `You are a helpful assistant for ${baseDomain}. Use the search tool to find relevant information from the crawled content when answering questions. Be concise and on-point in your responses. Always cite relevant references as markdown links using the format [Page Title](URL) from the references of the tool results (doc id is reference.id) in result object. You have tool get_page to lookup page details and fetch correct URL and Title.
+          instructions: `You are a helpful assistant for ${baseDomain}. Use the search tool to find relevant information from the crawled content when answering questions. Be concise and on-point in your responses. Always cite relevant references as markdown links using the format [Page Title](URL) from the references of the tool results in result object. You have tool get_page to lookup page details and fetch correct URL and Title for multiple pages.
 
-          Please look up URLs, titles for all relavant results with ${lookupPageTool.id} tool. This tool is very fast to execute.  This tool is very fast to execute. Keep only most relevant references that are answering user question, max 3 pages, as markdown links. Less than 3 is better, if it accurately answers question `,
+
+          Please look up URLs, titles for all relevant results with ${lookupPageTool.id} tool. This tool is very fast to execute and accepts multiple reference ids. Keep only most relevant references that are answering user question, if it accurately answers question. Doc ids of pages are referenced in tool_call result object with data.reference.id. Don't use tool_result_id. Return up to 3 most relevant references as markdown links.`,
           tools: [
             {
               tool_ids: [searchTool.id, lookupPageTool.id],
