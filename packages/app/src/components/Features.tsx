@@ -27,8 +27,7 @@ const features = [
   {
     icon: "🔒",
     title: "Privacy First",
-    description:
-      "No chat history logging. Your data is never used for AI training",
+    description: "Your data is never used for AI training",
   },
   {
     icon: "🧩",

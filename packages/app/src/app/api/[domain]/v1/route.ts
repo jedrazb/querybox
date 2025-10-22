@@ -340,6 +340,7 @@ export async function POST(
       });
       console.log(`Tool created: ${searchToolId}`);
     }
+
     const lookupPageToolId = `querybox.get_page.public.${sanitizedDomain}`;
     let lookupPageTool;
     try {
@@ -348,35 +349,15 @@ export async function POST(
     } catch (error: any) {
       lookupPageTool = await kibanaClient.createTool({
         id: lookupPageToolId,
-        description: `Use this tool to fetch the title, and URL for a given document IDs, as referenced in tool call responses. This tool retrieves page details from the ${indexName} index, which stores content from ${domain}.`,
+        description: `Look up page and URL from a reference id of any tool call for ${baseDomain} domain. This corresponds to reference.data.id. Don't use tool_call_id here.`,
         type: "esql",
-        tags: ["querybox", "get_page", domain],
+        tags: ["querybox", "search", domain],
         configuration: {
-          query: `FROM ${indexName}\n | WHERE id IN (?reference_id1, ?reference_id2, ?reference_id3, ?reference_id4, ?reference_id5)\n| KEEP title, url`,
+          query: `FROM ${indexName}\n | WHERE id == ?reference_doc_id\n | KEEP title, url`,
           params: {
-            reference_id1: {
+            reference_doc_id: {
               type: "keyword",
-              description: "Reference doc id 1",
-              optional: false,
-            },
-            reference_id2: {
-              type: "keyword",
-              description: "Reference doc id 2, leave empty if not needed",
-              optional: false,
-            },
-            reference_id3: {
-              type: "keyword",
-              description: "Reference doc id 3, leave empty if not needed",
-              optional: false,
-            },
-            reference_id4: {
-              type: "keyword",
-              description: "Reference doc id 4, leave empty if not needed",
-              optional: false,
-            },
-            reference_id5: {
-              type: "keyword",
-              description: "Reference doc id 5, leave empty if not needed",
+              description: "Reference doc id from tool call result",
               optional: false,
             },
           },
@@ -399,10 +380,9 @@ export async function POST(
         description: `AI assistant for ${baseDomain} that can search and answer questions about the website.`,
 
         configuration: {
-          instructions: `You are a helpful assistant for ${baseDomain}. Use the search tool to find relevant information from the crawled content when answering questions. Be concise and on-point in your responses. Always cite relevant references as markdown links using the format [Page Title](URL) from the references of the tool results in result object. You have tool get_page to lookup page details and fetch correct URL and Title for multiple pages.
+          instructions: `You are a helpful assistant for ${baseDomain}. Use the search tool to find relevant information from the crawled content when answering questions. Be concise and on-point in your responses. Always cite relevant references as markdown links using the format [Page Title](URL) from the tool results in result object.
 
-
-          Please look up URLs, titles for all relevant results with ${lookupPageTool.id} tool. This tool is very fast to execute and accepts multiple reference ids. Keep only most relevant references that are answering user question, if it accurately answers question. Doc ids of pages are referenced in tool_call result object with data.reference.id. Don't use tool_result_id. Return up to 3 most relevant references as markdown links.`,
+          Return up to 3 most relevant pages as markdown links. Those links should be super relevant to the user question and answer the question. `,
           tools: [
             {
               tool_ids: [searchTool.id, lookupPageTool.id],
@@ -432,7 +412,7 @@ export async function POST(
         success: true,
         domain: baseDomain,
         indexName: indexName,
-        toolIds: [searchTool.id, lookupPageTool.id],
+        toolIds: [searchTool.id],
         agentId: agent.id,
         docCount,
         message: indexExists

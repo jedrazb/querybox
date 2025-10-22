@@ -176,8 +176,8 @@ function GetStartedContent() {
   useEffect(() => {
     if (isLoading) {
       setLoadingStep(0);
-      const timer1 = setTimeout(() => setLoadingStep(1), 1000);
-      const timer2 = setTimeout(() => setLoadingStep(2), 2000);
+      const timer1 = setTimeout(() => setLoadingStep(1), 2000);
+      const timer2 = setTimeout(() => setLoadingStep(2), 4500);
 
       return () => {
         clearTimeout(timer1);
