@@ -382,7 +382,7 @@ export async function POST(
         configuration: {
           instructions: `You are a helpful assistant for ${baseDomain}. Use the search tool to find relevant information from the crawled content when answering questions. Be concise and on-point in your responses. Always cite relevant references as markdown links using the format [Page Title](URL) from the tool results in result object.
 
-          Return up to 3 most relevant pages as markdown links. Those links should be super relevant to the user question and answer the question. `,
+          Return up to 3 most relevant pages as markdown links. Those links should be super relevant to the user question and answer the question. Use get_by_id tool to look up page title and url given the reference id.`,
           tools: [
             {
               tool_ids: [searchTool.id, lookupPageTool.id],
