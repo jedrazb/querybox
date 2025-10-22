@@ -59,13 +59,12 @@
 /* Responsive design */
 @media (max-width: 768px) {
   .websiteStats {
-    flex-direction: column;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 5rem;
   }
 
   .statsLabel {
-    font-size: 1.15rem;
+    font-size: 1rem;
   }
 }
 
