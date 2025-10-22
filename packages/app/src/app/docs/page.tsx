@@ -99,11 +99,18 @@ export default function Docs() {
           <h1>QueryBox Documentation</h1>
           <p className={styles.lead}>
             A lightweight, embeddable JavaScript widget for search and AI chat
-            powered by Elastic Agent Builder.{" "}
-            <a href="/examples" className={styles.link}>
-              See live examples
-            </a>{" "}
-            of QueryBox in action across different websites.
+            powered by{" "}
+            <a
+              href="https://www.elastic.co/docs/solutions/search/elastic-agent-builder"
+              target="_blank"
+            >
+              Elastic Agent Builder
+            </a>
+            .
+          </p>
+          <p className={styles.lead}>
+            <a href="/examples">See live examples</a> of QueryBox in action
+            across different websites.
           </p>
         </section>
 
@@ -343,6 +350,17 @@ querybox.chat();`}</code>
             </a>{" "}
             page. Re-crawling updates your search index with new or changed
             content.
+          </p>
+          <p>
+            Powered by{" "}
+            <a
+              href="https://github.com/elastic/crawler"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Elastic Open Web Crawler
+            </a>
+            .
           </p>
 
           <h3>Crawler Configuration</h3>
