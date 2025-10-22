@@ -4,6 +4,7 @@ import { useState } from "react";
 import Features from "@/components/Features";
 import UseCases from "@/components/UseCases";
 import FinalCTA from "@/components/FinalCTA";
+import WebsiteStats from "@/components/WebsiteStats";
 import { useQueryBox } from "@/components/QueryBoxProvider";
 import styles from "./page.module.css";
 import { MAX_CRAWL_URL_COUNT } from "./constants";
@@ -93,6 +94,8 @@ export default function Home() {
               Add
             </button>
           </form>
+
+          <WebsiteStats />
         </div>
       </section>
 
