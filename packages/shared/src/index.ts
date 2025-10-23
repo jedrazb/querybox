@@ -132,14 +132,6 @@ export interface ChatRequest {
   conversationId?: string;
 }
 
-/**
- * Chat response from API
- */
-export interface ChatResponse {
-  message: ChatMessage;
-  conversationId: string;
-}
-
 // ============================================================================
 // Backend API Types (for API package)
 // ============================================================================
@@ -154,74 +146,4 @@ export interface DomainConfig {
   createdAt: number;
   updatedAt: number;
   crawlExecutionId?: string;
-}
-
-// ============================================================================
-// Elasticsearch Types (for API backend)
-// ============================================================================
-
-/**
- * Elasticsearch hit
- */
-export interface ElasticsearchHit {
-  _index: string;
-  _id: string;
-  _score: number;
-  _source: Record<string, unknown>;
-}
-
-/**
- * Elasticsearch search response
- */
-export interface ElasticsearchSearchResponse {
-  took: number;
-  hits: {
-    total: {
-      value: number;
-      relation: string;
-    };
-    max_score: number;
-    hits: ElasticsearchHit[];
-  };
-}
-
-/**
- * Crawler document structure
- * Represents a document indexed by the Elastic web crawler
- */
-export interface CrawlerDocument {
-  /** Main body content of the page */
-  body?: string;
-  /** Page headings */
-  headings?: string;
-  /** Document ID */
-  id?: string;
-  /** Timestamp of last crawl */
-  last_crawled_at?: string;
-  /** Links found on the page */
-  links?: string;
-  /** Meta description tag content */
-  meta_description?: string;
-  /** Combined semantic field (title + body) */
-  semantic_body?: string;
-  /** ELSER semantic text field for semantic search */
-  semantic_text?: string;
-  /** Page title */
-  title?: string;
-  /** Full URL of the page */
-  url?: string;
-  /** URL host component */
-  url_host?: string;
-  /** URL path component */
-  url_path?: string;
-  /** First directory in URL path */
-  url_path_dir1?: string;
-  /** Second directory in URL path */
-  url_path_dir2?: string;
-  /** Third directory in URL path */
-  url_path_dir3?: string;
-  /** URL port number */
-  url_port?: number;
-  /** URL scheme (http/https) */
-  url_scheme?: string;
 }
