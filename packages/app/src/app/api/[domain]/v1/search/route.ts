@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import type { SearchRequest, SearchResponse } from "@jedrazb/querybox-shared";
+import type { SearchRequest } from "@jedrazb/querybox-shared";
 import { getElasticsearchClient } from "@/lib/elasticsearch";
 
 export async function POST(
