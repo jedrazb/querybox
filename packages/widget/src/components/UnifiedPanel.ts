@@ -32,6 +32,7 @@ export class UnifiedPanel extends BasePanel {
   private searchContainer: HTMLElement | null = null;
   private chatContainer: HTMLElement | null = null;
   private searchDebounceTimer: number | null = null;
+  private currentSearchAbortController: AbortController | null = null;
   private searchClient: SearchClient;
   private chatClient: ChatClient;
   private messages: ChatMessage[] = [];
@@ -304,28 +305,64 @@ export class UnifiedPanel extends BasePanel {
   }
 
   /**
-   * Handle search input with debouncing
+   * Handle search input with debouncing and request cancellation
    */
   private handleSearch(query: string): void {
+    // Cancel previous debounce timer
     if (this.searchDebounceTimer) {
       clearTimeout(this.searchDebounceTimer);
     }
 
-    if (!query.trim()) {
+    // Cancel any in-flight request
+    if (this.currentSearchAbortController) {
+      this.currentSearchAbortController.abort();
+      this.currentSearchAbortController = null;
+    }
+
+    const trimmedQuery = query.trim();
+
+    // Show empty state immediately if query is empty
+    if (!trimmedQuery) {
       this.showEmptyState();
       return;
     }
 
+    // Show loading state immediately for better perceived performance
     this.showLoadingState();
 
+    // Debounce the actual search request (350ms is a good balance)
     this.searchDebounceTimer = window.setTimeout(async () => {
+      // Create new abort controller for this request
+      const abortController = new AbortController();
+      this.currentSearchAbortController = abortController;
+
       try {
-        const response = await this.searchClient.search(query);
-        this.displayResults(response.results);
+        const response = await this.searchClient.search(
+          trimmedQuery,
+          { size: 10, from: 0 },
+          abortController.signal
+        );
+
+        // Check if this request was aborted before displaying results
+        if (!abortController.signal.aborted) {
+          this.displayResults(response.results);
+        }
       } catch (error) {
-        this.showErrorState(error as Error);
+        // Don't show error if request was aborted (user is typing)
+        if (
+          error instanceof Error &&
+          error.name !== "AbortError" &&
+          !abortController.signal.aborted
+        ) {
+          this.showErrorState(error);
+        }
+      } finally {
+        // Clean up if this is still the current controller
+        if (this.currentSearchAbortController === abortController) {
+          this.currentSearchAbortController = null;
+        }
       }
-    }, 300);
+    }, 350);
   }
 
   private showEmptyState(): void {
@@ -772,10 +809,33 @@ export class UnifiedPanel extends BasePanel {
     this.focusInput();
   }
 
-  public destroy(): void {
+  protected onClose(): void {
+    // Cancel any in-flight search requests when panel closes
+    if (this.currentSearchAbortController) {
+      this.currentSearchAbortController.abort();
+      this.currentSearchAbortController = null;
+    }
+
+    // Clear debounce timer
     if (this.searchDebounceTimer) {
       clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = null;
     }
+  }
+
+  public destroy(): void {
+    // Clean up debounce timer
+    if (this.searchDebounceTimer) {
+      clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = null;
+    }
+
+    // Cancel any in-flight search requests
+    if (this.currentSearchAbortController) {
+      this.currentSearchAbortController.abort();
+      this.currentSearchAbortController = null;
+    }
+
     this.messages = [];
     this.messageElements.clear();
     super.destroy();

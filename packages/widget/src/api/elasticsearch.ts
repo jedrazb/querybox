@@ -15,13 +15,15 @@ export class SearchClient {
    * Perform a search query via backend API
    * @param query - The search query string
    * @param options - Additional search options
+   * @param signal - Optional AbortSignal to cancel the request
    */
   async search(
     query: string,
     options?: {
       size?: number;
       from?: number;
-    }
+    },
+    signal?: AbortSignal
   ): Promise<SearchResponse> {
     const size = options?.size || 10;
     const from = options?.from || 0;
@@ -39,6 +41,7 @@ export class SearchClient {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(searchRequest),
+        signal, // Pass abort signal to fetch
       });
 
       if (!response.ok) {
@@ -53,7 +56,10 @@ export class SearchClient {
       const data: SearchResponse = await response.json();
       return data;
     } catch (error) {
-      console.error("Search error:", error);
+      // Don't log aborted requests as errors
+      if (error instanceof Error && error.name !== "AbortError") {
+        console.error("Search error:", error);
+      }
       throw error;
     }
   }
