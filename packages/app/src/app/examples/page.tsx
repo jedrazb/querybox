@@ -46,7 +46,7 @@ const EXAMPLES: ExampleConfig[] = [
     domain: "docs.elastic.co",
     initialQuestions: [
       "What's the easiest way to run ES locally?",
-      "What mappings should I use for easy semantic search?",
+      "In 2 sentences, what is semantic_text mapping?",
       "How can I use ES|QL in Kibana?",
     ],
   },
