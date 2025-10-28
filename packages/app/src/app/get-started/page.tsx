@@ -435,7 +435,7 @@ function GetStartedContent() {
       description: "Crawl your website ",
     },
     {
-      title: "Test and install",
+      title: "Customize and install",
       description: "Try QueryBox with your data and install it",
     },
   ];
@@ -498,7 +498,7 @@ function GetStartedContent() {
           </p>
         </section>
         <section>
-          <h2>Step 3: Test and Install</h2>
+          <h2>Step 3: Customize and Install</h2>
           <p>
             Test QueryBox with your indexed content using our live preview. You
             can customize the appearance by choosing a theme (light, dark, or
