@@ -363,6 +363,17 @@ querybox.chat();`}</code>
             .
           </p>
 
+          <h3>Embeddings</h3>
+
+          <p>
+            QueryBox uses{" "}
+            <a href="https://www.elastic.co/docs/explore-analyze/machine-learning/nlp/ml-nlp-elser">
+              ELSER
+            </a>{" "}
+            to generate sparse embeddings for your content. It works best with
+            English content.
+          </p>
+
           <h3>Crawler Configuration</h3>
 
           <p>

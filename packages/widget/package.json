@@ -20,8 +20,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:docs": "node scripts/build-docs.js",
-    "build:all": "pnpm build && pnpm build:docs",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
